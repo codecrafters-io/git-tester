@@ -145,6 +145,7 @@ func (e *Executable) Wait() (ExecutableResult, error) {
 		e.stderrBytes = nil
 		e.stdoutLineWriter = nil
 		e.stderrLineWriter = nil
+		e.readDone = nil
 	}()
 
 	err := e.cmd.Wait()
