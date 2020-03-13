@@ -33,6 +33,6 @@ func TestSuccessParse(t *testing.T) {
 		t.FailNow()
 	}
 
-	assert.Equal(t, context.binaryPath, "test_helpers/valid_app_dir/spawn_redis_server.sh")
+	assert.Equal(t, context.binaryPath, "test_helpers/valid_app_dir/your_git.sh")
 	assert.Equal(t, context.currentStageSlug, "init")
 }

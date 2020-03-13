@@ -14,8 +14,8 @@ make test:
 	go test -v
 
 test_with_git: build
-	CODECRAFTERS_SUBMISSION_DIR=./test_helpers/pass_all \
-	CODECRAFTERS_CURRENT_STAGE_SLUG="expiry" \
+	CODECRAFTERS_SUBMISSION_DIR=$(shell pwd)/test_helpers/pass_all \
+	CODECRAFTERS_CURRENT_STAGE_SLUG="init" \
 	dist/main.out
 
 copy_course_file:

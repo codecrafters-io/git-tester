@@ -38,7 +38,7 @@ func GetContext(env map[string]string) (Context, error) {
 		return Context{}, fmt.Errorf("CODECRAFTERS_CURRENT_STAGE_SLUG env var not found")
 	}
 	configPath := path.Join(submissionDir, "codecrafters.yml")
-	binaryPath := path.Join(submissionDir, "spawn_redis_server.sh")
+	binaryPath := path.Join(submissionDir, "your_git.sh")
 
 	yamlConfig, err := ReadFromYAML(configPath)
 	if err != nil {

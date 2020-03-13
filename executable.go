@@ -19,6 +19,9 @@ type Executable struct {
 	timeoutInSecs int
 	loggerFunc    func(string)
 
+	// Hmm, no way around exposing this?
+	WorkingDir string
+
 	// These are set & removed together
 	cmd              *exec.Cmd
 	stdoutPipe       io.ReadCloser
@@ -83,6 +86,7 @@ func (e *Executable) Start(args ...string) error {
 
 	// TODO: Use timeout!
 	e.cmd = exec.Command(e.path, args...)
+	e.cmd.Dir = e.WorkingDir
 
 	// Setup stdout capture
 	e.stdoutPipe, err = e.cmd.StdoutPipe()
