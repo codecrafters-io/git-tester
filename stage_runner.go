@@ -36,42 +36,6 @@ func newStageRunner(isDebug bool) StageRunner {
 				logger:  getLogger(isDebug, "[stage-1] "),
 				runFunc: testBindToPort,
 			},
-			Stage{
-				slug:    "ping-pong",
-				name:    "Stage 2: Respond to PING",
-				logger:  getLogger(isDebug, "[stage-2] "),
-				runFunc: testPingPongOnce,
-			},
-			Stage{
-				slug:    "ping-pong-multiple",
-				name:    "Stage 3: Respond to multiple PINGs",
-				logger:  getLogger(isDebug, "[stage-3] "),
-				runFunc: testPingPongMultiple,
-			},
-			Stage{
-				slug:    "concurrent-clients",
-				name:    "Stage 4: Handle concurrent clients",
-				logger:  getLogger(isDebug, "[stage-4] "),
-				runFunc: testPingPongConcurrent,
-			},
-			Stage{
-				slug:    "echo",
-				name:    "Stage 5: Implement the ECHO command",
-				logger:  getLogger(isDebug, "[stage-5] "),
-				runFunc: testEcho,
-			},
-			Stage{
-				slug:    "set_get",
-				name:    "Stage 6: SET & GET",
-				logger:  getLogger(isDebug, "[stage-6] "),
-				runFunc: testGetSet,
-			},
-			Stage{
-				slug:    "expiry",
-				name:    "Stage 7: Expiry!",
-				logger:  getLogger(isDebug, "[stage-7] "),
-				runFunc: testExpiry,
-			},
 		},
 	}
 }

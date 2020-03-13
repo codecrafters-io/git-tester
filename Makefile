@@ -13,20 +13,14 @@ build:
 make test:
 	go test -v
 
-test_with_redis: build
+test_with_git: build
 	CODECRAFTERS_SUBMISSION_DIR=./test_helpers/pass_all \
 	CODECRAFTERS_CURRENT_STAGE_SLUG="expiry" \
 	dist/main.out
 
-test_tmp: build
-	cd /tmp/45c297f9e27ea8dc && \
-	CODECRAFTERS_SUBMISSION_DIR=/tmp/45c297f9e27ea8dc \
-	CODECRAFTERS_CURRENT_STAGE_SLUG="ping-pong" \
-	$(shell pwd)/dist/main.out
-
 copy_course_file:
 	hub api \
-		repos/rohitpaulk/codecrafters-server/contents/codecrafters/store/data/redis.yml \
+		repos/rohitpaulk/codecrafters-server/contents/codecrafters/store/data/git.yml \
 		| jq -r .content \
 		| base64 -d \
 		> test_helpers/course_definition.yml

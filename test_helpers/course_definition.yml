@@ -1,129 +1,113 @@
-slug: "redis"
-name: "Redis"
+slug: "git"
+name: "Git"
 description_md: |
-  In this challenge, you'll build a toy Redis clone
-  that's capable of handling basic commands like PING, GET
-  and SET. Along the way, we'll learn about event loops, the Redis
-  Protocol and more.
+  In this challenge, you'll build a toy Git implementation that can clone a
+  public repository, add commits and push them back to a git server. Along the
+  way, you'll learn about the `.git` directory, Git objects (blobs, commits,
+  trees etc.), Git's transfer protocols and much more.
 
-supported_languages: ["python", "go", "php"]
+supported_languages: ["python"]
 starter_repos:
-  python: https://github.com/codecrafters-io/redis-starter-py
-  swift: https://github.com/codecrafters-io/redis-starter-swift
-  go: https://github.com/codecrafters-io/redis-starter-golang
-  php: https://github.com/codecrafters-io/redis-starter-php
-
+  go: https://github.com/codecrafters-io/git-starter-python
+  
 marketing_intro_md: |
-  This is the first CodeCrafters challenge. We're currently running [early
-  access](/early-access) trials.
-
-  In this challenge, you’ll build an application that can speak the Redis
-  protocol, and is capable of serving basic commands like PING, ECHO, SET and
-  GET. Along the way, you’ll learn about TCP servers, event loops and more.
+  In this challenge, you'll build a toy Git implementation that can clone a
+  public repository, commit changes and push them back to a git server. Along
+  the way, you'll learn about the [`.git`
+  directory](http://gitready.com/advanced/2009/03/23/whats-inside-your-git-directory.html),
+  a few of Git's ["plumbing"
+  commands](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain),
+  [Git objects](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects)
+  (blobs, commits, trees etc.), Git's [transfer
+  protocols](https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols) and
+  more.
 
 stages:
   - slug: "init"
-    name: "Bind to a port"
+    name: "Initialize the .git directory"
     description_md: |
-      Let's start out with some basics.
+      WIP
 
-      In this stage, CodeCrafters will try to bind to port 6379, which is the default
-      port that Redis uses.
-
-      Your task is to start a TCP server on port 6379. We'd like to make the first
-      stage easy to pass, so we've included steps on how to pass this stage in the
-      readme.
     marketing_md: |
-      In this stage, you'll start a TCP server on port 6379, which is the
-      default port that Redis uses.
+      In this stage, you'll implement the `git init` command. You'll initialize
+      a git repository by creating a `.git` directory and some files inside it.
 
-  - slug: "ping-pong"
-    name: "Respond to PING"
+  - slug: "create_blob"
+    name: "Create a blob object"
     description_md: |
-      In this stage, you'll respond to the
-      [PING](https://redis.io/commands/ping) command.
+      WIP
 
-      Since the tester client _only_ sends `PING` at the moment, it's okay to
-      ignore what the client sends and hardcode a response. We'll get to parsing
-      client input in later stages.
-
-      Keep in mind that Redis clients & servers speak the Redis protocol, so
-      just sending "PONG" back won't suffice. You'll need to encode it as a
-      [RESP simple
-      string](https://redis.io/topics/protocol#resp-simple-strings).
     marketing_md: |
-      In this stage, you'll respond to the
-      [PING](https://redis.io/commands/ping) command. You'll use [the Redis
-      protocol](https://redis.io/topics/protocol) to encode the reply. 
+      In this stage, you'll add a file to your git repository by creating a blob
+      object and persisting it in the `.git/objects` directory.
 
-  - slug: "ping-pong-multiple"
-    name: "Respond to multiple PINGs"
+      You'll do this using the first of multiple ["plumbing" commands](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain) we'll
+      encounter in thie challenge: [`git hash-object`](https://git-scm.com/docs/git-hash-object).
+
+
+  - slug: "read_blob"
+    name: "Read a blob object"
     description_md: |
-      In this stage, you'll respond to multiple
-      [PING](https://redis.io/commands/ping) commands, sent by the same client.
+      WIP
 
-      You'll need to run a loop that reads input from a client and sends a
-      response back.
     marketing_md: |
-      In this stage, you'll respond to multiple
-      [PING](https://redis.io/commands/ping) commands sent by the same client.
+      In the previous stage, we learnt how to persist a blob. In this stage,
+      we'll read a blob that already exists in storage by implementing the `git
+      cat-file` command.
 
-  - slug: "concurrent-clients"
-    name: "Handle concurrent clients"
+
+  - slug: "read_tree"
+    name: "Read a tree object"
     description_md: |
-      In this stage, your server will need to handle multiple concurrent
-      clients. Just like the previous stages, all clients will only send `PING`
-      commands for now.
+      WIP
 
-      To achieve this, you'll need to either use threads, or, if you're feeling
-      adventurous, an [Event Loop](https://en.wikipedia.org/wiki/Event_Loop) (like
-      the official Redis implementation does).
     marketing_md: |
-      In this stage, you'll add support for multiple concurrent clients to your
-      Redis server. To achieve this you'll use an [Event
-      Loop](https://en.wikipedia.org/wiki/Event_loop),
-      like the official Redis implementation does.
+      Now that we've learnt how to read/write blobs, let's move onto our next
+      Git object: [the tree](https://developer.github.com/v3/git/trees/). In
+      this stage, you'll read a tree object from storage by implementing the
+      `git ls-tree` command.
 
-  - slug: "echo"
-    name: "Implement the ECHO command"
+  - slug: "write_tree"
+    name: "Write a tree object"
     description_md: |
-      In this stage, you'll respond to the
-      [ECHO](https://redis.io/commands/echo) command.
+      WIP
 
-      The client will send you the command as a RESP array, which looks
-      something like this:
-
-      ```
-      *2\r\n$4\r\nECHO\r\n$3\r\nhey\r\n
-      ```
-
-      Seems confusing? Read up about [sending commands to a Redis
-      server](https://redis.io/topics/protocol#sending-commands-to-a-redis-server).
     marketing_md: |
-      In this stage, you'll respond to the
-      [ECHO](https://redis.io/commands/echo) command. You'll parse user input
-      according to the [the Redis protocol
-      specification](https://redis.io/topics/protocol).
+      In this stage, you'll write a tree to git storage by implementing the [`git
+      write-tree`](https://git-scm.com/docs/git-write-tree) command.
 
-  # TODO: Change this to use hyphens
-  - slug: "set_get"
-    name: "Implement the SET & GET commands"
+      To keep things simple, we won't implement an `index`, we'll just assume
+      that all changes in the worktree are staged.
+
+  - slug: "create_commit"
+    name: "Create a commit"
     description_md: |
-      In this stage, you'll need to implement the
-      [SET](https://redis.io/commands/set) &
-      [GET](https://redis.io/commands/get) commands.
-    marketing_md: |
-      In this stage, you'll need to implement the
-      [SET](https://redis.io/commands/set) &
-      [GET](https://redis.io/commands/get) commands.
+      WIP
 
-  - slug: "expiry"
-    name: "Expiry"
-    description_md: |
-      In this stage, you'll need to support setting a key with an expiry. The
-      expiry is provided using the "PX" argument to the
-      [SET](https://redis.io/commands/set) command.
     marketing_md: |
-      In this stage, you'll add support for setting a key with an expiry. The
-      expiry is provided using the "PX" argument to the
-      [SET](https://redis.io/commands/set) command.
+      Let's move on to the last git object we'll be dealing with in this
+      challenge: the commit. In this stage, you'll create a commit with all the
+      changes in the worktree by implementing [`git commit
+      --all`](https://git-scm.com/docs/git-commit).
+
+  - slug: "clone_repository"
+    name: "Clone a repository"
+    description_md: |
+      WIP
+
+    marketing_md: |
+      Time to interact with the real world! In this stage, you'll clone a public
+      repository from GitHub. To do this, you'll use the [Dumb
+      HTTP](https://git-scm.com/book/en/v2/Git-Internals-Transfer-Protocols)
+      transfer protocol.
+
+  - slug: "push_repository"
+    name: "Push changes to a repository"
+    description_md: |
+      WIP
+
+    marketing_md: |
+      This is the last stage of the challenge, and probably the hardest. You'll
+      implement the equivalent of `git push`, using the [Smart
+      HTTP](https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols)
+      transfer protocol.
