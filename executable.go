@@ -32,6 +32,7 @@ type Executable struct {
 	stderrBuffer     *bytes.Buffer
 	stdoutLineWriter *linewriter.LineWriter
 	stderrLineWriter *linewriter.LineWriter
+	readDone         chan bool
 }
 
 // ExecutableResult holds the result of an executable run
@@ -87,6 +88,7 @@ func (e *Executable) Start(args ...string) error {
 	// TODO: Use timeout!
 	e.cmd = exec.Command(e.path, args...)
 	e.cmd.Dir = e.WorkingDir
+	e.readDone = make(chan bool)
 
 	// Setup stdout capture
 	e.stdoutPipe, err = e.cmd.StdoutPipe()
@@ -115,6 +117,7 @@ func (e *Executable) setupIORelay(childReader io.Reader, buffer io.Writer, write
 	go func() {
 		writer := io.MultiWriter(writer, buffer)
 		ioutil.ReadAll(io.TeeReader(childReader, writer))
+		e.readDone <- true
 	}()
 }
 
@@ -145,6 +148,8 @@ func (e *Executable) Wait() (ExecutableResult, error) {
 	}()
 
 	err := e.cmd.Wait()
+	<-e.readDone
+	<-e.readDone
 	e.stdoutLineWriter.Flush()
 	e.stderrLineWriter.Flush()
 
