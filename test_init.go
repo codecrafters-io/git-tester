@@ -85,13 +85,16 @@ func assertFileExistsInDir(parent string, child string) error {
 func logDebugTree(logger *customLogger, dir string) {
 	logger.Debugf("Files found in directory: ")
 	doLogDebugTree(logger, dir, " ")
-	logger.Debugf("")
 }
 
 func doLogDebugTree(logger *customLogger, dir string, prefix string) {
 	entries, err := ioutil.ReadDir(dir)
 	if err != nil {
 		panic(err)
+	}
+
+	if len(entries) == 0 {
+		logger.Debugf(prefix + "  (directory is empty)")
 	}
 
 	for _, info := range entries {
@@ -102,14 +105,4 @@ func doLogDebugTree(logger *customLogger, dir string, prefix string) {
 			logger.Debugf(prefix + "- " + info.Name())
 		}
 	}
-	// filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-	// 	if info.IsDir() {
-	// 		logger.Debugf(path)
-	// 		// doLogDebugTree(logger, path, prefix+"  -")
-	// 	} else {
-	// 		logger.Debugf(path)
-	// 	}
-
-	// 	return nil
-	// })
 }
