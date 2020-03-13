@@ -20,8 +20,6 @@ func testBindToPort(executable *Executable, logger *customLogger) error {
 		return err
 	}
 
-	return fmt.Errorf("Something is wrong")
-
 	for _, dir := range []string{".git", ".git/objects", ".git/refs"} {
 		if err = assertDirExistsInDir(tempDir, dir); err != nil {
 			logDebugTree(logger, tempDir)
