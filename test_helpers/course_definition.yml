@@ -26,7 +26,12 @@ stages:
   - slug: "init"
     name: "Initialize the .git directory"
     description_md: |
-      WIP
+      In this stage, you'll implement the `git init` command. This command
+      initailizes a repository by creating a `.git` directory and some files
+      inside it.
+
+      We'd like to make the first stage easy to pass, so we've included steps on
+      how to pass this stage in the readme.
 
     marketing_md: |
       In this stage, you'll implement the `git init` command. You'll initialize
@@ -35,14 +40,36 @@ stages:
   - slug: "create_blob"
     name: "Create a blob object"
     description_md: |
-      WIP
+      In this stage, you'll add a file to your git repository by creating a blob
+      object and persisting it in the `.git/objects` directory.
+
+      You'll do this using the first of multiple ["plumbing"
+      commands](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain)
+      we'll encounter in this challenge: [`git
+      hash-object`](https://git-scm.com/docs/git-hash-object).
+
+      Your program will be called like so:
+
+      ```
+      ./your_git.sh hash-object -v <file>
+      ```
+
+      It is expected to print a 40-char SHA to stdout. 
+
+      To verify, the tester will run the following command:
+
+      ```
+      git cat-file -p <blob_sha>
+      ```
 
     marketing_md: |
       In this stage, you'll add a file to your git repository by creating a blob
       object and persisting it in the `.git/objects` directory.
 
-      You'll do this using the first of multiple ["plumbing" commands](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain) we'll
-      encounter in thie challenge: [`git hash-object`](https://git-scm.com/docs/git-hash-object).
+      You'll do this using the first of multiple ["plumbing"
+      commands](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain)
+      we'll encounter in thie challenge: [`git
+      hash-object`](https://git-scm.com/docs/git-hash-object).
 
 
   - slug: "read_blob"

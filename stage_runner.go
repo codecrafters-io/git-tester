@@ -36,6 +36,12 @@ func newStageRunner(isDebug bool) StageRunner {
 				logger:  getLogger(isDebug, "[stage-1] "),
 				runFunc: testBindToPort,
 			},
+			Stage{
+				slug:    "create_blob",
+				name:    "Stage 2: Create Blob",
+				logger:  getLogger(isDebug, "[stage-2] "),
+				runFunc: testCreateBlob,
+			},
 		},
 	}
 }
