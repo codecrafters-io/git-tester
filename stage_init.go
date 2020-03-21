@@ -7,7 +7,7 @@ import (
 	"path"
 )
 
-func testBindToPort(executable *Executable, logger *customLogger) error {
+func testInit(executable *Executable, logger *customLogger) error {
 	logger.Debugf("Running git init")
 	tempDir, err := ioutil.TempDir("", "worktree")
 	if err != nil {

@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func testCreateBlob(executable *Executable, logger *customLogger) error {
+func testReadBlob(executable *Executable, logger *customLogger) error {
 	tempDir, err := ioutil.TempDir("", "worktree")
 	if err != nil {
 		return err
@@ -32,19 +32,12 @@ func testCreateBlob(executable *Executable, logger *customLogger) error {
 		return err
 	}
 
-	logger.Debugf("Running ./your_git.sh hash-object -v <file>")
-	result, err := executable.Run("hash-object", "-v", sampleFile)
-	if err != nil {
-		return err
-	}
+	logger.Debugf("Running git hash-object -w <file>")
+	stdout := runGitCmd(tempDir, "hash-object", "-w", sampleFile)
+	sha := strings.TrimSpace(stdout)
 
-	expectedSha := strings.TrimSpace(runGitCmd(tempDir, "hash-object", sampleFile))
-	if err = assertStdoutContains(result, expectedSha); err != nil {
-		return err
-	}
-
-	logger.Debugf("Running git cat-file -p <sha>")
-	result, err = runGitCmdUnsafe(tempDir, "cat-file", "-p", expectedSha)
+	logger.Debugf("Running ./your_git.sh cat-file -p <sha>")
+	result, err := executable.Run("cat-file", "-p", sha)
 	if err != nil {
 		return err
 	}

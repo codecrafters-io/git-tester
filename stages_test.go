@@ -58,7 +58,7 @@ func TestReadBlob(t *testing.T) {
 	if !assert.Equal(t, 1, exitCode) {
 		failWithMockerOutput(t, m)
 	}
-	assert.Contains(t, m.ReadStdout(), "Expected stdout")
+	assert.Contains(t, m.ReadStdout(), "Expected")
 	assert.Contains(t, m.ReadStdout(), "Test failed")
 
 	m.Reset()
