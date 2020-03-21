@@ -42,6 +42,12 @@ func newStageRunner(isDebug bool) StageRunner {
 				logger:  getLogger(isDebug, "[stage-2] "),
 				runFunc: testCreateBlob,
 			},
+			Stage{
+				slug:    "read_blob",
+				name:    "Stage 3: Read Blob",
+				logger:  getLogger(isDebug, "[stage-3] "),
+				runFunc: testReadBlob,
+			},
 		},
 	}
 }

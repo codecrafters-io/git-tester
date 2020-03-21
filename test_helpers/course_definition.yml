@@ -71,11 +71,21 @@ stages:
       we'll encounter in thie challenge: [`git
       hash-object`](https://git-scm.com/docs/git-hash-object).
 
+      Your program will be called like so:
+
+      ```
+      ./your_git.sh cat-file -p <blob_sha>
+      ```
+
+      If a blob doesn't expected, your program is expected to exit with code
+      128, just like the official implementation does. 
 
   - slug: "read_blob"
     name: "Read a blob object"
     description_md: |
-      WIP
+      In the previous stage, we learnt how to persist a blob. In this stage,
+      we'll read a blob that already exists in storage by implementing the `git
+      cat-file` command.
 
     marketing_md: |
       In the previous stage, we learnt how to persist a blob. In this stage,

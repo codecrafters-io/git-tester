@@ -49,6 +49,26 @@ func TestCreateBlob(t *testing.T) {
 	}
 }
 
+func TestReadBlob(t *testing.T) {
+	m := NewStdIOMocker()
+	m.Start()
+	defer m.End()
+
+	exitCode := runCLIStage("read_blob", "test_helpers/stages/create_blob")
+	if !assert.Equal(t, 1, exitCode) {
+		failWithMockerOutput(t, m)
+	}
+	assert.Contains(t, m.ReadStdout(), "Expected stdout")
+	assert.Contains(t, m.ReadStdout(), "Test failed")
+
+	m.Reset()
+
+	exitCode = runCLIStage("read_blob", "test_helpers/stages/read_blob")
+	if !assert.Equal(t, 0, exitCode) {
+		failWithMockerOutput(t, m)
+	}
+}
+
 func runCLIStage(slug string, dir string) (exitCode int) {
 	cwd, err := os.Getwd()
 	if err != nil {
