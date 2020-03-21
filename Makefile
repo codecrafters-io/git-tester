@@ -15,7 +15,7 @@ make test:
 
 test_with_git: build
 	CODECRAFTERS_SUBMISSION_DIR=$(shell pwd)/test_helpers/pass_all \
-	CODECRAFTERS_CURRENT_STAGE_SLUG="init" \
+	CODECRAFTERS_CURRENT_STAGE_SLUG="read_blob" \
 	dist/main.out
 
 copy_course_file:

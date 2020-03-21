@@ -32,8 +32,8 @@ func testCreateBlob(executable *Executable, logger *customLogger) error {
 		return err
 	}
 
-	logger.Debugf("Running ./your_git.sh hash-object -v <file>")
-	result, err := executable.Run("hash-object", "-v", sampleFile)
+	logger.Debugf("Running ./your_git.sh hash-object -w <file>")
+	result, err := executable.Run("hash-object", "-w", sampleFile)
 	if err != nil {
 		return err
 	}

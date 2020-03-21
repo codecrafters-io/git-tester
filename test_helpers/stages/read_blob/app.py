@@ -17,7 +17,7 @@ def main():
 
         print("Initialized git directory")
     elif command == "hash-object":
-        assert sys.argv[2] == "-v"
+        assert sys.argv[2] == "-w"
         filepath = sys.argv[3]
         contents = open(filepath).read()
         header = f"blob {len(contents)}\0"
