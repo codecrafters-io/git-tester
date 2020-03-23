@@ -1,4 +1,4 @@
-.PHONY: release build run run_with_redis
+.PHONY: release build test test_with_git copy_course_file
 
 current_version_number := $(shell git tag --list "v*" | sort -V | tail -n 1 | cut -c 2-)
 next_version_number := $(shell echo $$(($(current_version_number)+1)))
@@ -10,7 +10,7 @@ release:
 build:
 	go build -o dist/main.out
 
-make test:
+test:
 	go test -v
 
 test_with_git: build
