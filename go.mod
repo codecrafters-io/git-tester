@@ -1,4 +1,4 @@
-module github.com/rohitpaulk/redis-challenge-tester
+module github.com/rohitpaulk/git-challenge-tester
 
 go 1.13
 

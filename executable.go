@@ -6,11 +6,10 @@ import (
 	"time"
 
 	"io"
-	"io/ioutil"
 	"os/exec"
 	"syscall"
 
-	"github.com/rohitpaulk/redis-challenge-tester/linewriter"
+	"github.com/rohitpaulk/git-challenge-tester/linewriter"
 )
 
 // Executable represents a program that can be executed
@@ -98,7 +97,6 @@ func (e *Executable) Start(args ...string) error {
 	e.stdoutBytes = []byte{}
 	e.stdoutBuffer = bytes.NewBuffer(e.stdoutBytes)
 	e.stdoutLineWriter = linewriter.New(newLoggerWriter(e.loggerFunc), 500*time.Millisecond)
-	e.setupIORelay(e.stdoutPipe, e.stdoutBuffer, e.stdoutLineWriter)
 
 	// Setup stderr relay
 	e.stderrPipe, err = e.cmd.StderrPipe()
@@ -108,15 +106,25 @@ func (e *Executable) Start(args ...string) error {
 	e.stderrBytes = []byte{}
 	e.stderrBuffer = bytes.NewBuffer(e.stderrBytes)
 	e.stderrLineWriter = linewriter.New(newLoggerWriter(e.loggerFunc), 500*time.Millisecond)
+
+	err = e.cmd.Start()
+	if err != nil {
+		return err
+	}
+
+	e.setupIORelay(e.stdoutPipe, e.stdoutBuffer, e.stdoutLineWriter)
 	e.setupIORelay(e.stderrPipe, e.stderrBuffer, e.stderrLineWriter)
 
-	return e.cmd.Start()
+	return nil
 }
 
 func (e *Executable) setupIORelay(childReader io.Reader, buffer io.Writer, writer io.Writer) {
 	go func() {
 		writer := io.MultiWriter(writer, buffer)
-		ioutil.ReadAll(io.TeeReader(childReader, writer))
+		_, err := io.Copy(writer, childReader)
+		if err != nil {
+			panic(err)
+		}
 		e.readDone <- true
 	}()
 }
@@ -148,9 +156,10 @@ func (e *Executable) Wait() (ExecutableResult, error) {
 		e.readDone = nil
 	}()
 
+	<-e.readDone
+	<-e.readDone
+
 	err := e.cmd.Wait()
-	<-e.readDone
-	<-e.readDone
 	e.stdoutLineWriter.Flush()
 	e.stderrLineWriter.Flush()
 
