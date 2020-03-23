@@ -18,7 +18,11 @@ class TreeEntry:
     sha: str
 
     def __repr__(self):
-        return f"TreeEntry('{self.filename}', '{self.sha}')"
+        return f"TreeEntry('{self.filename}', '{self.mode}', '{self.sha[0:4]}')"
+
+    @property
+    def is_dir(self):
+        return self.mode == "40000"
 
 
 def main():
@@ -57,8 +61,6 @@ def main():
         uncompressed = zlib.decompress(compressed)
         contents = BytesIO(uncompressed)
         header = read_until_null_byte(contents)
-        print("header")
-        print(header)
         objs = []
         try:
             while True:
@@ -67,13 +69,16 @@ def main():
                 sha = contents.read(20)
                 objs.append(
                     TreeEntry(
-                        mode=mode, filename=filename.decode(), sha=hexlify(sha).decode()
+                        mode=mode.decode(),
+                        filename=filename.decode(),
+                        sha=hexlify(sha).decode(),
                     )
                 )
         except EOFError:
             pass
 
-        print(objs)
+        for obj in objs:
+            print(obj.filename)
     else:
         raise RuntimeError(f"Unknown command: #{command}")
 

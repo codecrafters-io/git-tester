@@ -32,7 +32,6 @@ func testReadTree(executable *Executable, logger *customLogger) error {
 	runGitCmd(tempDir, "add", ".")
 	stdout := runGitCmd(tempDir, "write-tree")
 	sha := strings.TrimSpace(stdout)
-	logger.Debugf(sha)
 
 	logger.Debugf("Running ./your_git.sh ls-tree --name-only")
 	result, err := executable.Run("ls-tree", "--name-only", sha)
@@ -44,7 +43,11 @@ func testReadTree(executable *Executable, logger *customLogger) error {
 		return err
 	}
 
-	return assertStdout(result, "sample_dir_1")
+	if err = assertStdout(result, "file1\nsample_dir_1\nsample_dir_2\n"); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func writeFile(rootDir string, filepath string) {

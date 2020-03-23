@@ -94,7 +94,37 @@ stages:
   - slug: "read_tree"
     name: "Read a tree object"
     description_md: |
-      WIP
+      In this stage, you'll implement the [`git
+      ls-tree`](https://git-scm.com/docs/git-ls-tree) command, which lets you
+      inspect a tree object.
+
+      The tester will execute your program like this:
+
+      ```
+      ./your_git.sh ls-tree --name-only <tree_sha>
+      ```
+
+      For a directory structure like this, 
+
+      ```
+      - file1
+      dir1/
+       - file_in_dir_1
+       - file_in_dir_2
+      dir2/
+       - file_in_dir_3
+      ```
+
+      The output expected is:
+
+      ```
+      dir1
+      dir2
+      file1
+      ```
+
+      (Note that the output is alphabetically sorted, just like the tree objects
+      are stored)
 
     marketing_md: |
       Now that we've learnt how to read/write blobs, let's move onto our next
