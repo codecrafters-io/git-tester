@@ -32,25 +32,25 @@ func newStageRunner(isDebug bool) StageRunner {
 		stages: []Stage{
 			Stage{
 				slug:    "init",
-				name:    "Stage 1: Bind to a port",
+				name:    "Stage 1: Initialize the .git directory",
 				logger:  getLogger(isDebug, "[stage-1] "),
 				runFunc: testInit,
 			},
 			Stage{
 				slug:    "create_blob",
-				name:    "Stage 2: Create Blob",
+				name:    "Stage 2: Create a blob object",
 				logger:  getLogger(isDebug, "[stage-2] "),
 				runFunc: testCreateBlob,
 			},
 			Stage{
 				slug:    "read_blob",
-				name:    "Stage 3: Read Blob",
+				name:    "Stage 3: Read a blob object",
 				logger:  getLogger(isDebug, "[stage-3] "),
 				runFunc: testReadBlob,
 			},
 			Stage{
 				slug:    "read_tree",
-				name:    "Stage 4: Read Tree",
+				name:    "Stage 4: Read a tree object",
 				logger:  getLogger(isDebug, "[stage-4] "),
 				runFunc: testReadTree,
 			},
