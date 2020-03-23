@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -22,10 +23,11 @@ func testReadBlob(executable *Executable, logger *customLogger) error {
 	}
 
 	logger.Debugf("Writing sample file")
-	sampleFile := path.Join(tempDir, "test.txt")
+	sampleFile := path.Join(tempDir, fmt.Sprintf("%s.txt", randomStringShort()))
+	sampleFileContents := randomString()
 	err = ioutil.WriteFile(
-		path.Join(tempDir, "test.txt"),
-		[]byte("testing string"),
+		sampleFile,
+		[]byte(sampleFileContents),
 		os.ModePerm,
 	)
 	if err != nil {
@@ -46,5 +48,5 @@ func testReadBlob(executable *Executable, logger *customLogger) error {
 		return err
 	}
 
-	return assertStdout(result, "testing string")
+	return assertStdout(result, sampleFileContents)
 }

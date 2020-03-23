@@ -2,7 +2,6 @@ package main
 
 import (
 	"io/ioutil"
-	"math/rand"
 	"os"
 	"path"
 	"strings"
@@ -24,10 +23,17 @@ func testReadTree(executable *Executable, logger *customLogger) error {
 
 	logger.Debugf("Writing a tree to git storage..")
 
-	writeFile(tempDir, "file1")
-	writeFile(tempDir, "sample_dir_1/file1")
-	writeFile(tempDir, "sample_dir_2/file2")
-	writeFile(tempDir, "sample_dir_2/file1")
+	rootFile := randomStringShort()
+	rootDir1 := randomStringShort()
+	rootDir1File1 := randomStringShort()
+	rootDir1File2 := randomStringShort()
+	rootDir2 := randomStringShort()
+	rootDir2File1 := randomStringShort()
+
+	writeFile(tempDir, rootFile)
+	writeFile(tempDir, path.Join(rootDir1, rootDir1File1))
+	writeFile(tempDir, path.Join(rootDir1, rootDir1File2))
+	writeFile(tempDir, path.Join(rootDir2, rootDir2File1))
 
 	runGitCmd(tempDir, "add", ".")
 	stdout := runGitCmd(tempDir, "write-tree")
@@ -43,7 +49,8 @@ func testReadTree(executable *Executable, logger *customLogger) error {
 		return err
 	}
 
-	if err = assertStdout(result, "file1\nsample_dir_1\nsample_dir_2\n"); err != nil {
+	expectedStdout := runGitCmd(tempDir, "ls-tree", "--name-only", sha)
+	if err = assertStdout(result, expectedStdout); err != nil {
 		return err
 	}
 
@@ -58,31 +65,4 @@ func writeFile(rootDir string, filepath string) {
 	if err := ioutil.WriteFile(filepath, []byte(randomString()), os.ModePerm); err != nil {
 		panic(err)
 	}
-}
-
-func randomString() string {
-	words := []string{
-		"humpty",
-		"dumpty",
-		"horsey",
-		"donkey",
-		"yikes",
-		"monkey",
-		"doo",
-		"scooby",
-		"dooby",
-		"vanilla",
-	}
-
-	return strings.Join(
-		[]string{
-			words[rand.Intn(10)],
-			words[rand.Intn(10)],
-			words[rand.Intn(10)],
-			words[rand.Intn(10)],
-			words[rand.Intn(10)],
-			words[rand.Intn(10)],
-		},
-		" ",
-	)
 }
