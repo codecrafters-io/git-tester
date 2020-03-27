@@ -23,11 +23,11 @@ func testReadTree(executable *Executable, logger *customLogger) error {
 
 	logger.Debugf("Writing a tree to git storage..")
 
-	rootFile := randomStringShort()
-	rootDir1 := randomStringShort()
-	rootDir1File1 := randomStringShort()
-	rootDir1File2 := randomStringShort()
-	rootDir2 := randomStringShort()
+	rootFile := "root.txt"
+	firstLevel := randomStringsShort(3)
+	rootFile, rootDir1, rootDir2 := firstLevel[0], firstLevel[1], firstLevel[2]
+	secondLevel := randomStringsShort(2)
+	rootDir1File1, rootDir1File2 := secondLevel[0], secondLevel[1]
 	rootDir2File1 := randomStringShort()
 
 	writeFile(tempDir, rootFile)
