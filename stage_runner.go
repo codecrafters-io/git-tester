@@ -54,6 +54,12 @@ func newStageRunner(isDebug bool) StageRunner {
 				logger:  getLogger(isDebug, "[stage-4] "),
 				runFunc: testReadTree,
 			},
+			Stage{
+				slug:    "write_tree",
+				name:    "Stage 5: Write a tree object",
+				logger:  getLogger(isDebug, "[stage-5] "),
+				runFunc: testWriteTree,
+			},
 		},
 	}
 }

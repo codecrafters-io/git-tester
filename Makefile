@@ -15,7 +15,7 @@ test:
 
 test_with_git: build
 	CODECRAFTERS_SUBMISSION_DIR=$(shell pwd)/test_helpers/pass_all \
-	CODECRAFTERS_CURRENT_STAGE_SLUG="read_tree" \
+	CODECRAFTERS_CURRENT_STAGE_SLUG="write_tree" \
 	dist/main.out
 
 copy_course_file:
