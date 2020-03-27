@@ -123,8 +123,8 @@ stages:
       file1
       ```
 
-      (Note that the output is alphabetically sorted, just like the tree objects
-      are stored)
+      (Note that the output is alphabetically sorted, just like in the tree
+      object data)
 
     marketing_md: |
       Now that we've learnt how to read/write blobs, let's move onto our next
@@ -135,7 +135,26 @@ stages:
   - slug: "write_tree"
     name: "Write a tree object"
     description_md: |
-      WIP
+      Now that you know how to read a tree object, let's put your new found
+      skills to test - can you _write_ a tree?
+
+      Here's how the tester will invoke your program:
+
+      ```
+      ./your_git.sh write-tree
+      ```
+
+      You're expected to write the entire working directory as a tree object,
+      and return the 40-char SHA.
+
+      Caveat: Unlike the official Git implementation, we aren't going to
+      implement a staging area (the place where things go when you run `git
+      add`). We'll just assume that all files in the working directory are
+      staged. If you're testing this against `git` locally, make sure to run
+      `git add .` before `git write-tree`. 
+
+      To verify your implementation, the tester will read the tree object from
+      the `.git` directory.
 
     marketing_md: |
       In this stage, you'll write a tree to git storage by implementing the [`git
