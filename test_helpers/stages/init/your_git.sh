@@ -1,3 +1,3 @@
 #!/bin/sh
-export PYTHONPATH="$(dirname "${BASH_SOURCE[0]}")"
+export PYTHONPATH="$(dirname "$0")"
 exec python -m app "$@"
