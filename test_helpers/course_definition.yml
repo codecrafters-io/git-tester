@@ -8,7 +8,7 @@ description_md: |
 
 supported_languages: ["python"]
 starter_repos:
-  go: https://github.com/codecrafters-io/git-starter-python
+  python: https://github.com/codecrafters-io/git-starter-python
   
 marketing_intro_md: |
   In this challenge, you'll build a toy Git implementation that can clone a
@@ -41,8 +41,18 @@ stages:
   - slug: "create_blob"
     name: "Create a blob object"
     description_md: |
-      In this stage, you'll add a file to your git repository by creating a blob
-      object and persisting it in the `.git/objects` directory.
+      In this challenge, we'll deal with three [Git
+      objects](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects):
+
+        - blobs
+        - trees
+        - commits
+
+      Let's start with blobs, which represent files (binary data, to be
+      precise).
+
+      In this stage, you'll add a blob to your git repository by persisting it
+      in the `.git/objects` directory.
 
       You'll do this using the first of multiple ["plumbing"
       commands](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain)
@@ -55,9 +65,13 @@ stages:
       ./your_git.sh hash-object -v <file>
       ```
 
-      It is expected to print a 40-char SHA to stdout. 
+      It is expected to store the data from `<file>` as a blob in `.git/objects`
+      and print a 40-char SHA to stdout.
 
-      To verify, the tester will run the following command:
+      To verify your implementation, the tester will try to read the blob your
+      program wrote. It'll do this using [`git
+      cat-file`](https://git-scm.com/docs/git-cat-file), which prints the
+      contents of a blob.
 
       ```
       git cat-file -p <blob_sha>
@@ -123,8 +137,8 @@ stages:
       file1
       ```
 
-      (Note that the output is alphabetically sorted, just like in the tree
-      object data)
+      (Note that the output is alphabetically sorted, just like the tree objects
+      are stored)
 
     marketing_md: |
       Now that we've learnt how to read/write blobs, let's move onto our next
