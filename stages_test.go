@@ -101,5 +101,7 @@ func runCLIStage(slug string, dir string) (exitCode int) {
 }
 
 func failWithMockerOutput(t *testing.T, m *IOMocker) {
+	m.End()
 	t.Error(fmt.Sprintf("stdout: \n%s\n\nstderr: \n%s", m.ReadStdout(), m.ReadStderr()))
+	t.FailNow()
 }

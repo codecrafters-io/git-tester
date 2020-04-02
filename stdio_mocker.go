@@ -53,10 +53,6 @@ func (m *IOMocker) ReadStderr() string {
 }
 
 func (m *IOMocker) End() {
-	m.originalStdout = os.Stdout
-	m.originalStdin = os.Stdin
-	m.originalStdin = os.Stdin
-
 	os.Stdout = m.originalStdout
 	os.Stdin = m.originalStdin
 	os.Stderr = m.originalStderr
