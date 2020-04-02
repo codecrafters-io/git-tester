@@ -1,3 +1,3 @@
 #!/bin/sh
 export PYTHONPATH="$(dirname "$0")"
-exec python -m app "$@"
+exec python3 -m app "$@"
