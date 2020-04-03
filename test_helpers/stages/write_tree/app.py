@@ -2,6 +2,7 @@ import sys
 import os
 import zlib
 
+from typing import Any
 from dataclasses import dataclass
 
 from binascii import hexlify
@@ -9,7 +10,6 @@ from binascii import hexlify
 import hashlib
 import pathlib
 from io import BytesIO
-
 
 @dataclass
 class TreeEntry:
@@ -23,6 +23,40 @@ class TreeEntry:
     @property
     def is_dir(self):
         return self.mode == "40000"
+
+
+@dataclass
+class Blob():
+    filename: str
+    contents: str
+
+    @classmethod
+    def from_path(cls, path: str):
+        contents = open(path).read()
+        return Blob(filename=os.path.basename(path), contents=contents)
+        
+
+@dataclass
+class Tree():
+    nodes: Any
+
+    @classmethod
+    def from_path(cls, path: str, exclude: [str] = None) -> "Tree":
+        if not exclude:
+            exclude = []
+
+        for root, dirs, files in os.walk(path):
+            return Tree(
+                nodes=[
+                    Tree.from_path(os.path.join(root, _dir)) for _dir in dirs
+                    if _dir not in exclude
+                ] + [
+                    Blob.from_path(os.path.join(root, _file)) for _file in files
+                    if _file not in exclude
+                ]
+            )
+
+            
 
 
 def main():
@@ -79,9 +113,11 @@ def main():
 
         for obj in objs:
             print(obj.filename)
+    elif command == "write-tree":
+        tree = Tree.from_path(".", exclude=[".git"])
+        [print(x) for x in tree.nodes]
     else:
         raise RuntimeError(f"Unknown command: #{command}")
-
 
 def read_until_sep(io: BytesIO, sep: bytes) -> bytes:
     contents = b""

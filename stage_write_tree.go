@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"path"
 	"sort"
@@ -49,10 +50,19 @@ func testWriteTree(executable *Executable, logger *customLogger) error {
 	}
 
 	sha := strings.TrimSpace(string(result.Stdout))
+	if len(sha) != 40 {
+		return fmt.Errorf("Expected a 40-char SHA as output. Got: %v", sha)
+	}
+	logger.Debugf("Running git ls-tree --name-only <sha>")
 	result, err = runGitCmdUnsafe(tempDir, "ls-tree", "--name-only", sha)
 	if err != nil {
 		return err
 	}
+
+	if err = assertExitCode(result, 0); err != nil {
+		return err
+	}
+
 	expectedValues := []string{rootFile, rootDir1, rootDir2}
 	sort.Strings(expectedValues)
 	expectedStdout := strings.Join(
