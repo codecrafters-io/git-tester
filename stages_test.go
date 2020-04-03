@@ -89,6 +89,26 @@ func TestReadTree(t *testing.T) {
 	}
 }
 
+func TestWriteTree(t *testing.T) {
+	m := NewStdIOMocker()
+	m.Start()
+	defer m.End()
+
+	exitCode := runCLIStage("write_tree", "test_helpers/stages/read_tree")
+	if !assert.Equal(t, 1, exitCode) {
+		failWithMockerOutput(t, m)
+	}
+	assert.Contains(t, m.ReadStdout(), "Expected")
+	assert.Contains(t, m.ReadStdout(), "Test failed")
+
+	m.Reset()
+
+	exitCode = runCLIStage("write_tree", "test_helpers/stages/write_tree")
+	if !assert.Equal(t, 0, exitCode) {
+		failWithMockerOutput(t, m)
+	}
+}
+
 func runCLIStage(slug string, dir string) (exitCode int) {
 	cwd, err := os.Getwd()
 	if err != nil {
