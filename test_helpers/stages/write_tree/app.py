@@ -5,9 +5,11 @@ import zlib
 from typing import Any
 from dataclasses import dataclass
 
-from binascii import hexlify
+
+from binascii import hexlify, unhexlify
 
 import hashlib
+
 import pathlib
 from io import BytesIO
 
@@ -35,6 +37,34 @@ class Blob():
         contents = open(path).read()
         return Blob(filename=os.path.basename(path), contents=contents)
         
+    def git_obj_contents(self):
+        header = f"blob {len(self.contents)}\0"
+        return (header + self.contents).encode()
+
+    def sha(self):
+        return hashlib.sha1(self.git_obj_contents()).hexdigest()
+
+@dataclass
+class TreeNode():
+    name: str
+    git_obj: Any
+
+    def is_tree(self):
+        return isinstance(self.git_obj, Tree)
+
+    @classmethod
+    def tree_from_path(cls, path):
+        return TreeNode(
+            name=os.path.basename(path),
+            git_obj=Tree.from_path(path)
+        )
+        
+    @classmethod
+    def blob_from_path(self, path):
+        return TreeNode(
+            name=os.path.basename(path),
+            git_obj=Blob.from_path(path)
+        )
 
 @dataclass
 class Tree():
@@ -48,13 +78,30 @@ class Tree():
         for root, dirs, files in os.walk(path):
             return Tree(
                 nodes=[
-                    Tree.from_path(os.path.join(root, _dir)) for _dir in dirs
+                    TreeNode.tree_from_path(os.path.join(root, _dir)) for _dir in dirs
                     if _dir not in exclude
                 ] + [
-                    Blob.from_path(os.path.join(root, _file)) for _file in files
+                    TreeNode.blob_from_path(os.path.join(root, _file)) for _file in files
                     if _file not in exclude
                 ]
             )
+
+    def git_obj_contents(self):
+        contents = b"".join([
+            f"{self.mode_from_node(node)} {node.name}\0".encode() + unhexlify(node.git_obj.sha().encode())
+            for node in sorted(self.nodes, key=lambda x: x.name)
+        ])
+        header = f"tree {len(contents)}\0".encode()
+        return (header + contents)
+
+    def mode_from_node(self, node):
+        if node.is_tree():
+            return "40000"
+        else:
+            return "100644"
+
+    def sha(self):
+        return hashlib.sha1(self.git_obj_contents()).hexdigest()
 
             
 
@@ -72,15 +119,14 @@ def main():
     elif command == "hash-object":
         assert sys.argv[2] == "-w"
         filepath = sys.argv[3]
-        contents = open(filepath).read()
-        header = f"blob {len(contents)}\0"
-        store = (header + contents).encode()
-        sha = hashlib.sha1(store).hexdigest()
-        print(sha)
-        zlib_store = zlib.compress(store)
+        blob = Blob.from_path(filepath)
+        sha = blob.sha()
         path = f".git/objects/{sha[0:2]}/{sha[2:]}"
         os.makedirs(os.path.dirname(path), exist_ok=True)
+
+        zlib_store = zlib.compress(blob.git_obj_contents())
         open(path, "wb").write(zlib_store)
+        print(sha)
     elif command == "cat-file":
         sha = sys.argv[3]
         obj_path = f".git/objects/{sha[0:2]}/{sha[2:]}"
@@ -115,7 +161,13 @@ def main():
             print(obj.filename)
     elif command == "write-tree":
         tree = Tree.from_path(".", exclude=[".git"])
-        [print(x) for x in tree.nodes]
+        sha = tree.sha()
+        path = f".git/objects/{sha[0:2]}/{sha[2:]}"
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+
+        zlib_store = zlib.compress(tree.git_obj_contents())
+        open(path, "wb").write(zlib_store)
+        print(sha)
     else:
         raise RuntimeError(f"Unknown command: #{command}")
 
