@@ -1,6 +1,6 @@
 # Git Challenge Tester
 
-This is a program that validates your progress on the Git challenge.
+This is a program that validates your progress on the Git challenge. 
 
 # Requirements for binary
 
