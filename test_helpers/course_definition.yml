@@ -1,5 +1,5 @@
 slug: "git"
-name: "Git"
+name: "Build your own Git"
 description_md: |
   In this challenge, you'll build a toy Git implementation that can clone a
   public repository, add commits and push them back to a git server. Along the
@@ -180,13 +180,40 @@ stages:
   - slug: "create_commit"
     name: "Create a commit"
     description_md: |
-      WIP
+      Let's move on to the last git object we'll be dealing with in this
+      challenge: the commit.
+
+      To create a commit, you'll need the following information:
+
+      - Committer/Author name + email
+      - Timestamp
+      - Tree SHA
+      - Parent commit SHA(s), if any
+
+      In this stage, you'll implement `git commit-tree`, a plumbing command that
+      creates a commit. 
+
+      Your program will be invoked like this:
+
+      ```
+      ./your_git.sh commit-tree <tree_sha> -p <commit_sha> -m <message>
+      ```
+
+      You'll receive exactly one parent commit, and exactly one line in the
+      message. You're free to hardcode any valid name/email for the
+      author/committer fields. 
+
+      Your program must create a commit object and print its 40-char SHA to
+      stdout.
+
+      To verify your changes, the tester will read the commit object from the
+      `.git` directory. It'll use the `git show` command to do this.
 
     marketing_md: |
       Let's move on to the last git object we'll be dealing with in this
-      challenge: the commit. In this stage, you'll create a commit with all the
-      changes in the worktree by implementing [`git commit
-      --all`](https://git-scm.com/docs/git-commit).
+      challenge: the commit. In this stage, you'll create a commit by
+      implementing the [`git commit-tree`](https://git-scm.com/docs/git-commit)
+      command.
 
   - slug: "clone_repository"
     name: "Clone a repository"
