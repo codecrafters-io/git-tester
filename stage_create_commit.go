@@ -34,6 +34,7 @@ func testCreateCommit(executable *Executable, logger *customLogger) error {
 	writeFile(tempDir, path.Join(rootDir2, rootDir2File1))
 
 	logger.Debugf("Running git commit --all")
+	runGitCmd(tempDir, "add", ".")
 	runGitCmd(tempDir, "commit", "--all", "-m", "initial commit")
 	parentCommitSha := strings.TrimSpace(runGitCmd(tempDir, "rev-parse", "@"))
 
