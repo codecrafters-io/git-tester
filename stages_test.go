@@ -109,6 +109,28 @@ func TestWriteTree(t *testing.T) {
 	}
 }
 
+func TestCreateCommit(t *testing.T) {
+	m := NewStdIOMocker()
+	m.Start()
+	defer m.End()
+
+	exitCode := runCLIStage("create_commit", "test_helpers/stages/write_tree")
+	if !assert.Equal(t, 1, exitCode) {
+		failWithMockerOutput(t, m)
+	}
+	assert.Contains(t, m.ReadStdout(), "Expected")
+	assert.Contains(t, m.ReadStdout(), "Test failed")
+
+	m.Reset()
+
+	t.Skip("Not done yet")
+
+	exitCode = runCLIStage("create_commit", "test_helpers/stages/create_commit")
+	if !assert.Equal(t, 0, exitCode) {
+		failWithMockerOutput(t, m)
+	}
+}
+
 func runCLIStage(slug string, dir string) (exitCode int) {
 	cwd, err := os.Getwd()
 	if err != nil {
