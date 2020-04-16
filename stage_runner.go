@@ -62,9 +62,15 @@ func newStageRunner(isDebug bool) StageRunner {
 			},
 			Stage{
 				slug:    "create_commit",
-				name:    "Stage 5: Create a commit object",
+				name:    "Stage 6: Create a commit object",
 				logger:  getLogger(isDebug, "[stage-6] "),
 				runFunc: testCreateCommit,
+			},
+			Stage{
+				slug:    "clone_repository",
+				name:    "Stage 7: Clone a repository",
+				logger:  getLogger(isDebug, "[stage-7] "),
+				runFunc: testCloneRepository,
 			},
 		},
 	}

@@ -5,6 +5,14 @@ import (
 	"strings"
 )
 
+func assertEqual(actual string, expected string) error {
+	if expected != actual {
+		return fmt.Errorf("Expected %q as stdout, got: %q", expected, actual)
+	}
+
+	return nil
+}
+
 func assertStdout(result ExecutableResult, expected string) error {
 	actual := string(result.Stdout)
 	if expected != actual {
