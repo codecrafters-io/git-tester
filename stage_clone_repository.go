@@ -60,7 +60,7 @@ var testRepos []TestRepo = []TestRepo{
 		},
 		exampleFiles: []TestFile{
 			TestFile{
-				path:     "onkey/donkey/monkey",
+				path:     "donkey/donkey/monkey",
 				contents: "monkey humpty doo scooby dumpty donkey vanilla horsey dooby",
 			},
 		},
