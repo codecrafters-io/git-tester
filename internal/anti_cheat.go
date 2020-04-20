@@ -1,4 +1,4 @@
-package main
+package internal
 
 func antiCheatRunner() StageRunner {
 	return StageRunner{

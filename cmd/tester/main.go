@@ -3,10 +3,12 @@ package main
 import (
 	"os"
 	"strings"
+
+	"github.com/codecrafters-io/git-tester/internal"
 )
 
 func main() {
-	os.Exit(RunCLI(envMap()))
+	os.Exit(internal.RunCLI(envMap()))
 }
 
 func envMap() map[string]string {

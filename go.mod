@@ -1,4 +1,4 @@
-module github.com/rohitpaulk/git-challenge-tester
+module github.com/codecrafters-io/git-tester
 
 go 1.13
 
