@@ -8,10 +8,11 @@ release:
 	git push origin master v$(next_version_number)
 
 build:
-	go build -o dist/main.out
+	go build -o dist/main.out ./cmd/tester
+	go build -o dist/starter.out ./cmd/starter_tester
 
 test:
-	go test -v
+	go test -v ./internal/
 
 test_with_git: build
 	CODECRAFTERS_SUBMISSION_DIR=$(shell pwd)/test_helpers/pass_all \
