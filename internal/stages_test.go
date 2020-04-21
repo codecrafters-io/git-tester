@@ -29,32 +29,39 @@ func TestInit(t *testing.T) {
 	}
 }
 
-func TestCreateBlob(t *testing.T) {
-	m := NewStdIOMocker()
-	m.Start()
-	defer m.End()
-
-	exitCode := runCLIStage("create_blob", "test_helpers/stages/init")
-	if !assert.Equal(t, 1, exitCode) {
-		failWithMockerOutput(t, m)
-	}
-	assert.Contains(t, m.ReadStdout(), "Expected stdout")
-	assert.Contains(t, m.ReadStdout(), "Test failed")
-
-	m.Reset()
-
-	exitCode = runCLIStage("create_blob", "test_helpers/stages/create_blob")
-	if !assert.Equal(t, 0, exitCode) {
-		failWithMockerOutput(t, m)
-	}
-}
-
 func TestReadBlob(t *testing.T) {
 	m := NewStdIOMocker()
 	m.Start()
 	defer m.End()
 
-	exitCode := runCLIStage("read_blob", "test_helpers/stages/create_blob")
+	exitCode := runCLIStage("read_blob", "test_helpers/stages/init")
+	if !assert.Equal(t, 1, exitCode) {
+		failWithMockerOutput(t, m)
+	}
+	if !assert.Contains(t, m.ReadStdout(), "Expected") {
+		failWithMockerOutput(t, m)
+	}
+	if !assert.Contains(t, m.ReadStdout(), "as stdout") {
+		failWithMockerOutput(t, m)
+	}
+	if !assert.Contains(t, m.ReadStdout(), "Test failed") {
+		failWithMockerOutput(t, m)
+	}
+
+	m.Reset()
+
+	exitCode = runCLIStage("read_blob", "test_helpers/stages/read_blob")
+	if !assert.Equal(t, 0, exitCode) {
+		failWithMockerOutput(t, m)
+	}
+}
+
+func TestCreateBlob(t *testing.T) {
+	m := NewStdIOMocker()
+	m.Start()
+	defer m.End()
+
+	exitCode := runCLIStage("create_blob", "test_helpers/stages/read_blob")
 	if !assert.Equal(t, 1, exitCode) {
 		failWithMockerOutput(t, m)
 	}
@@ -63,7 +70,7 @@ func TestReadBlob(t *testing.T) {
 
 	m.Reset()
 
-	exitCode = runCLIStage("read_blob", "test_helpers/stages/read_blob")
+	exitCode = runCLIStage("create_blob", "test_helpers/stages/create_blob")
 	if !assert.Equal(t, 0, exitCode) {
 		failWithMockerOutput(t, m)
 	}

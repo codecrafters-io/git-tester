@@ -19,7 +19,6 @@ type CourseYAML struct {
 }
 
 func TestStagesMatchYAML(t *testing.T) {
-	t.Skip("All stages not completed yet")
 	bytes, err := ioutil.ReadFile("test_helpers/course_definition.yml")
 	if err != nil {
 		t.Fatal(err)

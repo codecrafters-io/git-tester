@@ -37,16 +37,16 @@ func newStageRunner(isDebug bool) StageRunner {
 				runFunc: testInit,
 			},
 			Stage{
-				slug:    "create_blob",
-				name:    "Stage 2: Create a blob object",
+				slug:    "read_blob",
+				name:    "Stage 2: Read a blob object",
 				logger:  getLogger(isDebug, "[stage-2] "),
-				runFunc: testCreateBlob,
+				runFunc: testReadBlob,
 			},
 			Stage{
-				slug:    "read_blob",
-				name:    "Stage 3: Read a blob object",
+				slug:    "create_blob",
+				name:    "Stage 3: Create a blob object",
 				logger:  getLogger(isDebug, "[stage-3] "),
-				runFunc: testReadBlob,
+				runFunc: testCreateBlob,
 			},
 			Stage{
 				slug:    "read_tree",

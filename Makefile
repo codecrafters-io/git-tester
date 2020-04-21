@@ -24,4 +24,4 @@ copy_course_file:
 		repos/rohitpaulk/codecrafters-server/contents/codecrafters/store/data/git.yml \
 		| jq -r .content \
 		| base64 -d \
-		> test_helpers/course_definition.yml
+		> internal/test_helpers/course_definition.yml

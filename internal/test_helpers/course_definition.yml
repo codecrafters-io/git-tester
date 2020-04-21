@@ -6,9 +6,10 @@ description_md: |
   way, you'll learn about the `.git` directory, Git objects (blobs, commits,
   trees etc.), Git's transfer protocols and much more.
 
-supported_languages: ["python"]
+supported_languages: ["python", "ruby"]
 starter_repos:
   python: https://github.com/codecrafters-io/git-starter-python
+  ruby: https://github.com/codecrafters-io/git-starter-ruby
   
 marketing_intro_md: |
   In this challenge, you'll build a toy Git implementation that can clone a
@@ -28,8 +29,21 @@ stages:
     name: "Initialize the .git directory"
     description_md: |
       In this stage, you'll implement the `git init` command. This command
-      initailizes a repository by creating a `.git` directory and some files
+      initializes a repository by creating a `.git` directory and some files
       inside it.
+
+      You can read more about what's inside the `.git` folder
+      [here](http://gitready.com/advanced/2009/03/23/whats-inside-your-git-directory.html).
+
+      For the purposes of this challenge, you'll only need to create the bare
+      minimum required for Git to function properly:
+
+      ```
+      - .git/
+        - objects/
+        - refs/
+        - HEAD (should contain "ref: refs/heads/master\n")
+      ```
 
       We'd like to make the first stage easy to pass, so we've included steps on
       how to pass this stage in the readme.
@@ -38,8 +52,8 @@ stages:
       In this stage, you'll implement the `git init` command. You'll initialize
       a git repository by creating a `.git` directory and some files inside it.
 
-  - slug: "create_blob"
-    name: "Create a blob object"
+  - slug: "read_blob"
+    name: "Read a blob object"
     description_md: |
       In this challenge, we'll deal with three [Git
       objects](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects):
@@ -51,48 +65,13 @@ stages:
       Let's start with blobs, which represent files (binary data, to be
       precise).
 
-      In this stage, you'll add a blob to your git repository by persisting it
-      in the `.git/objects` directory.
+      In this stage, you'll read a blob from your git repository by fetching its
+      contents from the `.git/objects` directory.
 
       You'll do this using the first of multiple ["plumbing"
       commands](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain)
       we'll encounter in this challenge: [`git
-      hash-object`](https://git-scm.com/docs/git-hash-object).
-
-      Your program will be called like so:
-
-      ```
-      ./your_git.sh hash-object -v <file>
-      ```
-
-      It is expected to store the data from `<file>` as a blob in `.git/objects`
-      and print a 40-char SHA to stdout.
-
-      To verify your implementation, the tester will try to read the blob your
-      program wrote. It'll do this using [`git
-      cat-file`](https://git-scm.com/docs/git-cat-file), which prints the
-      contents of a blob.
-
-      ```
-      git cat-file -p <blob_sha>
-      ```
-
-    marketing_md: |
-      In this stage, you'll add a file to your git repository by creating a blob
-      object and persisting it in the `.git/objects` directory.
-
-      You'll do this using the first of multiple ["plumbing"
-      commands](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain)
-      we'll encounter in thie challenge: [`git
-      hash-object`](https://git-scm.com/docs/git-hash-object).
-
-
-  - slug: "read_blob"
-    name: "Read a blob object"
-    description_md: |
-      In the previous stage, we learnt how to persist a blob. In this stage,
-      we'll read a blob that already exists in storage by implementing the `git
-      cat-file` command.
+      cat-file`](https://git-scm.com/docs/git-cat-file).
 
       Your program will be called like so:
 
@@ -100,10 +79,46 @@ stages:
       ./your_git.sh cat-file -p <blob_sha>
       ```
 
+      It is expected to print out the binary data that the blob contains.
+
     marketing_md: |
-      In the previous stage, we learnt how to persist a blob. In this stage,
-      we'll read a blob that already exists in storage by implementing the `git
-      cat-file` command.
+      In this stage, you'll read a blob from your git repository by fetching its
+      contents from the `.git/objects` directory.
+
+      You'll do this using the first of multiple ["plumbing"
+      commands](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain)
+      we'll encounter in this challenge: [`git
+      cat-file`](https://git-scm.com/docs/git-cat-file).
+
+
+  - slug: "create_blob"
+    name: "Create a blob object"
+    description_md: |
+      In the previous stage, we learnt how to read a blob. In this stage, you'll
+      add a blob to your git repository by implementing the [`git
+      hash-object`](https://git-scm.com/docs/git-hash-object) command.
+
+      Your program will be called like so:
+
+      ```
+      ./your_git.sh hash-object -w <file>
+      ```
+
+      It is expected to store the data from `<file>` as a blob in `.git/objects`
+      and print a 40-char SHA to stdout.
+
+      To verify your implementation, the tester will try to read the blob your
+      program wrote. It'll do this using [`git
+      cat-file`](https://git-scm.com/docs/git-cat-file), the command you
+      implemented in the previous stage.
+
+      ```
+      git cat-file -p <blob_sha>
+      ```
+
+    marketing_md: |
+      In the previous stage, we learnt how to read a blob. In this stage, we'll
+      persist a blob by implementing the `git hash-object` command.
 
   - slug: "read_tree"
     name: "Read a tree object"
@@ -218,21 +233,28 @@ stages:
   - slug: "clone_repository"
     name: "Clone a repository"
     description_md: |
-      WIP
+      This is the last stage of the challenge, and probably the hardest.
+
+      In this stage, you'll clone a public repository from GitHub. To do this,
+      you'll use one of Git's [Transfer
+      protocols](https://git-scm.com/book/en/v2/Git-Internals-Transfer-Protocols).
+
+      Your program will be invoked like this:
+
+      ```
+      ./your_git.sh clone https://github.com/blah/blah <some_dir>
+      ```
+
+      Your program must create `<some_dir>` and clone the given repository into
+      it. 
+
+      To verify your changes, the tester will do the following:
+
+      - Check the contents of a file
+      - Read commit object attributes from the `.git` directory
 
     marketing_md: |
-      Time to interact with the real world! In this stage, you'll clone a public
-      repository from GitHub. To do this, you'll use the [Dumb
-      HTTP](https://git-scm.com/book/en/v2/Git-Internals-Transfer-Protocols)
-      transfer protocol.
-
-  - slug: "push_repository"
-    name: "Push changes to a repository"
-    description_md: |
-      WIP
-
-    marketing_md: |
-      This is the last stage of the challenge, and probably the hardest. You'll
-      implement the equivalent of `git push`, using the [Smart
-      HTTP](https://git-scm.com/book/en/v2/Git-on-the-Server-The-Protocols)
-      transfer protocol.
+      This is the last stage of the challenge, and probably the hardest! In this
+      stage, you'll clone a public repository from GitHub. To do this, you'll
+      use one of Git's [Transfer
+      protocols](https://git-scm.com/book/en/v2/Git-Internals-Transfer-Protocols).
