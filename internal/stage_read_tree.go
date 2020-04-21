@@ -1,10 +1,19 @@
 package internal
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
-	"strings"
+	"time"
+
+	"github.com/go-git/go-billy/v5/osfs"
+	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/go-git/go-git/v5/plumbing/cache"
+	"github.com/go-git/go-git/v5/plumbing/object"
+	"github.com/go-git/go-git/v5/storage/filesystem"
+	"github.com/go-git/go-git/v5/storage/filesystem/dotgit"
 )
 
 func testReadTree(executable *Executable, logger *customLogger) error {
@@ -35,23 +44,63 @@ func testReadTree(executable *Executable, logger *customLogger) error {
 	writeFile(tempDir, path.Join(rootDir1, rootDir1File2))
 	writeFile(tempDir, path.Join(rootDir2, rootDir2File1))
 
-	runGitCmd(tempDir, "add", ".")
-	stdout := runGitCmd(tempDir, "write-tree")
-	sha := strings.TrimSpace(stdout)
+	repository, err := git.PlainOpen(tempDir)
+	if err != nil {
+		return err
+	}
 
-	logger.Debugf("Running ./your_git.sh ls-tree --name-only")
+	w, err := repository.Worktree()
+	if err != nil {
+		return err
+	}
+
+	if err = w.AddGlob("."); err != nil {
+		return err
+	}
+
+	commitHash, err := w.Commit("test", &git.CommitOptions{
+		Author: &object.Signature{
+			Name:  "test",
+			Email: "test",
+			When:  time.Now(),
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	commit, err := repository.CommitObject(commitHash)
+	if err != nil {
+		return err
+	}
+
+	sha := commit.TreeHash.String()
+	logger.Debugf("Running ./your_git.sh ls-tree --name-only %s", sha)
 	result, err := executable.Run("ls-tree", "--name-only", sha)
 	if err != nil {
 		return err
 	}
 
-	if err = assertExitCode(result, 0); err != nil {
+	storage := filesystem.NewObjectStorage(
+		dotgit.New(osfs.New(path.Join(tempDir, ".git"))),
+		cache.NewObjectLRU(0),
+	)
+	tree, err := object.GetTree(storage, plumbing.NewHash(sha))
+	if err != nil {
 		return err
 	}
 
-	expectedStdout := runGitCmd(tempDir, "ls-tree", "--name-only", sha)
-	if err = assertStdout(result, expectedStdout); err != nil {
-		return err
+	expected := ""
+
+	for _, entry := range tree.Entries {
+		expected += entry.Name
+		expected += "\n"
+	}
+
+	actual := string(result.Stdout)
+
+	if expected != actual {
+		return fmt.Errorf("Expected %q as stdout, got: %q", expected, actual)
 	}
 
 	return nil
