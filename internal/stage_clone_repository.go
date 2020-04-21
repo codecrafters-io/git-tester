@@ -6,6 +6,9 @@ import (
 	"math/rand"
 	"path"
 	"time"
+
+	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
 )
 
 type TestFile struct {
@@ -93,26 +96,28 @@ func testCloneRepository(executable *Executable, logger *customLogger) error {
 	}
 
 	repoDir := path.Join(tempDir, "test_dir")
+	r, err := git.PlainOpen(repoDir)
+	if err != nil {
+		return err
+	}
 
 	// Test a commit
 	commit_sha := testRepo.randomCommit()
 
 	logger.Debugf("Running git cat-file commit %s", commit_sha)
-	result, err = runGitCmdUnsafe(repoDir, "cat-file", "commit", commit_sha)
+
+	commit, err := r.CommitObject(plumbing.NewHash(commit_sha))
 	if err != nil {
 		return err
 	}
 
-	if err = assertExitCode(result, 0); err != nil {
-		return err
-	}
-
-	if err = assertStdoutContains(result, "author Paul Kuruvilla"); err != nil {
-		return err
+	expected, actual := "Paul Kuruvilla", commit.Author.Name
+	if expected != actual {
+		return fmt.Errorf("Expected '%s' as author name, got: '%s'", expected, actual)
 	}
 	logger.Successf("Commit contents verified")
 
-	// Test a commit
+	// Test a file
 	testFile := testRepo.randomFile()
 
 	logger.Debugf("Reading contents of a sample file")
@@ -121,9 +126,7 @@ func testCloneRepository(executable *Executable, logger *customLogger) error {
 		return err
 	}
 
-	expected := testFile.contents
-	actual := string(bytes)
-
+	expected, actual = testFile.contents, string(bytes)
 	if expected != actual {
 		return fmt.Errorf("Expected '%s' as file contents, got: '%s'", expected, actual)
 	}
