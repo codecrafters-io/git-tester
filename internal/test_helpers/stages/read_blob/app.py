@@ -27,7 +27,7 @@ def main():
         zlib_store = zlib.compress(store)
         path = f".git/objects/{sha[0:2]}/{sha[2:]}"
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        open(path, "wb").write(zlib_store).close()
+        open(path, "wb").write(zlib_store)
     elif command == "cat-file":
         sha = sys.argv[3]
         obj_path = f".git/objects/{sha[0:2]}/{sha[2:]}"

@@ -28,6 +28,6 @@ elif command == "hash-object":
     zlib_store = zlib.compress(store)
     path = f".git/objects/{sha[0:2]}/{sha[2:]}"
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    open(path, "wb").write(zlib_store).close()
+    open(path, "wb").write(zlib_store)
 else:
     raise RuntimeError(f"Unknown command: #{command}")
