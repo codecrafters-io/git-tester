@@ -5,7 +5,12 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
-	"strings"
+
+	"github.com/go-git/go-billy/v5/osfs"
+	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/go-git/go-git/v5/plumbing/cache"
+	"github.com/go-git/go-git/v5/storage/filesystem"
+	"github.com/go-git/go-git/v5/storage/filesystem/dotgit"
 )
 
 func testReadBlob(executable *Executable, logger *customLogger) error {
@@ -33,13 +38,34 @@ func testReadBlob(executable *Executable, logger *customLogger) error {
 	if err != nil {
 		return err
 	}
+	expectedSha := plumbing.ComputeHash(plumbing.BlobObject, []byte(sampleFileContents))
 
-	logger.Debugf("Running git hash-object -w <file>")
-	stdout := runGitCmd(tempDir, "hash-object", "-w", sampleFile)
-	sha := strings.TrimSpace(stdout)
+	storage := filesystem.NewObjectStorage(
+		dotgit.New(osfs.New(path.Join(tempDir, ".git"))),
+		cache.NewObjectLRU(0),
+	)
+	obj := storage.NewEncodedObject()
+	obj.SetType(plumbing.BlobObject)
+	writer, err := obj.Writer()
+	if err != nil {
+		return err
+	}
 
-	logger.Debugf("Running ./your_git.sh cat-file -p <sha>")
-	result, err := executable.Run("cat-file", "-p", sha)
+	if _, err := writer.Write([]byte(sampleFileContents)); err != nil {
+		return err
+	}
+
+	hash, err := storage.SetEncodedObject(obj)
+	if err != nil {
+		return err
+	}
+
+	if hash != expectedSha {
+		panic("Expected sha doesn't match!")
+	}
+
+	logger.Debugf("Running ./your_git.sh cat-file -p %s", expectedSha.String())
+	result, err := executable.Run("cat-file", "-p", expectedSha.String())
 	if err != nil {
 		return err
 	}
