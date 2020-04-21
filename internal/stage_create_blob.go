@@ -5,7 +5,9 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
-	"strings"
+
+	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
 )
 
 func testCreateBlob(executable *Executable, logger *customLogger) error {
@@ -34,19 +36,10 @@ func testCreateBlob(executable *Executable, logger *customLogger) error {
 		return err
 	}
 
+	expectedSha := plumbing.ComputeHash(plumbing.BlobObject, []byte(sampleFileContents))
+
 	logger.Debugf("Running ./your_git.sh hash-object -w <file>")
 	result, err := executable.Run("hash-object", "-w", sampleFile)
-	if err != nil {
-		return err
-	}
-
-	expectedSha := strings.TrimSpace(runGitCmd(tempDir, "hash-object", sampleFile))
-	if err = assertStdoutContains(result, expectedSha); err != nil {
-		return err
-	}
-
-	logger.Debugf("Running git cat-file -p <sha>")
-	result, err = runGitCmdUnsafe(tempDir, "cat-file", "-p", expectedSha)
 	if err != nil {
 		return err
 	}
@@ -55,5 +48,36 @@ func testCreateBlob(executable *Executable, logger *customLogger) error {
 		return err
 	}
 
-	return assertStdout(result, sampleFileContents)
+	if err = assertStdoutContains(result, expectedSha.String()); err != nil {
+		return err
+	}
+
+	logger.Debugf("Running git cat-file -p %s", expectedSha.String())
+	r, err := git.PlainOpen(tempDir)
+	if err != nil {
+		return err
+	}
+
+	blob, err := r.BlobObject(expectedSha)
+	if err != nil {
+		return err
+	}
+
+	blobReader, err := blob.Reader()
+	if err != nil {
+		return err
+	}
+
+	bytes, err := ioutil.ReadAll(blobReader)
+	if err != nil {
+		return err
+	}
+
+	expected, actual := sampleFileContents, string(bytes)
+
+	if expected != actual {
+		return fmt.Errorf("Expected %q as file contents, got: %q", expected, actual)
+	}
+
+	return nil
 }
