@@ -6,6 +6,8 @@ import (
 	"os"
 	"path"
 
+	tester_utils "github.com/codecrafters-io/tester-utils"
+
 	"github.com/go-git/go-billy/v5/osfs"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/cache"
@@ -13,7 +15,10 @@ import (
 	"github.com/go-git/go-git/v5/storage/filesystem/dotgit"
 )
 
-func testReadBlob(executable *Executable, logger *customLogger) error {
+func testReadBlob(stageHarness tester_utils.StageHarness) error {
+	logger := stageHarness.Logger
+	executable := stageHarness.Executable
+
 	tempDir, err := ioutil.TempDir("", "worktree")
 	if err != nil {
 		return err

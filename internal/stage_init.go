@@ -5,9 +5,14 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+
+	tester_utils "github.com/codecrafters-io/tester-utils"
 )
 
-func testInit(executable *Executable, logger *customLogger) error {
+func testInit(stageHarness tester_utils.StageHarness) error {
+	logger := stageHarness.Logger
+	executable := stageHarness.Executable
+
 	logger.Debugf("Running git init")
 	tempDir, err := ioutil.TempDir("", "worktree")
 	if err != nil {
@@ -82,12 +87,12 @@ func assertFileExistsInDir(parent string, child string) error {
 	return nil
 }
 
-func logDebugTree(logger *customLogger, dir string) {
+func logDebugTree(logger *tester_utils.Logger, dir string) {
 	logger.Debugf("Files found in directory: ")
 	doLogDebugTree(logger, dir, " ")
 }
 
-func doLogDebugTree(logger *customLogger, dir string, prefix string) {
+func doLogDebugTree(logger *tester_utils.Logger, dir string, prefix string) {
 	entries, err := ioutil.ReadDir(dir)
 	if err != nil {
 		panic(err)
