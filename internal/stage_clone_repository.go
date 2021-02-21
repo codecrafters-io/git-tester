@@ -7,6 +7,8 @@ import (
 	"path"
 	"time"
 
+	tester_utils "github.com/codecrafters-io/tester-utils"
+
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 )
@@ -75,7 +77,10 @@ func randomRepo() TestRepo {
 	return testRepos[rand.Intn(3)]
 }
 
-func testCloneRepository(executable *Executable, logger *customLogger) error {
+func testCloneRepository(stageHarness tester_utils.StageHarness) error {
+	logger := stageHarness.Logger
+	executable := stageHarness.Executable
+
 	tempDir, err := ioutil.TempDir("", "worktree")
 	if err != nil {
 		return err

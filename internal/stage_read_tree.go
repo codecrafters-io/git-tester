@@ -7,6 +7,7 @@ import (
 	"path"
 	"time"
 
+	tester_utils "github.com/codecrafters-io/tester-utils"
 	"github.com/go-git/go-billy/v5/osfs"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
@@ -16,7 +17,10 @@ import (
 	"github.com/go-git/go-git/v5/storage/filesystem/dotgit"
 )
 
-func testReadTree(executable *Executable, logger *customLogger) error {
+func testReadTree(stageHarness tester_utils.StageHarness) error {
+	logger := stageHarness.Logger
+	executable := stageHarness.Executable
+
 	tempDir, err := ioutil.TempDir("", "worktree")
 	if err != nil {
 		return err
