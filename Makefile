@@ -17,6 +17,7 @@ test:
 test_with_git: build
 	CODECRAFTERS_SUBMISSION_DIR=$(shell pwd)/internal/test_helpers/pass_all \
 	CODECRAFTERS_CURRENT_STAGE_SLUG="clone_repository" \
+	CODECRAFTERS_COURSE_PAGE_URL="test" \
 	dist/main.out
 
 copy_course_file:
