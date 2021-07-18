@@ -146,6 +146,7 @@ func runCLIStage(slug string, dir string) (exitCode int) {
 	return RunCLI(map[string]string{
 		"CODECRAFTERS_CURRENT_STAGE_SLUG": slug,
 		"CODECRAFTERS_SUBMISSION_DIR":     path.Join(cwd, dir),
+		"CODECRAFTERS_COURSE_PAGE_URL":    "test",
 	})
 }
 

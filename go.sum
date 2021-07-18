@@ -6,6 +6,8 @@ github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5 h1:0CwZNZbxp69SHPd
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5/go.mod h1:wHh0iHkYZB8zMSxRWpUBQtwG5a7fFgvEO+odwuTv2gs=
 github.com/codecrafters-io/tester-utils v0.1.4 h1:mSCe3RkibLfc02nq3H6JGaQN4JetZX1hvkHEF1LIVWI=
 github.com/codecrafters-io/tester-utils v0.1.4/go.mod h1:VifsWEvXrRB18l2+rkE7gwuzWRhGX4AffJ01VTgMYfw=
+github.com/codecrafters-io/tester-utils v0.1.8 h1:VeAU3SoTemNrm4PlHJz0nSDBUhNWtfsiAX0lDrxUCIY=
+github.com/codecrafters-io/tester-utils v0.1.8/go.mod h1:VifsWEvXrRB18l2+rkE7gwuzWRhGX4AffJ01VTgMYfw=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
