@@ -29,10 +29,10 @@ func testCreateBlob(stageHarness tester_utils.StageHarness) error {
 	}
 
 	logger.Debugf("Writing sample file")
-	sampleFile := path.Join(tempDir, fmt.Sprintf("%s.txt", randomStringShort()))
+	sampleFileName := fmt.Sprintf("%s.txt", randomStringShort())
 	sampleFileContents := randomString()
 	err = ioutil.WriteFile(
-		sampleFile,
+		path.Join(tempDir, sampleFileName),
 		[]byte(sampleFileContents),
 		os.ModePerm,
 	)
@@ -42,8 +42,8 @@ func testCreateBlob(stageHarness tester_utils.StageHarness) error {
 
 	expectedSha := plumbing.ComputeHash(plumbing.BlobObject, []byte(sampleFileContents))
 
-	logger.Debugf("Running ./your_git.sh hash-object -w <file>")
-	result, err := executable.Run("hash-object", "-w", sampleFile)
+	logger.Debugf("Running ./your_git.sh hash-object -w %s", sampleFileName)
+	result, err := executable.Run("hash-object", "-w", sampleFileName)
 	if err != nil {
 		return err
 	}
