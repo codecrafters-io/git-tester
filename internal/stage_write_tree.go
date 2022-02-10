@@ -18,7 +18,7 @@ import (
 	"github.com/go-git/go-git/v5/storage/filesystem/dotgit"
 )
 
-func testWriteTree(stageHarness tester_utils.StageHarness) error {
+func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 	logger := stageHarness.Logger
 	executable := stageHarness.Executable
 

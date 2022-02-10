@@ -11,7 +11,7 @@ import (
 	"github.com/go-git/go-git/v5/plumbing"
 )
 
-func testCreateBlob(stageHarness tester_utils.StageHarness) error {
+func testCreateBlob(stageHarness *tester_utils.StageHarness) error {
 	logger := stageHarness.Logger
 	executable := stageHarness.Executable
 

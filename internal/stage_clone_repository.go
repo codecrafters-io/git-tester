@@ -77,7 +77,7 @@ func randomRepo() TestRepo {
 	return testRepos[rand.Intn(3)]
 }
 
-func testCloneRepository(stageHarness tester_utils.StageHarness) error {
+func testCloneRepository(stageHarness *tester_utils.StageHarness) error {
 	logger := stageHarness.Logger
 	executable := stageHarness.Executable
 
