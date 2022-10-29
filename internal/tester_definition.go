@@ -40,7 +40,7 @@ var testerDefinition = testerutils.TesterDefinition{
 		},
 		{
 			Slug:                    "create_commit",
-			Title:                   "Create a commit object",
+			Title:                   "Create a commit",
 			TestFunc:                testCreateCommit,
 			ShouldRunPreviousStages: true,
 		},
