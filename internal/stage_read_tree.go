@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"path"
+	"path/filepath"
 	"time"
 
 	tester_utils "github.com/codecrafters-io/tester-utils"
@@ -44,9 +44,9 @@ func testReadTree(stageHarness *tester_utils.StageHarness) error {
 	rootDir2File1 := randomStringShort()
 
 	writeFile(tempDir, rootFile)
-	writeFile(tempDir, path.Join(rootDir1, rootDir1File1))
-	writeFile(tempDir, path.Join(rootDir1, rootDir1File2))
-	writeFile(tempDir, path.Join(rootDir2, rootDir2File1))
+	writeFile(tempDir, filepath.Join(rootDir1, rootDir1File1))
+	writeFile(tempDir, filepath.Join(rootDir1, rootDir1File2))
+	writeFile(tempDir, filepath.Join(rootDir2, rootDir2File1))
 
 	repository, err := git.PlainOpen(tempDir)
 	if err != nil {
@@ -86,7 +86,7 @@ func testReadTree(stageHarness *tester_utils.StageHarness) error {
 	}
 
 	storage := filesystem.NewObjectStorage(
-		dotgit.New(osfs.New(path.Join(tempDir, ".git"))),
+		dotgit.New(osfs.New(filepath.Join(tempDir, ".git"))),
 		cache.NewObjectLRU(0),
 	)
 	tree, err := object.GetTree(storage, plumbing.NewHash(sha))
@@ -111,11 +111,15 @@ func testReadTree(stageHarness *tester_utils.StageHarness) error {
 }
 
 func writeFile(rootDir string, filepath string) {
-	filepath = path.Join(rootDir, filepath)
-	if err := os.MkdirAll(path.Dir(filepath), 0700); err != nil {
+	writeFileContent(rootDir, filepath, randomString())
+}
+
+func writeFileContent(rootDir string, filePath, content string) {
+	filePath = filepath.Join(rootDir, filePath)
+	if err := os.MkdirAll(filepath.Dir(filePath), 0700); err != nil {
 		panic(err)
 	}
-	if err := ioutil.WriteFile(filepath, []byte(randomString()), os.ModePerm); err != nil {
+	if err := ioutil.WriteFile(filePath, []byte(content), os.ModePerm); err != nil {
 		panic(err)
 	}
 }
