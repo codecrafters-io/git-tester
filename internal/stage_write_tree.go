@@ -85,9 +85,15 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 		dotgit.New(osfs.New(path.Join(tempDir, ".git"))),
 		cache.NewObjectLRU(0),
 	)
-	tree, err := object.GetTree(storage, plumbing.NewHash(sha))
+
+	obj, err := storage.EncodedObject(plumbing.TreeObject, plumbing.NewHash(sha))
 	if err != nil {
-		return err
+		return fmt.Errorf("not a valid object name (no such object): %s", sha)
+	}
+
+	tree, err := object.DecodeTree(storage, obj)
+	if err != nil {
+		return fmt.Errorf("malformed tree object")
 	}
 
 	actual := ""
