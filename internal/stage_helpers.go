@@ -19,37 +19,57 @@ var randomWords = []string{
 	"vanilla",
 }
 
-func randomString() string {
+func init() {
 	rand.Seed(time.Now().UnixNano())
+}
 
+func randomWord() string {
+	return randomWords[rand.Intn(len(randomWords))]
+
+}
+
+func randomString() string {
 	return strings.Join(
 		[]string{
-			randomWords[rand.Intn(10)],
-			randomWords[rand.Intn(10)],
-			randomWords[rand.Intn(10)],
-			randomWords[rand.Intn(10)],
-			randomWords[rand.Intn(10)],
-			randomWords[rand.Intn(10)],
+			randomWord(),
+			randomWord(),
+			randomWord(),
+			randomWord(),
+			randomWord(),
+			randomWord(),
 		},
 		" ",
 	)
 }
 
 func randomStringShort() string {
-	rand.Seed(time.Now().UnixNano())
-	return randomWords[rand.Intn(10)]
+	return randomWord()
 }
 
 func randomStringsShort(n int) []string {
-	return shuffle(randomWords)[0:n]
+	return shuffle(randomWords, n)
 }
 
-func shuffle(vals []string) []string {
-	r := rand.New(rand.NewSource(time.Now().Unix()))
-	ret := make([]string, len(vals))
-	perm := r.Perm(len(vals))
-	for i, randIndex := range perm {
+func shuffle(vals []string, n int) []string {
+	if n > len(vals) {
+		panic("don't have so many words")
+	}
+
+	ret := make([]string, n)
+
+	for i, randIndex := range rand.Perm(len(vals))[:n] {
 		ret[i] = vals[randIndex]
 	}
+
 	return ret
+}
+
+func randomStrings(n int) []string {
+	l := make([]string, n)
+
+	for i := range l {
+		l[i] = randomString()
+	}
+
+	return l
 }
