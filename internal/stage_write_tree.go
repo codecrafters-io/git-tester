@@ -3,10 +3,14 @@ package internal
 import (
 	"fmt"
 	"io/ioutil"
+	"math/rand"
+	"os"
 	"path"
 	"sort"
 	"strings"
+	"time"
 
+	"github.com/codecrafters-io/git-tester/tester"
 	tester_utils "github.com/codecrafters-io/tester-utils"
 
 	"github.com/go-git/go-billy/v5/osfs"
@@ -18,7 +22,82 @@ import (
 	"github.com/go-git/go-git/v5/storage/filesystem/dotgit"
 )
 
-func testWriteTree(stageHarness *tester_utils.StageHarness) error {
+func testWriteTree(stageHarness *tester_utils.StageHarness) (err error) {
+	logger := stageHarness.Logger
+
+	tempDir, err := ioutil.TempDir("", "git-tester")
+	if err != nil {
+		return fmt.Errorf("create temp dir: %w", err)
+	}
+
+	defer func() {
+		e := os.RemoveAll(tempDir)
+		if err == nil && e != nil {
+			err = fmt.Errorf("remove temp dir: %w", e)
+		}
+	}()
+
+	git := tester_utils.NewExecutable(envOrPanic("CODECRAFTERS_GIT"))
+
+	t, err := tester.New(
+		tempDir,
+		git,                     // canonical command
+		stageHarness.Executable, // testable
+	)
+	if err != nil {
+		return fmt.Errorf("make tester: %w", err)
+	}
+
+	logger.Debugf("Running ./your_git.sh init")
+
+	_, err = t.Run("init")
+	if err != nil {
+		return err
+	}
+
+	seed := time.Now().UnixNano()
+
+	t.Do(func(cmd *tester_utils.Executable) error {
+		r := rand.New(rand.NewSource(seed))
+
+		content := randomLongStringsRand(4, r)
+
+		root := randomStringsRand(3, r) // file1, dir1, dir2
+
+		dir1 := randomStringsRand(2, r) // file2, file3
+		dir2 := randomStringsRand(1, r) // file4
+
+		writeFileContent(content[0], cmd.WorkingDir, root[0])
+		writeFileContent(content[1], cmd.WorkingDir, root[1], dir1[0])
+		writeFileContent(content[2], cmd.WorkingDir, root[1], dir1[1])
+		writeFileContent(content[3], cmd.WorkingDir, root[2], dir2[0])
+
+		return nil
+	})
+
+	_, err = t.DoOnlyArgs(0, "add", ".")
+	if err != nil {
+		return err
+	}
+
+	logger.Debugf("Running ./your_git.sh write-tree")
+
+	sha, err := t.Run("write-tree")
+	if err != nil {
+		return err
+	}
+
+	logger.Debugf("Running ./your_git.sh ls-tree --name-only %v", string(sha))
+
+	_, err = t.Run("ls-tree", "--name-only", string(sha))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func testWriteTree0(stageHarness *tester_utils.StageHarness) error {
 	logger := stageHarness.Logger
 	executable := stageHarness.Executable
 
@@ -114,4 +193,13 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 	}
 
 	return nil
+}
+
+func envOrPanic(key string) string {
+	res := os.Getenv(key)
+	if res == "" {
+		panic(key + " is not set")
+	}
+
+	return res
 }

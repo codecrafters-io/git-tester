@@ -111,11 +111,11 @@ func testReadTree(stageHarness *tester_utils.StageHarness) error {
 }
 
 func writeFile(rootDir string, filepath string) {
-	writeFileContent(rootDir, filepath, randomString())
+	writeFileContent(randomString(), rootDir, filepath)
 }
 
-func writeFileContent(rootDir string, filePath, content string) {
-	filePath = filepath.Join(rootDir, filePath)
+func writeFileContent(content string, path ...string) {
+	filePath := filepath.Join(path...)
 	if err := os.MkdirAll(filepath.Dir(filePath), 0700); err != nil {
 		panic(err)
 	}
