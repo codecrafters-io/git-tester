@@ -3,15 +3,18 @@ package internal
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"os"
 	"path"
 	"sort"
 	"strings"
 	"time"
+	"unsafe"
 
 	"github.com/codecrafters-io/git-tester/tester"
 	tester_utils "github.com/codecrafters-io/tester-utils"
+	"github.com/fatih/color"
 
 	"github.com/go-git/go-billy/v5/osfs"
 	"github.com/go-git/go-git/v5"
@@ -37,27 +40,43 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) (err error) {
 		}
 	}()
 
-	git := tester_utils.NewExecutable(envOrPanic("CODECRAFTERS_GIT"))
+	git, err := tester.NewCommand(envOrPanic("CODECRAFTERS_GIT"))
+	if err != nil {
+		return fmt.Errorf("init git: %w", err)
+	}
+
+	prefix := color.New(color.FgYellow).Sprint("[your_program]") + " "
+	userLogger := log.New(os.Stdout, prefix, 0)
+
+	userProg, err := tester.NewCommand(
+		extractPath(stageHarness.Executable),
+		tester.WithLogger(userLogger),
+	)
+	if err != nil {
+		return fmt.Errorf("init user prog: %w", err)
+	}
 
 	t, err := tester.New(
 		tempDir,
-		git,                     // canonical command
-		stageHarness.Executable, // testable
+		git,      // canonical command
+		userProg, // testable
 	)
 	if err != nil {
 		return fmt.Errorf("make tester: %w", err)
 	}
 
+	t.Logger = (*log.Logger)(unsafe.Pointer(logger))
+
 	logger.Debugf("Running ./your_git.sh init")
 
-	_, err = t.Run("init")
+	_, err = t.Run("init", tester.CheckExitCode)
 	if err != nil {
 		return err
 	}
 
 	seed := time.Now().UnixNano()
 
-	t.Do(func(cmd *tester_utils.Executable) error {
+	t.Do(func(cmd *tester.Command) error {
 		r := rand.New(rand.NewSource(seed))
 
 		content := randomLongStringsRand(4, r)
@@ -67,10 +86,10 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) (err error) {
 		dir1 := randomStringsRand(2, r) // file2, file3
 		dir2 := randomStringsRand(1, r) // file4
 
-		writeFileContent(content[0], cmd.WorkingDir, root[0])
-		writeFileContent(content[1], cmd.WorkingDir, root[1], dir1[0])
-		writeFileContent(content[2], cmd.WorkingDir, root[1], dir1[1])
-		writeFileContent(content[3], cmd.WorkingDir, root[2], dir2[0])
+		writeFileContent(content[0], cmd.WorkDir, root[0])
+		writeFileContent(content[1], cmd.WorkDir, root[1], dir1[0])
+		writeFileContent(content[2], cmd.WorkDir, root[1], dir1[1])
+		writeFileContent(content[3], cmd.WorkDir, root[2], dir2[0])
 
 		return nil
 	})
@@ -82,14 +101,20 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) (err error) {
 
 	logger.Debugf("Running ./your_git.sh write-tree")
 
-	sha, err := t.Run("write-tree")
+	sha, err := t.Run("write-tree",
+		tester.CheckExitCode,
+	//	tester.CheckOutput,
+	)
 	if err != nil {
 		return err
 	}
 
 	logger.Debugf("Running ./your_git.sh ls-tree --name-only %v", string(sha))
 
-	_, err = t.Run("ls-tree", "--name-only", string(sha))
+	_, err = t.Run("ls-tree", "--name-only", string(sha),
+		tester.CheckExitCode,
+		tester.CheckOutput,
+	)
 	if err != nil {
 		return err
 	}
@@ -202,4 +227,14 @@ func envOrPanic(key string) string {
 	}
 
 	return res
+}
+
+func extractPath(e *tester_utils.Executable) string {
+	type dummy struct {
+		Path string
+	}
+
+	d := (*dummy)(unsafe.Pointer(e))
+
+	return d.Path
 }
