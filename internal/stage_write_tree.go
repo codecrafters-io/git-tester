@@ -40,7 +40,9 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) (err error) {
 		}
 	}()
 
-	git, err := tester.NewCommand(envOrPanic("CODECRAFTERS_GIT"))
+	gitpath := envOrPanic("CODECRAFTERS_GIT")
+
+	git, err := tester.NewCommand(gitpath)
 	if err != nil {
 		return fmt.Errorf("init git: %w", err)
 	}
@@ -67,16 +69,18 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) (err error) {
 
 	t.Logger = (*log.Logger)(unsafe.Pointer(logger))
 
-	logger.Debugf("Running ./your_git.sh init")
+	t.Logf("Running command: init")
 
-	_, err = t.Run("init", tester.CheckExitCode)
+	err = t.Run("init", tester.CheckExitCode)
 	if err != nil {
 		return err
 	}
 
 	seed := time.Now().UnixNano()
 
-	t.Do(func(cmd *tester.Command) error {
+	t.Logf("Crafting some files")
+
+	err = t.Do(func(cmd *tester.Command, _ int) error {
 		r := rand.New(rand.NewSource(seed))
 
 		content := randomLongStringsRand(4, r)
@@ -93,28 +97,38 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) (err error) {
 
 		return nil
 	})
+	if err != nil {
+		return fmt.Errorf("craft some files: %w", err)
+	}
 
-	_, err = t.DoOnlyArgs(0, "add", ".")
+	err = t.RunI(0, "add", ".")
 	if err != nil {
 		return err
 	}
 
-	logger.Debugf("Running ./your_git.sh write-tree")
+	t.Logf("Running command: write-tree")
 
-	sha, err := t.Run("write-tree",
-		tester.CheckExitCode,
-	//	tester.CheckOutput,
-	)
+	err = t.Run("write-tree", tester.CheckExitCode)
 	if err != nil {
 		return err
 	}
 
-	logger.Debugf("Running ./your_git.sh ls-tree --name-only %v", string(sha))
+	sha := t.AllStdouts()
 
-	_, err = t.Run("ls-tree", "--name-only", string(sha),
-		tester.CheckExitCode,
-		tester.CheckOutput,
-	)
+	t.Logf("Running command: ls-tree --name-only %s", sha[1])
+
+	err = t.Do(func(cmd *tester.Command, i int) error {
+		return cmd.Run("ls-tree", "--name-only", sha[i])
+	}, tester.CheckExitCode, tester.CheckOutput)
+	if err != nil {
+		return err
+	}
+
+	t.Logf("Running crosscheck: ls-tree --name-only %s. We run canonical git on files created by git of yours", sha[1])
+
+	err = t.CrossDo(func(cmd *tester.Command, i int) error {
+		return cmd.Run("ls-tree", "--name-only", sha[i])
+	}, tester.CheckExitCode, tester.CheckOutput)
 	if err != nil {
 		return err
 	}

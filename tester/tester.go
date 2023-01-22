@@ -9,7 +9,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 	"time"
 )
 
@@ -28,7 +27,7 @@ type (
 		Path    string
 		WorkDir string
 
-		*log.Logger
+		Logger *log.Logger
 
 		*exec.Cmd
 
@@ -63,13 +62,14 @@ func New(basedir string, commands ...*Command) (*Tester, error) {
 	}
 
 	for _, cmd := range t.commands {
-		wd, err := os.MkdirTemp(basedir, cmd.Name())
+		cmd.WorkDir = filepath.Join(basedir, cmd.Name())
+
+		err := os.Mkdir(cmd.WorkDir, 0755)
 		if err != nil {
 			return nil, fmt.Errorf("create temp dir: %w", err)
 		}
 
 		cmd.tester = t
-		cmd.WorkDir = wd
 	}
 
 	t.want = t.commands[0]
@@ -77,39 +77,48 @@ func New(basedir string, commands ...*Command) (*Tester, error) {
 	return t, nil
 }
 
-func (t *Tester) Run(args ...interface{}) (out []byte, err error) {
+func (t *Tester) Logf(format string, args ...interface{}) {
+	if t.Logger == nil {
+		return
+	}
+
+	t.Logger.Printf(format, args...)
+}
+
+func (t *Tester) Run(args ...interface{}) error {
 	cmdline, checkers := t.parseArgs(args...)
 
-	if t.Logger != nil {
-		t.Logger.Printf("Running command: %v", strings.Join(cmdline, " "))
-	}
+	return t.Do(func(cmd *Command, i int) error {
+		return cmd.Run(cmdline...)
+	}, checkers...)
+}
 
-	err = t.commands[0].Run(cmdline...)
+func (t *Tester) Do(fn func(*Command, int) error, checkers ...Checker) error {
+	err := fn(t.commands[0], 0)
 	if err != nil {
-		return nil, fmt.Errorf("run first command: %w", err)
+		return fmt.Errorf("run first command: %w", err)
 	}
 
-	for _, cmd := range t.commands[1:] {
-		err = t.runCommand(cmd, cmdline, checkers)
+	for i, cmd := range t.commands[1:] {
+		err = t.runCommand(fn, cmd, 1+i, checkers)
 		if err != nil {
-			return nil, fmt.Errorf("%v: %w", cmd.Name(), err)
+			return fmt.Errorf("%v: %w", cmd.Name(), err)
 		}
 	}
 
-	out = t.commands[0].stdout.Bytes()
-	out = bytes.TrimSpace(out)
-
-	return out, nil
+	return nil
 }
 
-func (t *Tester) runCommand(cmd *Command, cmdline []string, checkers []Checker) (err error) {
-	err = cmd.Run(cmdline...)
+func (t *Tester) runCommand(fn func(*Command, int) error, cmd *Command, i int, checkers []Checker) (err error) {
+	cmd.Reset()
+
+	err = fn(cmd, i)
 	if err != nil {
 		return err
 	}
 
-	if cmd.Logger != nil {
-		for _, line := range bytes.Split(cmd.CombinedOutput(), []byte("\n")) {
+	if cmd.Logger != nil && len(cmd.Combined()) != 0 {
+		for _, line := range bytes.Split(cmd.Combined(), []byte("\n")) {
 			cmd.Logger.Printf("%s", line)
 		}
 	}
@@ -124,27 +133,60 @@ func (t *Tester) runCommand(cmd *Command, cmdline []string, checkers []Checker) 
 	return nil
 }
 
-func (t *Tester) DoOnlyArgs(i int, args ...interface{}) (out []byte, err error) {
+func (t *Tester) RunI(i int, args ...interface{}) (err error) {
 	cmdline, checkers := t.parseArgs(args...)
 
 	cmd := t.commands[i]
 
 	err = cmd.Run(cmdline...)
 	if err != nil {
-		return nil, fmt.Errorf("run command: %w", err)
+		return fmt.Errorf("run command: %w", err)
 	}
 
 	for _, c := range checkers {
 		err = c.Check(cmd, nil)
 		if err != nil {
-			return nil, fmt.Errorf("check %T: %w", c, err)
+			return fmt.Errorf("check %T: %w", c, err)
 		}
 	}
 
-	return cmd.Stdout(), nil
+	return nil
 }
 
-func (t *Tester) Do(f func(*Command) error) error {
+func (t *Tester) CrossRun(args ...interface{}) (err error) {
+	cmdline, checkers := t.parseArgs(args...)
+
+	return t.CrossDo(func(cmd *Command, i int) error {
+		return cmd.Run(cmdline...)
+	}, checkers...)
+}
+
+func (t *Tester) CrossDo(fn func(*Command, int) error, checkers ...Checker) error {
+	err := fn(t.commands[0], 0)
+	if err != nil {
+		return fmt.Errorf("run first command: %w", err)
+	}
+
+	for i, cmd := range t.commands[1:] {
+		crossCmd := &Command{
+			Path:    t.commands[0].Path,
+			WorkDir: cmd.WorkDir,
+			Logger:  t.commands[0].Logger,
+			tester:  t,
+		}
+
+		err = t.runCommand(fn, crossCmd, 1+i, checkers)
+		if err != nil {
+			return fmt.Errorf("%v: %w", cmd.Name(), err)
+		}
+
+		fmt.Printf("cross do wd: %v\ncommand: %v\nstdout\n%s\nstderr\n%s\n", crossCmd.WorkDir, crossCmd.Path, crossCmd.Stdout(), crossCmd.Stderr())
+	}
+
+	return nil
+}
+
+func (t *Tester) Each(f func(*Command) error) error {
 	for _, cmd := range t.commands {
 		err := f(cmd)
 		if err != nil {
@@ -153,6 +195,16 @@ func (t *Tester) Do(f func(*Command) error) error {
 	}
 
 	return nil
+}
+
+func (t *Tester) AllStdouts() []string {
+	l := make([]string, len(t.commands))
+
+	for i, cmd := range t.commands {
+		l[i] = string(cmd.Stdout())
+	}
+
+	return l
 }
 
 func (t *Tester) parseArgs(args ...interface{}) (cmdline []string, cc []Checker) {
@@ -186,9 +238,7 @@ func NewCommand(path string, opts ...Option) (*Command, error) {
 }
 
 func (c *Command) Run(cmdline ...string) error {
-	c.stdout.Reset()
-	c.stderr.Reset()
-	c.combined.Reset()
+	c.Reset()
 
 	c.Cmd = exec.Command(c.Path, cmdline...)
 
@@ -197,12 +247,22 @@ func (c *Command) Run(cmdline ...string) error {
 	c.Cmd.Stdout = io.MultiWriter(&c.stdout, &c.combined)
 	c.Cmd.Stderr = io.MultiWriter(&c.stderr, &c.combined)
 
+	//	defer func() {
+	//		fmt.Printf("COMMAND %v %v\nSTDOUT\n%s\nSTDERR\n%s\nSTDBOTH\n%s\n", c.Name(), cmdline, c.Stdout(), c.Stderr(), c.Combined())
+	//	}()
+
 	err := c.Cmd.Start()
 	if err != nil {
 		return fmt.Errorf("start command: %w", err)
 	}
 
-	to := time.NewTimer(c.tester.Timeout)
+	timeout := 5 * time.Second
+
+	if c.tester != nil {
+		timeout = c.tester.Timeout
+	}
+
+	to := time.NewTimer(timeout)
 	defer to.Stop()
 
 	errc := make(chan error, 1)
@@ -245,8 +305,16 @@ func (c *Command) Stderr() []byte {
 	return bytes.TrimSpace(c.stderr.Bytes())
 }
 
-func (c *Command) CombinedOutput() []byte {
+func (c *Command) Combined() []byte {
 	return bytes.TrimSpace(c.combined.Bytes())
+}
+
+func (c *Command) Reset() {
+	c.stdout.Reset()
+	c.stderr.Reset()
+	c.combined.Reset()
+
+	c.Cmd = nil
 }
 
 func (ExitCodeChecker) Name() string { return "check exit code" }
@@ -272,6 +340,14 @@ func (OutputChecker) Check(res, want *Command) error {
 func WithLogger(l *log.Logger) Option {
 	return func(c *Command) error {
 		c.Logger = l
+
+		return nil
+	}
+}
+
+func WithWorkDir(wd string) Option {
+	return func(c *Command) error {
+		c.WorkDir = wd
 
 		return nil
 	}

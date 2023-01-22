@@ -116,10 +116,10 @@ func writeFile(rootDir string, filepath string) {
 
 func writeFileContent(content string, path ...string) {
 	filePath := filepath.Join(path...)
-	if err := os.MkdirAll(filepath.Dir(filePath), 0700); err != nil {
+	if err := os.MkdirAll(filepath.Dir(filePath), 0755); err != nil {
 		panic(err)
 	}
-	if err := ioutil.WriteFile(filePath, []byte(content), os.ModePerm); err != nil {
+	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
 		panic(err)
 	}
 }

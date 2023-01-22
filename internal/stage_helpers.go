@@ -92,13 +92,7 @@ func randomLongStringRand(rnd *rand.Rand) string {
 }
 
 func randomStringsRand(n int, rnd *rand.Rand) []string {
-	l := make([]string, n)
-
-	for i := range l {
-		l[i] = randomWordRand(rnd)
-	}
-
-	return l
+	return shuffleRand(randomWords, n, rnd)
 }
 
 func randomLongStringsRand(n int, rnd *rand.Rand) []string {
@@ -109,4 +103,18 @@ func randomLongStringsRand(n int, rnd *rand.Rand) []string {
 	}
 
 	return l
+}
+
+func shuffleRand(vals []string, n int, rnd *rand.Rand) []string {
+	if n > len(vals) {
+		panic("don't have so many words")
+	}
+
+	ret := make([]string, n)
+
+	for i, randIndex := range rnd.Perm(len(vals))[:n] {
+		ret[i] = vals[randIndex]
+	}
+
+	return ret
 }
