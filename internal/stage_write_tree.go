@@ -135,7 +135,7 @@ func generateFiles(root string, seed int64) error {
 }
 
 func runGit(wd string, args ...string) ([]byte, error) {
-	path := envOr("CODECRAFTERS_GIT", "/usr/codecrafters-secret-git")
+	path := findGit()
 
 	return runCmd(wd, path, args...)
 }
@@ -166,10 +166,19 @@ func runCmd(wd, path string, args ...string) ([]byte, error) {
 	return outb.Bytes(), err
 }
 
-func envOr(key, defaul string) string {
-	if val, ok := os.LookupEnv(key); ok {
-		return val
+func findGit() string {
+	fromEnv := os.Getenv("CODECRAFTERS_GIT")
+
+	return choosePath(fromEnv, "/usr/codecrafters-secret-git", "git")
+}
+
+func choosePath(paths ...string) string {
+	for _, p := range paths {
+		path, err := exec.LookPath(p)
+		if err == nil {
+			return path
+		}
 	}
 
-	return defaul
+	panic("no git found")
 }
