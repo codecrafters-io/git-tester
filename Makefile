@@ -19,6 +19,12 @@ test_with_git: build
 	CODECRAFTERS_COURSE_PAGE_URL="test" \
 	dist/main.out
 
+test_with_solution: build
+	CODECRAFTERS_SUBMISSION_DIR=/Users/rohitpaulk/experiments/codecrafters/course-sdk/courses/git/solutions/go/06-create_commit/code \
+	CODECRAFTERS_CURRENT_STAGE_SLUG="clone_repository" \
+	CODECRAFTERS_COURSE_PAGE_URL="test" \
+	dist/main.out
+
 copy_course_file:
 	hub api \
 		repos/rohitpaulk/codecrafters-server/contents/codecrafters/store/data/git.yml \
