@@ -3,6 +3,8 @@ package internal
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
+	"os/exec"
 	"path"
 	"sort"
 	"strings"
@@ -86,14 +88,14 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 		cache.NewObjectLRU(0),
 	)
 
-	obj, err := storage.EncodedObject(plumbing.TreeObject, plumbing.NewHash(sha))
+	tree, err := object.GetTree(storage, plumbing.NewHash(sha))
 	if err != nil {
-		return fmt.Errorf("not a valid object name (no such object): %s", sha)
-	}
+		out, err := runGit(executable.WorkingDir, "ls-tree", "--name-only", sha)
+		if err != nil {
+			return fmt.Errorf("malformed tree object (git error: %w)", err)
+		}
 
-	tree, err := object.DecodeTree(storage, obj)
-	if err != nil {
-		return fmt.Errorf("malformed tree object")
+		return fmt.Errorf("%s", out)
 	}
 
 	actual := ""
@@ -114,4 +116,22 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 	}
 
 	return nil
+}
+
+func runGit(wd string, args ...string) ([]byte, error) {
+	path := envOr("CODECRAFTERS_GIT", "/usr/codecrafters-secret-git")
+
+	cmd := exec.Command(path, args...)
+
+	cmd.Dir = wd
+
+	return cmd.CombinedOutput()
+}
+
+func envOr(key, defaul string) string {
+	if val, ok := os.LookupEnv(key); ok {
+		return val
+	}
+
+	return defaul
 }
