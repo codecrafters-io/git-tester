@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"github.com/go-git/go-git/v5/plumbing/filemode"
 	"io/ioutil"
 	"os"
 	"path"
@@ -79,8 +80,8 @@ func testReadTree(stageHarness *tester_utils.StageHarness) error {
 	}
 
 	sha := commit.TreeHash.String()
-	logger.Debugf("Running ./your_git.sh ls-tree --name-only %s", sha)
-	result, err := executable.Run("ls-tree", "--name-only", sha)
+	logger.Debugf("Running ./your_git.sh ls-tree %s", sha)
+	result, err := executable.Run("ls-tree", sha)
 	if err != nil {
 		return err
 	}
@@ -97,6 +98,16 @@ func testReadTree(stageHarness *tester_utils.StageHarness) error {
 	expected := ""
 
 	for _, entry := range tree.Entries {
+		expected += entry.Mode.String()[1:]
+
+		if entry.Mode == filemode.Dir {
+			expected += " tree "
+		} else {
+			expected += " blob "
+		}
+
+		expected += entry.Hash.String()
+		expected += "\t"
 		expected += entry.Name
 		expected += "\n"
 	}
