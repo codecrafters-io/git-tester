@@ -169,7 +169,7 @@ func runCmd(wd, path string, args ...string) ([]byte, error) {
 func findGit() string {
 	fromEnv := os.Getenv("CODECRAFTERS_GIT")
 
-	return choosePath(fromEnv, "/usr/codecrafters-secret-git", "git")
+	return choosePath(fromEnv, "/usr/bin/codecrafters-secret-git", "git")
 }
 
 func choosePath(paths ...string) string {
