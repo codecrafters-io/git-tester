@@ -1,21 +1,17 @@
 package internal
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
 	"io/ioutil"
-	"path"
-	"sort"
+	"math/rand"
+	"os"
+	"os/exec"
 	"strings"
+	"time"
 
 	tester_utils "github.com/codecrafters-io/tester-utils"
-
-	"github.com/go-git/go-billy/v5/osfs"
-	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/plumbing"
-	"github.com/go-git/go-git/v5/plumbing/cache"
-	"github.com/go-git/go-git/v5/plumbing/object"
-	"github.com/go-git/go-git/v5/storage/filesystem"
-	"github.com/go-git/go-git/v5/storage/filesystem/dotgit"
 )
 
 func testWriteTree(stageHarness *tester_utils.StageHarness) error {
@@ -37,31 +33,10 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 
 	logger.Debugf("Creating some files & directories")
 
-	rootFile := "root.txt"
-	firstLevel := randomStringsShort(3)
-	rootFile, rootDir1, rootDir2 := firstLevel[0], firstLevel[1], firstLevel[2]
-	secondLevel := randomStringsShort(2)
-	rootDir1File1, rootDir1File2 := secondLevel[0], secondLevel[1]
-	rootDir2File1 := randomStringShort()
-
-	writeFile(tempDir, rootFile)
-	writeFile(tempDir, path.Join(rootDir1, rootDir1File1))
-	writeFile(tempDir, path.Join(rootDir1, rootDir1File2))
-	writeFile(tempDir, path.Join(rootDir2, rootDir2File1))
-
-	r, err := git.PlainOpen(tempDir)
+	seed := time.Now().UnixNano()
+	err = generateFiles(tempDir, seed)
 	if err != nil {
-		return err
-	}
-
-	w, err := r.Worktree()
-	if err != nil {
-		return nil
-	}
-
-	// If we're running against git, update the index
-	if err = w.AddGlob("."); err != nil {
-		return err
+		panic(err)
 	}
 
 	logger.Debugf("Running ./your_git.sh write-tree")
@@ -81,37 +56,129 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 
 	logger.Debugf("Running git ls-tree --name-only <sha>")
 
-	storage := filesystem.NewObjectStorage(
-		dotgit.New(osfs.New(path.Join(tempDir, ".git"))),
-		cache.NewObjectLRU(0),
-	)
-
-	obj, err := storage.EncodedObject(plumbing.TreeObject, plumbing.NewHash(sha))
+	tree, err := runGit(executable.WorkingDir, "ls-tree", "--name-only", sha)
 	if err != nil {
-		return fmt.Errorf("not a valid object name (no such object): %s", sha)
+		panic(err)
 	}
 
-	tree, err := object.DecodeTree(storage, obj)
+	err = checkWithGit(sha, tree, seed)
 	if err != nil {
-		return fmt.Errorf("malformed tree object")
-	}
-
-	actual := ""
-	for _, entry := range tree.Entries {
-		actual += entry.Name
-		actual += "\n"
-	}
-
-	expectedValues := []string{rootFile, rootDir1, rootDir2}
-	sort.Strings(expectedValues)
-	expected := strings.Join(
-		expectedValues,
-		"\n",
-	) + "\n"
-
-	if expected != actual {
-		return fmt.Errorf("Expected %q as stdout, got: %q", expected, actual)
+		return err
 	}
 
 	return nil
+}
+
+func checkWithGit(hash string, tree []byte, seed int64) error {
+	tempDir, err := ioutil.TempDir("", "worktree")
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		_ = os.RemoveAll(tempDir)
+	}()
+
+	err = generateFiles(tempDir, seed)
+	if err != nil {
+		return err
+	}
+
+	_, err = runGit(tempDir, "init")
+	if err != nil {
+		return err
+	}
+
+	_, err = runGit(tempDir, "add", ".")
+	if err != nil {
+		return err
+	}
+
+	expectedHash, err := runGit(tempDir, "write-tree")
+	if err != nil {
+		return err
+	}
+
+	expectedTree, err := runGit(tempDir, "ls-tree", "--name-only", string(bytes.TrimSpace(expectedHash)))
+	if err != nil {
+		return err
+	}
+
+	// check file list first as it's more useful
+	if expected := string(expectedTree); expected != string(tree) {
+		return fmt.Errorf("Expected %q as stdout, got: %q", expected, tree)
+	}
+
+	if expected := string(bytes.TrimSpace(expectedHash)); expected != hash {
+		return fmt.Errorf("Expected %q as tree hash, got: %q", expected, hash)
+	}
+
+	return nil
+}
+
+func generateFiles(root string, seed int64) error {
+	r := rand.New(rand.NewSource(seed))
+
+	content := randomLongStringsRand(4, r)
+
+	first := randomStringsRand(3, r) // file1, dir1, dir2
+
+	dir1 := randomStringsRand(2, r) // file2, file3
+	dir2 := randomStringsRand(1, r) // file4
+
+	writeFileContent(content[0], root, first[0])
+	writeFileContent(content[1], root, first[1], dir1[0])
+	writeFileContent(content[2], root, first[1], dir1[1])
+	writeFileContent(content[3], root, first[2], dir2[0])
+
+	return nil
+}
+
+func runGit(wd string, args ...string) ([]byte, error) {
+	path := findGit()
+
+	return runCmd(wd, path, args...)
+}
+
+func runCmd(wd, path string, args ...string) ([]byte, error) {
+	cmd := exec.Command(path, args...)
+
+	cmd.Dir = wd
+
+	var outb, errb bytes.Buffer
+
+	cmd.Stdout = &outb
+	cmd.Stderr = &errb
+
+	err := cmd.Run()
+
+	//	fmt.Printf("run: %v %v\nerr: %v\nout: %s\nstderr: %s\n", path, args, err, outb.Bytes(), errb.Bytes())
+
+	var exitError *exec.ExitError
+	if errors.As(err, &exitError) {
+		panic(errb.String())
+	}
+
+	if err != nil {
+		panic(err)
+	}
+
+	return outb.Bytes(), err
+}
+
+func findGit() string {
+	fromEnv := os.Getenv("CODECRAFTERS_GIT")
+
+	return choosePath(fromEnv, "/usr/bin/codecrafters-secret-git", "git")
+}
+
+func choosePath(paths ...string) string {
+	for _, p := range paths {
+		path, err := exec.LookPath(p)
+		if err == nil {
+			return path
+		}
+	}
+
+	panic("no git found")
 }

@@ -25,7 +25,6 @@ func init() {
 
 func randomWord() string {
 	return randomWords[rand.Intn(len(randomWords))]
-
 }
 
 func randomString() string {
@@ -72,4 +71,50 @@ func randomStrings(n int) []string {
 	}
 
 	return l
+}
+
+func randomWordRand(rnd *rand.Rand) string {
+	return randomWords[rnd.Intn(len(randomWords))]
+}
+
+func randomStringRand(rnd *rand.Rand) string {
+	return randomWordRand(rnd)
+}
+
+func randomLongStringRand(rnd *rand.Rand) string {
+	l := make([]string, 6)
+
+	for i := range l {
+		l[i] = randomWordRand(rnd)
+	}
+
+	return strings.Join(l, "-")
+}
+
+func randomStringsRand(n int, rnd *rand.Rand) []string {
+	return shuffleRand(randomWords, n, rnd)
+}
+
+func randomLongStringsRand(n int, rnd *rand.Rand) []string {
+	l := make([]string, n)
+
+	for i := range l {
+		l[i] = randomLongStringRand(rnd)
+	}
+
+	return l
+}
+
+func shuffleRand(vals []string, n int, rnd *rand.Rand) []string {
+	if n > len(vals) {
+		panic("don't have so many words")
+	}
+
+	ret := make([]string, n)
+
+	for i, randIndex := range rnd.Perm(len(vals))[:n] {
+		ret[i] = vals[randIndex]
+	}
+
+	return ret
 }
