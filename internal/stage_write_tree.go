@@ -58,7 +58,7 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 
 	tree, err := runGit(executable.WorkingDir, "ls-tree", "--name-only", sha)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	err = checkWithGit(sha, tree, seed)
@@ -156,7 +156,7 @@ func runCmd(wd, path string, args ...string) ([]byte, error) {
 
 	var exitError *exec.ExitError
 	if errors.As(err, &exitError) {
-		panic(errb.String())
+		return nil, fmt.Errorf("%s", errb.Bytes())
 	}
 
 	if err != nil {
