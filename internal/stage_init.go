@@ -53,9 +53,10 @@ func assertFileContents(friendlyName string, path string) error {
 	}
 
 	actualContents := string(bytes)
-	expectedContents := "ref: refs/heads/master\n"
-	if actualContents != expectedContents {
-		return fmt.Errorf("Expected %s to contain '%s', got '%s'", friendlyName, expectedContents, actualContents)
+	expectedContents1 := "ref: refs/heads/main\n"
+	expectedContents2 := "ref: refs/heads/master\n"
+	if actualContents != expectedContents1 && actualContents != expectedContents2 {
+		return fmt.Errorf("Expected %s to contain '%s' or '%s', got '%s'", friendlyName, expectedContents1, expectedContents2, actualContents)
 	}
 
 	return nil
