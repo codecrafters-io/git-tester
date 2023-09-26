@@ -13,32 +13,41 @@ func TestStages(t *testing.T) {
 			CodePath: "./test_helpers/stages/init",
 			ExpectedExitCode: 0,
 			StdoutFixturePath: "./test_helpers/fixtures/init",
+			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"read_blob_success": {
 			UntilStageSlug: "read_blob",
 			CodePath: "./test_helpers/stages/read_blob",
 			ExpectedExitCode: 0,
 			StdoutFixturePath: "./test_helpers/fixtures/read_blob",
+			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"create_blob_success": {
 			UntilStageSlug: "create_blob",
 			CodePath: "./test_helpers/stages/create_blob",
 			ExpectedExitCode: 0,
 			StdoutFixturePath: "./test_helpers/fixtures/create_blob",
+			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"read_tree_success": {
 			UntilStageSlug: "read_tree",
 			CodePath: "./test_helpers/stages/read_tree",
 			ExpectedExitCode: 0,
 			StdoutFixturePath: "./test_helpers/fixtures/read_tree",
+			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"write_tree_success": {
-			UntilStageSlug: "read_tree",
+			UntilStageSlug: "write_tree",
 			CodePath: "./test_helpers/stages/write_tree",
 			ExpectedExitCode: 0,
 			StdoutFixturePath: "./test_helpers/fixtures/write_tree",
+			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 	}
 
 	tester_utils_testing.TestTesterOutput(t, testerDefinition, testCases)
+}
+
+func normalizeTesterOutput(testerOutput []byte) []byte {
+	return testerOutput
 }
