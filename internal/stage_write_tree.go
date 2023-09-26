@@ -33,7 +33,7 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 
 	logger.Debugf("Creating some files & directories")
 
-	seed := time.Now().UnixNano()
+	seed := time.Date(2023, time.September, 26, 15, 40, 0, 0, time.UTC).UnixNano()
 	err = generateFiles(tempDir, seed)
 	if err != nil {
 		panic(err)

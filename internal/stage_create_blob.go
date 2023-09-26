@@ -29,8 +29,8 @@ func testCreateBlob(stageHarness *tester_utils.StageHarness) error {
 	}
 
 	logger.Debugf("Writing sample file")
-	sampleFileName := fmt.Sprintf("%s.txt", randomStringShort())
-	sampleFileContents := randomString()
+	sampleFileName := fmt.Sprintf("%s.txt", getStringShort())
+	sampleFileContents := getString()
 	err = ioutil.WriteFile(
 		path.Join(tempDir, sampleFileName),
 		[]byte(sampleFileContents),

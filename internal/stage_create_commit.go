@@ -33,11 +33,11 @@ func testCreateCommit(stageHarness *tester_utils.StageHarness) error {
 	logger.Debugf("Creating some files & directories")
 
 	rootFile := "root.txt"
-	firstLevel := randomStringsShort(3)
+	firstLevel := getStringsShort(3)
 	rootFile, rootDir1, rootDir2 := firstLevel[0], firstLevel[1], firstLevel[2]
-	secondLevel := randomStringsShort(2)
+	secondLevel := getStringsShort(2)
 	rootDir1File1, rootDir1File2 := secondLevel[0], secondLevel[1]
-	thirdLevel := randomStringsShort(2)
+	thirdLevel := getStringsShort(2)
 	rootDir2File1, rootDir2File2 := thirdLevel[0], thirdLevel[1]
 
 	writeFile(tempDir, rootFile)
@@ -97,7 +97,7 @@ func testCreateCommit(stageHarness *tester_utils.StageHarness) error {
 
 	treeSha := nextCommit.TreeHash.String()
 
-	commitMessage := randomString()
+	commitMessage := getString()
 	logger.Debugf("Running ./your_git.sh commit-tree <tree_sha> -p <commit_sha> -m <message>")
 	result, err := executable.Run("commit-tree", treeSha, "-p", parentCommitSha, "-m", commitMessage)
 	if err != nil {

@@ -33,8 +33,8 @@ func testReadBlob(stageHarness *tester_utils.StageHarness) error {
 	}
 
 	logger.Debugf("Writing sample file")
-	sampleFile := path.Join(tempDir, fmt.Sprintf("%s.txt", randomStringShort()))
-	sampleFileContents := randomString()
+	sampleFile := path.Join(tempDir, fmt.Sprintf("%s.txt", getStringShort()))
+	sampleFileContents := getString()
 	err = ioutil.WriteFile(
 		sampleFile,
 		[]byte(sampleFileContents),
