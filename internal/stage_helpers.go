@@ -23,20 +23,54 @@ func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
-func getWord() string {
-	return randomWords[0]
+func randomWord() string {
+	return randomWords[rand.Intn(len(randomWords))]
 }
 
-func getString() string {
-	return strings.Join(randomWords[:6], " ")
+func randomString() string {
+	return strings.Join(
+		[]string{
+			randomWord(),
+			randomWord(),
+			randomWord(),
+			randomWord(),
+			randomWord(),
+			randomWord(),
+		},
+		" ",
+	)
 }
 
-func getStringShort() string {
-	return getWord()
+func randomStringShort() string {
+	return randomWord()
 }
 
-func getStringsShort(n int) []string {
-	return randomWords[:n]
+func randomStringsShort(n int) []string {
+	return shuffle(randomWords, n)
+}
+
+func shuffle(vals []string, n int) []string {
+	if n > len(vals) {
+		panic("don't have so many words")
+	}
+
+	ret := make([]string, n)
+
+	for i, randIndex := range rand.Perm(len(vals))[:n] {
+		ret[i] = vals[randIndex]
+	}
+
+	return ret
+}
+
+func randomStrings(n int) []string {
+	l := make([]string, n)
+
+	for i := range l {
+		l[i] = randomString()
+	}
+
+	return l
 }
 
 func randomWordRand(rnd *rand.Rand) string {

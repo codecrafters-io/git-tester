@@ -37,11 +37,11 @@ func testReadTree(stageHarness *tester_utils.StageHarness) error {
 	logger.Debugf("Writing a tree to git storage..")
 
 	rootFile := "root.txt"
-	firstLevel := getStringsShort(3)
+	firstLevel := randomStringsShort(3)
 	rootFile, rootDir1, rootDir2 := firstLevel[0], firstLevel[1], firstLevel[2]
-	secondLevel := getStringsShort(2)
+	secondLevel := randomStringsShort(2)
 	rootDir1File1, rootDir1File2 := secondLevel[0], secondLevel[1]
-	rootDir2File1 := getStringShort()
+	rootDir2File1 := randomStringShort()
 
 	writeFile(tempDir, rootFile)
 	writeFile(tempDir, filepath.Join(rootDir1, rootDir1File1))
@@ -111,7 +111,7 @@ func testReadTree(stageHarness *tester_utils.StageHarness) error {
 }
 
 func writeFile(rootDir string, filepath string) {
-	writeFileContent(getString(), rootDir, filepath)
+	writeFileContent(randomString(), rootDir, filepath)
 }
 
 func writeFileContent(content string, path ...string) {
