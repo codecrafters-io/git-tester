@@ -9,25 +9,34 @@ Debug = true
 [33m[stage-2] [0m[36m[36mRunning ./your_git.sh init[0m[0m
 [33m[your_program] [0mInitialized git directory
 [33m[stage-2] [0m[36m[36mWriting sample file[0m[0m
-[33m[stage-2] [0m[36m[36mRunning ./your_git.sh cat-file -p 8c39d1fff62d97e60d8006487a1156c8e102c853[0m[0m
-[33m[your_program] [0mhorsey dumpty humpty scooby horsey dumpty
+[33m[stage-2] [0m[36m[36mRunning ./your_git.sh cat-file -p e57e478e7972647dd205d4e294deea8fba011188[0m[0m
+[33m[your_program] [0mhumpty yikes monkey dumpty dooby doo
 [33m[stage-2] [0m[92m[92mTest passed.[0m[0m
 
 [33m[stage-3] [0m[94m[94mRunning tests for Stage #3: create_blob[0m[0m
 [33m[stage-3] [0m[36m[36mRunning ./your_git.sh init[0m[0m
 [33m[your_program] [0mInitialized git directory
 [33m[stage-3] [0m[36m[36mWriting sample file[0m[0m
-[33m[stage-3] [0m[36m[36mRunning ./your_git.sh hash-object -w yikes.txt[0m[0m
-[33m[your_program] [0m65b95cba8f9ea657a2a6d6f1ec39548bfefb8940
-[33m[stage-3] [0m[36m[36mRunning git cat-file -p 65b95cba8f9ea657a2a6d6f1ec39548bfefb8940[0m[0m
+[33m[stage-3] [0m[36m[36mRunning ./your_git.sh hash-object -w doo.txt[0m[0m
+[33m[your_program] [0m3d51c02b4f71e4f25688f9213fdc44531ba36aee
+[33m[stage-3] [0m[36m[36mRunning git cat-file -p 3d51c02b4f71e4f25688f9213fdc44531ba36aee[0m[0m
 [33m[stage-3] [0m[92m[92mTest passed.[0m[0m
 
 [33m[stage-4] [0m[94m[94mRunning tests for Stage #4: read_tree[0m[0m
 [33m[stage-4] [0m[36m[36mRunning ./your_git.sh init[0m[0m
 [33m[your_program] [0mInitialized git directory
 [33m[stage-4] [0m[36m[36mWriting a tree to git storage..[0m[0m
-[33m[stage-4] [0m[36m[36mRunning ./your_git.sh ls-tree --name-only 4b9c7ddb27d1e53a88e854765190c6753a1cc27d[0m[0m
+[33m[stage-4] [0m[36m[36mRunning ./your_git.sh ls-tree --name-only 54fc02ca0ddc4abcfecfd38c6fca2b398613309d[0m[0m
 [33m[your_program] [0mdonkey
-[33m[your_program] [0mdumpty
-[33m[your_program] [0mmonkey
+[33m[your_program] [0mdoo
+[33m[your_program] [0mhorsey
 [33m[stage-4] [0m[92m[92mTest passed.[0m[0m
+
+[33m[stage-5] [0m[94m[94mRunning tests for Stage #5: write_tree[0m[0m
+[33m[stage-5] [0m[36m[36mRunning ./your_git.sh init[0m[0m
+[33m[your_program] [0mInitialized git directory
+[33m[stage-5] [0m[36m[36mCreating some files & directories[0m[0m
+[33m[stage-5] [0m[36m[36mRunning ./your_git.sh write-tree[0m[0m
+[33m[your_program] [0mea1ec448a4107771430ea7d1ba6553af37f1d060
+[33m[stage-5] [0m[36m[36mRunning git ls-tree --name-only <sha>[0m[0m
+[33m[stage-5] [0m[92m[92mTest passed.[0m[0m

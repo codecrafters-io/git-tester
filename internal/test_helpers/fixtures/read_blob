@@ -9,6 +9,6 @@ Debug = true
 [33m[stage-2] [0m[36m[36mRunning ./your_git.sh init[0m[0m
 [33m[your_program] [0mInitialized git directory
 [33m[stage-2] [0m[36m[36mWriting sample file[0m[0m
-[33m[stage-2] [0m[36m[36mRunning ./your_git.sh cat-file -p 932c771e2d87923d95f7025923d17788659bd729[0m[0m
-[33m[your_program] [0myikes yikes yikes yikes dooby scooby
+[33m[stage-2] [0m[36m[36mRunning ./your_git.sh cat-file -p 6084e95dd9185d6711dd057039eea99add8a0160[0m[0m
+[33m[your_program] [0mvanilla humpty monkey dumpty vanilla donkey
 [33m[stage-2] [0m[92m[92mTest passed.[0m[0m
