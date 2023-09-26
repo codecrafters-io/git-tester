@@ -15,8 +15,7 @@ test:
 
 test_with_git: build
 	CODECRAFTERS_SUBMISSION_DIR=$(shell pwd)/internal/test_helpers/pass_all \
-	CODECRAFTERS_CURRENT_STAGE_SLUG="clone_repository" \
-	CODECRAFTERS_COURSE_PAGE_URL="test" \
+	CODECRAFTERS_TEST_CASES_JSON="[{"slug":"init","tester_log_prefix":"stage-1","title":"Stage #1: Initialize the .git directory"},{"slug":"read_blob","tester_log_prefix":"stage-2","title":"Stage #2: Read a blob object"},{"slug":"create_blob","tester_log_prefix":"stage-3","title":"Stage #3: Create a blob object"},{"slug":"read_tree","tester_log_prefix":"stage-4","title":"Stage #4: Read a tree object"},{"slug":"write_tree","tester_log_prefix":"stage-5","title":"Stage #5: Write a tree object"},{"slug":"create_commit","tester_log_prefix":"stage-6","title":"Stage #6: Create a commit"},{"slug":"clone_repository","tester_log_prefix":"stage-7","title":"Stage #7: Clone a repository"}]" \
 	dist/main.out
 
 copy_course_file:

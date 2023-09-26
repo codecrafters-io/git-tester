@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 
@@ -15,6 +16,8 @@ import (
 )
 
 func testWriteTree(stageHarness *tester_utils.StageHarness) error {
+	initRandom()
+
 	logger := stageHarness.Logger
 	executable := stageHarness.Executable
 
@@ -33,7 +36,20 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 
 	logger.Debugf("Creating some files & directories")
 
-	seed := time.Now().UnixNano()
+	var seed int64
+
+	if seedStr := os.Getenv("CODECRAFTERS_RANDOM_SEED"); seedStr != "" {
+		seedInt, err := strconv.Atoi(seedStr)
+
+		if err != nil {
+			panic(err)
+		}
+
+		seed = int64(seedInt)
+	} else {
+		seed = time.Now().UnixNano()
+	}
+
 	err = generateFiles(tempDir, seed)
 	if err != nil {
 		panic(err)
