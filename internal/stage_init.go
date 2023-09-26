@@ -11,6 +11,8 @@ import (
 )
 
 func testInit(stageHarness *tester_utils.StageHarness) error {
+	initRandom()
+
 	logger := stageHarness.Logger
 	executable := stageHarness.Executable
 

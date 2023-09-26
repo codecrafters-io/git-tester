@@ -9,15 +9,15 @@ Debug = true
 [33m[stage-2] [0m[36m[36mRunning ./your_git.sh init[0m[0m
 [33m[your_program] [0mInitialized git directory
 [33m[stage-2] [0m[36m[36mWriting sample file[0m[0m
-[33m[stage-2] [0m[36m[36mRunning ./your_git.sh cat-file -p e3ae6388700115e886859fc41217ee195e59689b[0m[0m
-[33m[your_program] [0mvanilla humpty yikes scooby humpty humpty
+[33m[stage-2] [0m[36m[36mRunning ./your_git.sh cat-file -p 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m[0m
+[33m[your_program] [0mdumpty dooby doo donkey horsey vanilla
 [33m[stage-2] [0m[92m[92mTest passed.[0m[0m
 
 [33m[stage-3] [0m[94m[94mRunning tests for Stage #3: create_blob[0m[0m
 [33m[stage-3] [0m[36m[36mRunning ./your_git.sh init[0m[0m
 [33m[your_program] [0mInitialized git directory
 [33m[stage-3] [0m[36m[36mWriting sample file[0m[0m
-[33m[stage-3] [0m[36m[36mRunning ./your_git.sh hash-object -w vanilla.txt[0m[0m
-[33m[your_program] [0m723499151fc9c4f4c680d46121d79da459f9d40b
-[33m[stage-3] [0m[36m[36mRunning git cat-file -p 723499151fc9c4f4c680d46121d79da459f9d40b[0m[0m
+[33m[stage-3] [0m[36m[36mRunning ./your_git.sh hash-object -w donkey.txt[0m[0m
+[33m[your_program] [0m32eb24247f1cc0f2aa44da05b849392063a9b9e7
+[33m[stage-3] [0m[36m[36mRunning git cat-file -p 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m[0m
 [33m[stage-3] [0m[92m[92mTest passed.[0m[0m

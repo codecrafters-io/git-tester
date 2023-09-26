@@ -2,6 +2,8 @@ package internal
 
 import (
 	"math/rand"
+	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -19,8 +21,18 @@ var randomWords = []string{
 	"vanilla",
 }
 
-func init() {
-	rand.Seed(time.Now().UnixNano())
+func initRandom() {
+	if seed := os.Getenv("CODECRAFTERS_RANDOM_SEED"); seed != "" {
+		seedInt, err := strconv.Atoi(seed)
+
+		if err != nil {
+			panic(err)
+		}
+
+		rand.Seed(int64(seedInt))
+	} else {
+		rand.Seed(time.Now().UnixNano())
+	}
 }
 
 func randomWord() string {
