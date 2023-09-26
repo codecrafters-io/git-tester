@@ -5,9 +5,9 @@ import (
 )
 
 var testerDefinition = testerutils.TesterDefinition{
-	AntiCheatStages:    []testerutils.Stage{},
+	AntiCheatTestCases:    []testerutils.TestCase{},
 	ExecutableFileName: "your_git.sh",
-	Stages: []testerutils.Stage{
+	TestCases: []testerutils.TestCase{
 		{
 			Slug:                    "init",
 			TestFunc:                testInit,

@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 
+	logger "github.com/codecrafters-io/tester-utils/logger"
 	tester_utils "github.com/codecrafters-io/tester-utils"
 )
 
@@ -88,12 +89,12 @@ func assertFileExistsInDir(parent string, child string) error {
 	return nil
 }
 
-func logDebugTree(logger *tester_utils.Logger, dir string) {
+func logDebugTree(logger *logger.Logger, dir string) {
 	logger.Debugf("Files found in directory: ")
 	doLogDebugTree(logger, dir, " ")
 }
 
-func doLogDebugTree(logger *tester_utils.Logger, dir string, prefix string) {
+func doLogDebugTree(logger *logger.Logger, dir string, prefix string) {
 	entries, err := ioutil.ReadDir(dir)
 	if err != nil {
 		panic(err)
