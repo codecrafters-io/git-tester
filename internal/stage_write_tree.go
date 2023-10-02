@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
+	"path"
 	"strconv"
 	"strings"
 	"time"
@@ -70,6 +71,18 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 		return fmt.Errorf("Expected a 40-char SHA as output. Got: %v", sha)
 	}
 
+	gitObjectFilePath := path.Join(executable.WorkingDir, ".git", "objects", sha[:2], sha[2:])
+	logger.Debugf("Reading file at %v", gitObjectFilePath)
+
+	gitObjectFileContents, err := os.ReadFile(gitObjectFilePath)
+	if err == os.ErrNotExist {
+		return fmt.Errorf("Did you write the tree object? Did not find a file in .git/objects/<first 2 chars of sha>/<remaining chars of sha>")
+	} else if err != nil {
+		return fmt.Errorf("CodeCrafters internal error. Error reading %v: %v", gitObjectFilePath, err)
+	}
+
+	logger.Successf("Found git object file written at .git/objects/%v/%v.", sha[:2], sha[2:])
+
 	logger.Debugf("Running git ls-tree --name-only <sha>")
 
 	tree, err := runGit(executable.WorkingDir, "ls-tree", "--name-only", sha)
@@ -77,7 +90,7 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 		return err
 	}
 
-	err = checkWithGit(sha, tree, seed)
+	err = checkWithGit(sha, tree, gitObjectFileContents, seed)
 	if err != nil {
 		return err
 	}
@@ -85,7 +98,7 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 	return nil
 }
 
-func checkWithGit(hash string, tree []byte, seed int64) error {
+func checkWithGit(actualHash string, tree []byte, actualGitObjectFileContents []byte, seed int64) error {
 	tempDir, err := ioutil.TempDir("", "worktree")
 	if err != nil {
 		return err
@@ -110,23 +123,36 @@ func checkWithGit(hash string, tree []byte, seed int64) error {
 		return err
 	}
 
-	expectedHash, err := runGit(tempDir, "write-tree")
+	expectedHashBytes, err := runGit(tempDir, "write-tree")
 	if err != nil {
 		return err
 	}
 
-	expectedTree, err := runGit(tempDir, "ls-tree", "--name-only", string(bytes.TrimSpace(expectedHash)))
+	expectedHash := string(bytes.TrimSpace(expectedHashBytes))
+
+	expectedTree, err := runGit(tempDir, "ls-tree", "--name-only", expectedHash)
 	if err != nil {
 		return err
 	}
 
-	// check file list first as it's more useful
+	// check file list first as it's the friendliest diff to read
 	if expected := string(expectedTree); expected != string(tree) {
 		return fmt.Errorf("Expected %q as stdout, got: %q", expected, tree)
 	}
 
-	if expected := string(bytes.TrimSpace(expectedHash)); expected != hash {
-		return fmt.Errorf("Expected %q as tree hash, got: %q", expected, hash)
+	// check file contents
+	expectedGitObjectFilePath := path.Join(tempDir, ".git", "objects", expectedHash[:2], expectedHash[2:])
+	expectedGitObjectFileContents, err := os.ReadFile(expectedGitObjectFilePath)
+	if err != nil {
+		return fmt.Errorf("CodeCrafters internal error. Error reading %v: %v", expectedGitObjectFilePath, err)
+	}
+
+	if !bytes.Equal(expectedGitObjectFileContents, actualGitObjectFileContents) {
+		return fmt.Errorf("Expected %q as tree object file contents, got: %q", expectedGitObjectFileContents, actualGitObjectFileContents)
+	}
+
+	if expected := expectedHash; expected != actualHash {
+		return fmt.Errorf("Expected %q as tree hash, got: %q", expected, actualHash)
 	}
 
 	return nil
