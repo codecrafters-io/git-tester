@@ -3,10 +3,13 @@ module github.com/codecrafters-io/git-tester
 go 1.20
 
 require (
-	github.com/codecrafters-io/tester-utils v0.2.0
+	github.com/codecrafters-io/tester-utils v0.2.7
 	github.com/go-git/go-billy/v5 v5.0.0
 	github.com/go-git/go-git/v5 v5.0.0
 )
+
+// Use this to test locally
+// replace github.com/codecrafters-io/tester-utils v0.2.0 => /Users/rohitpaulk/experiments/codecrafters/tester-utils
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

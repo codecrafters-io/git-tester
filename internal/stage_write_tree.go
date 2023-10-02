@@ -2,6 +2,7 @@ package internal
 
 import (
 	"bytes"
+	"compress/zlib"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -9,11 +10,14 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
 
 	tester_utils "github.com/codecrafters-io/tester-utils"
+	bytes_diff_visualizer "github.com/codecrafters-io/tester-utils/bytes_diff_visualizer"
+	logger "github.com/codecrafters-io/tester-utils/logger"
 )
 
 func testWriteTree(stageHarness *tester_utils.StageHarness) error {
@@ -35,7 +39,7 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 		return err
 	}
 
-	logger.Debugf("Creating some files & directories")
+	logger.Infof("Creating some files & directories")
 
 	var seed int64
 
@@ -56,7 +60,7 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 		panic(err)
 	}
 
-	logger.Debugf("Running ./your_git.sh write-tree")
+	logger.Infof("$ ./your_git.sh write-tree")
 	result, err := executable.Run("write-tree")
 	if err != nil {
 		return err
@@ -72,25 +76,26 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 	}
 
 	gitObjectFilePath := path.Join(executable.WorkingDir, ".git", "objects", sha[:2], sha[2:])
-	logger.Debugf("Reading file at %v", gitObjectFilePath)
+	relativePath, _ := filepath.Rel(executable.WorkingDir, gitObjectFilePath)
+	logger.Debugf("Reading file at %v", relativePath)
 
 	gitObjectFileContents, err := os.ReadFile(gitObjectFilePath)
 	if err == os.ErrNotExist {
 		return fmt.Errorf("Did you write the tree object? Did not find a file in .git/objects/<first 2 chars of sha>/<remaining chars of sha>")
 	} else if err != nil {
-		return fmt.Errorf("CodeCrafters internal error. Error reading %v: %v", gitObjectFilePath, err)
+		return fmt.Errorf("CodeCrafters internal error. Error reading %v: %v", relativePath, err)
 	}
 
 	logger.Successf("Found git object file written at .git/objects/%v/%v.", sha[:2], sha[2:])
 
-	logger.Debugf("Running git ls-tree --name-only <sha>")
+	logger.Infof("$ git ls-tree --name-only <sha>")
 
 	tree, err := runGit(executable.WorkingDir, "ls-tree", "--name-only", sha)
 	if err != nil {
 		return err
 	}
 
-	err = checkWithGit(sha, tree, gitObjectFileContents, seed)
+	err = checkWithGit(logger, sha, tree, gitObjectFileContents, seed)
 	if err != nil {
 		return err
 	}
@@ -98,7 +103,7 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 	return nil
 }
 
-func checkWithGit(actualHash string, tree []byte, actualGitObjectFileContents []byte, seed int64) error {
+func checkWithGit(logger *logger.Logger, actualHash string, tree []byte, actualGitObjectFileContents []byte, seed int64) error {
 	tempDir, err := ioutil.TempDir("", "worktree")
 	if err != nil {
 		return err
@@ -147,8 +152,25 @@ func checkWithGit(actualHash string, tree []byte, actualGitObjectFileContents []
 		return fmt.Errorf("CodeCrafters internal error. Error reading %v: %v", expectedGitObjectFilePath, err)
 	}
 
-	if !bytes.Equal(expectedGitObjectFileContents, actualGitObjectFileContents) {
-		return fmt.Errorf("Expected %q as tree object file contents, got: %q", expectedGitObjectFileContents, actualGitObjectFileContents)
+	decompressedActualGitObjectFileContents, err := decodeZlib(actualGitObjectFileContents)
+	if err != nil {
+		return fmt.Errorf("Git object file doesn't match official Git implementation. This file must be zlib-compressed")
+	}
+
+	decompressedExpectedGitObjectFileContents, err := decodeZlib(expectedGitObjectFileContents)
+	if err != nil {
+		return fmt.Errorf("CodeCrafters internal error. Error decoding zlib-compressed file %v: %v", expectedGitObjectFilePath, err)
+	}
+
+	if !bytes.Equal(decompressedExpectedGitObjectFileContents, decompressedActualGitObjectFileContents) {
+		lines := bytes_diff_visualizer.VisualizeByteDiff(decompressedActualGitObjectFileContents, decompressedExpectedGitObjectFileContents)
+		logger.Errorf("Git object file doesn't match official Git implementation. Diff after zlib decompression:")
+		logger.Errorf("")
+		for _, line := range lines {
+			logger.Plainln(line)
+		}
+		logger.Errorf("")
+		return fmt.Errorf("Git object file doesn't match official Git implementation")
 	}
 
 	if expected := expectedHash; expected != actualHash {
@@ -156,6 +178,23 @@ func checkWithGit(actualHash string, tree []byte, actualGitObjectFileContents []
 	}
 
 	return nil
+}
+
+func decodeZlib(data []byte) ([]byte, error) {
+	// Create a new zlib reader
+	r, err := zlib.NewReader(bytes.NewReader(data))
+	if err != nil {
+		return nil, err
+	}
+	defer r.Close()
+
+	// Read all the decompressed data
+	decompressedData, err := ioutil.ReadAll(r)
+	if err != nil {
+		return nil, err
+	}
+
+	return decompressedData, nil
 }
 
 func generateFiles(root string, seed int64) error {
