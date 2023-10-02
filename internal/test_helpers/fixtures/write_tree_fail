@@ -40,7 +40,7 @@ Debug = true
 [33m[your_program] [0mca6496ab067423eec80b85b1b5aeb8882d29963e
 [33m[stage-5] [0m[36m[36mReading file at .git/objects/ca/6496ab067423eec80b85b1b5aeb8882d29963e[0m[0m
 [33m[stage-5] [0m[92m[92mFound git object file written at .git/objects/ca/6496ab067423eec80b85b1b5aeb8882d29963e.[0m[0m
-[33m[stage-5] [0m[94m[94m$ git ls-tree --name-only <sha>[0m[0m
+[33m[stage-5] [0m[94m[94m$ git ls-tree --name-only ca6496ab067423eec80b85b1b5aeb8882d29963e[0m[0m
 [33m[stage-5] [0m[91m[91mGit object file doesn't match official Git implementation. Diff after zlib decompression:[0m[0m
 [33m[stage-5] [0m[91m[91m[0m[0m
 [33m[stage-5] [0mExpected (bytes 0-100), hexadecimal:                        | ASCII:

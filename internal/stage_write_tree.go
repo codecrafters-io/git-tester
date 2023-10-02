@@ -88,7 +88,7 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 
 	logger.Successf("Found git object file written at .git/objects/%v/%v.", sha[:2], sha[2:])
 
-	logger.Infof("$ git ls-tree --name-only <sha>")
+	logger.Infof("$ git ls-tree --name-only %v", sha)
 
 	tree, err := runGit(executable.WorkingDir, "ls-tree", "--name-only", sha)
 	if err != nil {

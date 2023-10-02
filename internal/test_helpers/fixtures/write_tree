@@ -40,5 +40,5 @@ Debug = true
 [33m[your_program] [0m7bba7df6498a0391b69e6343b517c3360b658293
 [33m[stage-5] [0m[36m[36mReading file at .git/objects/7b/ba7df6498a0391b69e6343b517c3360b658293[0m[0m
 [33m[stage-5] [0m[92m[92mFound git object file written at .git/objects/7b/ba7df6498a0391b69e6343b517c3360b658293.[0m[0m
-[33m[stage-5] [0m[94m[94m$ git ls-tree --name-only <sha>[0m[0m
+[33m[stage-5] [0m[94m[94m$ git ls-tree --name-only 7bba7df6498a0391b69e6343b517c3360b658293[0m[0m
 [33m[stage-5] [0m[92m[92mTest passed.[0m[0m
