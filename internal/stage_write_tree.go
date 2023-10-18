@@ -90,10 +90,7 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 
 	logger.Infof("$ git ls-tree --name-only %v", sha)
 
-	tree, err := runGit(executable.WorkingDir, "ls-tree", "--name-only", sha)
-	if err != nil {
-		return err
-	}
+	tree, _ := runGit(executable.WorkingDir, "ls-tree", "--name-only", sha)
 
 	err = checkWithGit(logger, sha, tree, gitObjectFileContents, seed)
 	if err != nil {
