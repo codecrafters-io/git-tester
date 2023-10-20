@@ -88,11 +88,13 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 
 	logger.Successf("Found git object file written at .git/objects/%v/%v.", sha[:2], sha[2:])
 
+	err = checkWithGit(logger, sha, gitObjectFileContents, seed)
+	if err != nil {
+		return err
+	}
+
 	logger.Infof("$ git ls-tree --name-only %v", sha)
-
-	tree, _ := runGit(executable.WorkingDir, "ls-tree", "--name-only", sha)
-
-	err = checkWithGit(logger, sha, tree, gitObjectFileContents, seed)
+	_, err = runGit(executable.WorkingDir, "ls-tree", "--name-only", sha)
 	if err != nil {
 		return err
 	}
@@ -100,7 +102,7 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 	return nil
 }
 
-func checkWithGit(logger *logger.Logger, actualHash string, tree []byte, actualGitObjectFileContents []byte, seed int64) error {
+func checkWithGit(logger *logger.Logger, actualHash string, actualGitObjectFileContents []byte, seed int64) error {
 	tempDir, err := ioutil.TempDir("", "worktree")
 	if err != nil {
 		return err
@@ -131,16 +133,6 @@ func checkWithGit(logger *logger.Logger, actualHash string, tree []byte, actualG
 	}
 
 	expectedHash := string(bytes.TrimSpace(expectedHashBytes))
-
-	expectedTree, err := runGit(tempDir, "ls-tree", "--name-only", expectedHash)
-	if err != nil {
-		return err
-	}
-
-	// check file list first as it's the friendliest diff to read
-	if expected := string(expectedTree); expected != string(tree) {
-		return fmt.Errorf("Expected %q as stdout, got: %q", expected, tree)
-	}
 
 	// check file contents
 	expectedGitObjectFilePath := path.Join(tempDir, ".git", "objects", expectedHash[:2], expectedHash[2:])
