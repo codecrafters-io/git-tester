@@ -1,47 +1,47 @@
 Debug = true
 
-[33m[stage-1] [0m[94m[94mRunning tests for Stage #1: init[0m[0m
-[33m[stage-1] [0m[36m[36mRunning git init[0m[0m
+[33m[stage-1] [0m[94mRunning tests for Stage #1: init[0m
+[33m[stage-1] [0m[36mRunning git init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-1] [0m[92m[92mTest passed.[0m[0m
+[33m[stage-1] [0m[92mTest passed.[0m
 
-[33m[stage-2] [0m[94m[94mRunning tests for Stage #2: read_blob[0m[0m
-[33m[stage-2] [0m[36m[36mRunning ./your_git.sh init[0m[0m
+[33m[stage-2] [0m[94mRunning tests for Stage #2: read_blob[0m
+[33m[stage-2] [0m[36mRunning ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-2] [0m[36m[36mWriting sample file[0m[0m
-[33m[stage-2] [0m[36m[36mRunning ./your_git.sh cat-file -p 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m[0m
+[33m[stage-2] [0m[36mWriting sample file[0m
+[33m[stage-2] [0m[36mRunning ./your_git.sh cat-file -p 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m
 [33m[your_program] [0mdumpty dooby doo donkey horsey vanilla
-[33m[stage-2] [0m[92m[92mTest passed.[0m[0m
+[33m[stage-2] [0m[92mTest passed.[0m
 
-[33m[stage-3] [0m[94m[94mRunning tests for Stage #3: create_blob[0m[0m
-[33m[stage-3] [0m[36m[36mRunning ./your_git.sh init[0m[0m
+[33m[stage-3] [0m[94mRunning tests for Stage #3: create_blob[0m
+[33m[stage-3] [0m[36mRunning ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-3] [0m[36m[36mWriting sample file[0m[0m
-[33m[stage-3] [0m[36m[36mRunning ./your_git.sh hash-object -w donkey.txt[0m[0m
+[33m[stage-3] [0m[36mWriting sample file[0m
+[33m[stage-3] [0m[36mRunning ./your_git.sh hash-object -w donkey.txt[0m
 [33m[your_program] [0m32eb24247f1cc0f2aa44da05b849392063a9b9e7
-[33m[stage-3] [0m[36m[36mRunning git cat-file -p 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m[0m
-[33m[stage-3] [0m[92m[92mTest passed.[0m[0m
+[33m[stage-3] [0m[36mRunning git cat-file -p 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m
+[33m[stage-3] [0m[92mTest passed.[0m
 
-[33m[stage-4] [0m[94m[94mRunning tests for Stage #4: read_tree[0m[0m
-[33m[stage-4] [0m[36m[36mRunning ./your_git.sh init[0m[0m
+[33m[stage-4] [0m[94mRunning tests for Stage #4: read_tree[0m
+[33m[stage-4] [0m[36mRunning ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-4] [0m[36m[36mWriting a tree to git storage..[0m[0m
-[33m[stage-4] [0m[36m[36mRunning ./your_git.sh ls-tree --name-only 978c60262a761655b8429dbeb12f7dce351c6cd6[0m[0m
+[33m[stage-4] [0m[36mWriting a tree to git storage..[0m
+[33m[stage-4] [0m[36mRunning ./your_git.sh ls-tree --name-only 978c60262a761655b8429dbeb12f7dce351c6cd6[0m
 [33m[your_program] [0mhumpty
 [33m[your_program] [0mscooby
 [33m[your_program] [0mvanilla
-[33m[stage-4] [0m[92m[92mTest passed.[0m[0m
+[33m[stage-4] [0m[92mTest passed.[0m
 
-[33m[stage-5] [0m[94m[94mRunning tests for Stage #5: write_tree[0m[0m
-[33m[stage-5] [0m[36m[36mRunning ./your_git.sh init[0m[0m
+[33m[stage-5] [0m[94mRunning tests for Stage #5: write_tree[0m
+[33m[stage-5] [0m[36mRunning ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-5] [0m[94m[94mCreating some files & directories[0m[0m
-[33m[stage-5] [0m[94m[94m$ ./your_git.sh write-tree[0m[0m
+[33m[stage-5] [0m[94mCreating some files & directories[0m
+[33m[stage-5] [0m[94m$ ./your_git.sh write-tree[0m
 [33m[your_program] [0mca6496ab067423eec80b85b1b5aeb8882d29963e
-[33m[stage-5] [0m[36m[36mReading file at .git/objects/ca/6496ab067423eec80b85b1b5aeb8882d29963e[0m[0m
-[33m[stage-5] [0m[92m[92mFound git object file written at .git/objects/ca/6496ab067423eec80b85b1b5aeb8882d29963e.[0m[0m
-[33m[stage-5] [0m[91m[91mGit object file doesn't match official Git implementation. Diff after zlib decompression:[0m[0m
-[33m[stage-5] [0m[91m[91m[0m[0m
+[33m[stage-5] [0m[36mReading file at .git/objects/ca/6496ab067423eec80b85b1b5aeb8882d29963e[0m
+[33m[stage-5] [0m[92mFound git object file written at .git/objects/ca/6496ab067423eec80b85b1b5aeb8882d29963e.[0m
+[33m[stage-5] [0m[91mGit object file doesn't match official Git implementation. Diff after zlib decompression:[0m
+[33m[stage-5] [0m[91m[0m
 [33m[stage-5] [0mExpected (bytes 0-100), hexadecimal:                        | ASCII:
 [33m[stage-5] [0m74 72 65 65 20 31 30 30 00 31 30 30 36 34 34 20 68 6f 72 73 | tree 100.100644 hors
 [33m[stage-5] [0m65 79 00 b3 bb b4 97 51 ee 2c 31 b7 c5 e1 24 06 5d 0f 38 1b | ey.....Q.,1...$.].8.
@@ -55,6 +55,6 @@ Debug = true
 [33m[stage-5] [0mfe 7a ff 30 34 30 30 30 30 20 68 75 6d 70 74 79 00 39 b2 e8 | .z.040000 humpty.9..
 [33m[stage-5] [0mc1 14 4b ba dd 5e a5 a0 d0 85 9c 16 7b 6b fc 73 08 30 34 30 | ..K..^......{k.s.040
 [33m[stage-5] [0m30 30 30 20 6d 6f 6e 6b 65 79 00 a1 e1 d3 c8 39 8b 89 b3 09 | 000 monkey.....9....
-[33m[stage-5] [0m[91m[91m[0m[0m
-[33m[stage-5] [0m[91m[91mGit object file doesn't match official Git implementation[0m[0m
-[33m[stage-5] [0m[91m[91mTest failed[0m[0m
+[33m[stage-5] [0m[91m[0m
+[33m[stage-5] [0m[91mGit object file doesn't match official Git implementation[0m
+[33m[stage-5] [0m[91mTest failed[0m
