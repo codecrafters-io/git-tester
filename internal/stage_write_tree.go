@@ -80,7 +80,7 @@ func testWriteTree(stageHarness *tester_utils.StageHarness) error {
 	logger.Debugf("Reading file at %v", relativePath)
 
 	gitObjectFileContents, err := os.ReadFile(gitObjectFilePath)
-	if err == os.ErrNotExist {
+	if errors.Is(err, os.ErrNotExist) {
 		return fmt.Errorf("Did you write the tree object? Did not find a file in .git/objects/<first 2 chars of sha>/<remaining chars of sha>")
 	} else if err != nil {
 		return fmt.Errorf("CodeCrafters internal error. Error reading %v: %v", relativePath, err)
