@@ -37,7 +37,7 @@ Debug = true
 [33m[your_program] [0mInitialized git directory
 [33m[stage-5] [0m[94mCreating some files & directories[0m
 [33m[stage-5] [0m[94m$ ./your_git.sh write-tree[0m
-[33m[your_program] [0mca6496ab067423eec80b85b1b5aeb8882d29963e
-[33m[stage-5] [0m[36mReading file at .git/objects/ca/6496ab067423eec80b85b1b5aeb8882d29963e[0m
+[33m[your_program] [0m7bba7df6498a0391b69e6343b517c3360b658293
+[33m[stage-5] [0m[36mReading file at .git/objects/7b/ba7df6498a0391b69e6343b517c3360b658293[0m
 [33m[stage-5] [0m[91mDid you write the tree object? Did not find a file in .git/objects/<first 2 chars of sha>/<remaining chars of sha>[0m
 [33m[stage-5] [0m[91mTest failed[0m

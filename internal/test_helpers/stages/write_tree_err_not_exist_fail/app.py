@@ -13,7 +13,6 @@ import hashlib
 import pathlib
 from io import BytesIO
 
-
 @dataclass
 class TreeEntry:
     mode: str
@@ -29,7 +28,7 @@ class TreeEntry:
 
 
 @dataclass
-class Blob:
+class Blob():
     filename: str
     contents: str
 
@@ -37,7 +36,7 @@ class Blob:
     def from_path(cls, path: str):
         contents = open(path).read()
         return Blob(filename=os.path.basename(path), contents=contents)
-
+        
     def git_obj_contents(self):
         header = f"blob {len(self.contents)}\0"
         return (header + self.contents).encode()
@@ -45,9 +44,8 @@ class Blob:
     def sha(self):
         return hashlib.sha1(self.git_obj_contents()).hexdigest()
 
-
 @dataclass
-class TreeNode:
+class TreeNode():
     name: str
     git_obj: Any
 
@@ -56,15 +54,20 @@ class TreeNode:
 
     @classmethod
     def tree_from_path(cls, path):
-        return TreeNode(name=os.path.basename(path), git_obj=Tree.from_path(path))
-
+        return TreeNode(
+            name=os.path.basename(path),
+            git_obj=Tree.from_path(path)
+        )
+        
     @classmethod
     def blob_from_path(self, path):
-        return TreeNode(name=os.path.basename(path), git_obj=Blob.from_path(path))
-
+        return TreeNode(
+            name=os.path.basename(path),
+            git_obj=Blob.from_path(path)
+        )
 
 @dataclass
-class Tree:
+class Tree():
     nodes: Any
 
     @classmethod
@@ -75,36 +78,32 @@ class Tree:
         for root, dirs, files in os.walk(path):
             return Tree(
                 nodes=[
-                    TreeNode.tree_from_path(os.path.join(root, _dir))
-                    for _dir in dirs
+                    TreeNode.tree_from_path(os.path.join(root, _dir)) for _dir in dirs
                     if _dir not in exclude
-                ]
-                + [
-                    TreeNode.blob_from_path(os.path.join(root, _file))
-                    for _file in files
+                ] + [
+                    TreeNode.blob_from_path(os.path.join(root, _file)) for _file in files
                     if _file not in exclude
                 ]
             )
 
     def git_obj_contents(self):
-        contents = b"".join(
-            [
-                f"{self.mode_from_node(node)} {node.name}\0".encode()
-                + unhexlify(node.git_obj.sha().encode())
-                for node in sorted(self.nodes, key=lambda x: x.name)
-            ]
-        )
+        contents = b"".join([
+            f"{self.mode_from_node(node)} {node.name}\0".encode() + unhexlify(node.git_obj.sha().encode())
+            for node in sorted(self.nodes, key=lambda x: x.name)
+        ])
         header = f"tree {len(contents)}\0".encode()
-        return header + contents
+        return (header + contents)
 
     def mode_from_node(self, node):
         if node.is_tree():
-            return "040000"  # Mistake, this should be 40000
+            return "40000"
         else:
             return "100644"
 
     def sha(self):
         return hashlib.sha1(self.git_obj_contents()).hexdigest()
+
+            
 
 
 def main():
@@ -163,7 +162,7 @@ def main():
     elif command == "write-tree":
         tree = Tree.from_path(".", exclude=[".git"])
         sha = tree.sha()
-        path = ".git/objects/dummy/path"
+        path = f".git/objects/dummy/path"
         os.makedirs(os.path.dirname(path), exist_ok=True)
 
         zlib_store = zlib.compress(tree.git_obj_contents())
@@ -171,7 +170,6 @@ def main():
         print(sha)
     else:
         raise RuntimeError(f"Unknown command: #{command}")
-
 
 def read_until_sep(io: BytesIO, sep: bytes) -> bytes:
     contents = b""
