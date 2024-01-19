@@ -46,6 +46,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath: "./test_helpers/fixtures/write_tree_fail",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+    "write_tree_err_not_exist_failure": {
+			UntilStageSlug: "write_tree",
+			CodePath: "./test_helpers/stages/write_tree_err_not_exist_fail",
+			ExpectedExitCode: 1,
+			StdoutFixturePath: "./test_helpers/fixtures/write_tree_err_not_exist_fail",
+			NormalizeOutputFunc: normalizeTesterOutput,
+    },
 		"write_tree_success": {
 			UntilStageSlug: "write_tree",
 			CodePath: "./test_helpers/stages/write_tree",
