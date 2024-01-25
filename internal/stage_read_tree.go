@@ -87,6 +87,10 @@ func testReadTree(stageHarness *tester_utils.StageHarness) error {
 		return err
 	}
 
+	if err = assertExitCode(result, 0); err != nil {
+		return err
+	}
+
 	storage := filesystem.NewObjectStorage(
 		dotgit.New(osfs.New(filepath.Join(tempDir, ".git"))),
 		cache.NewObjectLRU(0),
