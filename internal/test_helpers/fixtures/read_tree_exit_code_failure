@@ -27,18 +27,9 @@ Debug = true
 [33m[your_program] [0mInitialized git directory
 [33m[stage-4] [0m[36mWriting a tree to git storage..[0m
 [33m[stage-4] [0m[36mRunning ./your_git.sh ls-tree --name-only 978c60262a761655b8429dbeb12f7dce351c6cd6[0m
-[33m[your_program] [0mTraceback (most recent call last):
-[33m[your_program] [0m  File "/Users/rohitpaulk/.pyenv/versions/3.10.1/lib/python3.10/runpy.py", line 196, in _run_module_as_main
-[33m[your_program] [0m    return _run_code(code, main_globals, None,
 [33m[your_program] [0mhumpty
 [33m[your_program] [0mscooby
 [33m[your_program] [0mvanilla
-[33m[your_program] [0m  File "/Users/rohitpaulk/.pyenv/versions/3.10.1/lib/python3.10/runpy.py", line 86, in _run_code
-[33m[your_program] [0m    exec(code, run_globals)
-[33m[your_program] [0m  File "/Users/rohitpaulk/experiments/codecrafters/testers/git-tester/internal/test_helpers/stages/read_tree_exit_code_failure/app.py", line 111, in <module>
-[33m[your_program] [0m    main()
-[33m[your_program] [0m  File "/Users/rohitpaulk/experiments/codecrafters/testers/git-tester/internal/test_helpers/stages/read_tree_exit_code_failure/app.py", line 83, in main
-[33m[your_program] [0m    raise RuntimeError(
-[33m[your_program] [0mRuntimeError: Something went wrong!
+[33m[your_program] [0mSomething went wrong!
 [33m[stage-4] [0m[91mExpected 0 as exit code, got: 1[0m
 [33m[stage-4] [0m[91mTest failed[0m

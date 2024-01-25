@@ -80,9 +80,8 @@ def main():
         for obj in objs:
             print(obj.filename)
 
-        raise RuntimeError(
-            "Something went wrong!"
-        )  # Should exit with non-zero exit code for tests
+        print("Something went wrong!")
+        exit(1)  # Simulate a non-zero exit code
     else:
         raise RuntimeError(f"Unknown command: #{command}")
 
