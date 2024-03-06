@@ -10,9 +10,10 @@ Debug = true
 [33m[stage-1] [0m[92mTest passed.[0m
 
 [33m[stage-2] [0m[94mRunning tests for Stage #2: read_blob[0m
-[33m[stage-2] [0m[36mRunning ./your_git.sh init[0m
+[33m[stage-2] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-2] [0m[36mWriting sample file[0m
-[33m[stage-2] [0m[36mRunning ./your_git.sh cat-file -p 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m
+[33m[stage-2] [0m[94mAdded blob object to .git/objects: 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m
+[33m[stage-2] [0m[94m$ ./your_git.sh cat-file -p 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m
 [33m[your_program] [0mdumpty dooby doo donkey horsey vanilla
+[33m[stage-2] [0m[92mOutput is valid.[0m
 [33m[stage-2] [0m[92mTest passed.[0m
