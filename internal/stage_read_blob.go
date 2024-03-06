@@ -27,13 +27,12 @@ func testReadBlob(harness *test_case_harness.TestCaseHarness) error {
 
 	executable.WorkingDir = tempDir
 
-	logger.Debugf("Running ./your_git.sh init")
+	logger.Infof("$ ./your_git.sh init")
 	_, err = executable.Run("init")
 	if err != nil {
 		return err
 	}
 
-	logger.Debugf("Writing sample file")
 	sampleFile := path.Join(tempDir, fmt.Sprintf("%s.txt", randomStringShort()))
 	sampleFileContents := randomString()
 	err = ioutil.WriteFile(
@@ -70,7 +69,9 @@ func testReadBlob(harness *test_case_harness.TestCaseHarness) error {
 		panic("Expected sha doesn't match!")
 	}
 
-	logger.Debugf("Running ./your_git.sh cat-file -p %s", expectedSha.String())
+	logger.Infof("Added blob object to .git/objects: %s", expectedSha.String())
+
+	logger.Infof("$ ./your_git.sh cat-file -p %s", expectedSha.String())
 	result, err := executable.Run("cat-file", "-p", expectedSha.String())
 	if err != nil {
 		return err
@@ -80,5 +81,10 @@ func testReadBlob(harness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	return assertStdout(result, sampleFileContents)
+	if err = assertStdout(result, sampleFileContents); err != nil {
+		return err
+	}
+
+	logger.Successf("Output is valid.")
+	return nil
 }
