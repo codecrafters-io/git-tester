@@ -6,16 +6,16 @@ import (
 	"os"
 	"path"
 
-	tester_utils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 )
 
-func testCreateBlob(stageHarness *tester_utils.StageHarness) error {
+func testCreateBlob(harness *test_case_harness.TestCaseHarness) error {
 	initRandom()
 
-	logger := stageHarness.Logger
-	executable := stageHarness.Executable
+	logger := harness.Logger
+	executable := harness.Executable
 
 	tempDir, err := ioutil.TempDir("", "worktree")
 	if err != nil {
