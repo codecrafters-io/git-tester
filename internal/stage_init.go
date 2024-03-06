@@ -33,6 +33,8 @@ func testInit(harness *test_case_harness.TestCaseHarness) error {
 		if err = assertDirExistsInDir(tempDir, dir); err != nil {
 			logDebugTree(logger, tempDir)
 			return err
+		} else {
+			logger.Successf("%s directory found.", dir)
 		}
 	}
 
@@ -43,14 +45,16 @@ func testInit(harness *test_case_harness.TestCaseHarness) error {
 		}
 	}
 
-	if err = assertFileContents(".git/HEAD", path.Join(tempDir, ".git/HEAD")); err != nil {
+	if err = assertHeadFileContents(".git/HEAD", path.Join(tempDir, ".git/HEAD")); err != nil {
 		return err
 	}
+
+	logger.Successf("%s file is valid.", ".git/HEAD")
 
 	return nil
 }
 
-func assertFileContents(friendlyName string, path string) error {
+func assertHeadFileContents(friendlyName string, path string) error {
 	bytes, err := ioutil.ReadFile(path)
 	if err != nil {
 		return err
@@ -93,7 +97,7 @@ func assertFileExistsInDir(parent string, child string) error {
 }
 
 func logDebugTree(logger *logger.Logger, dir string) {
-	logger.Debugf("Files found in directory: ")
+	logger.Infof("Files found in directory: ")
 	doLogDebugTree(logger, dir, " ")
 }
 
@@ -104,15 +108,15 @@ func doLogDebugTree(logger *logger.Logger, dir string, prefix string) {
 	}
 
 	if len(entries) == 0 {
-		logger.Debugf(prefix + "  (directory is empty)")
+		logger.Infof(prefix + "  (directory is empty)")
 	}
 
 	for _, info := range entries {
 		if info.IsDir() {
-			logger.Debugf(prefix + "- " + info.Name() + "/")
+			logger.Infof(prefix + "- " + info.Name() + "/")
 			doLogDebugTree(logger, path.Join(dir, info.Name()), prefix+" ")
 		} else {
-			logger.Debugf(prefix + "- " + info.Name())
+			logger.Infof(prefix + "- " + info.Name())
 		}
 	}
 }
