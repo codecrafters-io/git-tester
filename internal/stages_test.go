@@ -42,14 +42,14 @@ func TestStages(t *testing.T) {
 		"create_blob_failure": {
 			UntilStageSlug:      "create_blob",
 			CodePath:            "./test_helpers/stages/create_blob_failure",
-			ExpectedExitCode:    0,
+			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/create_blob_failure",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 		"create_blob_no_file": {
 			UntilStageSlug:      "create_blob",
 			CodePath:            "./test_helpers/stages/create_blob_no_file",
-			ExpectedExitCode:    0,
+			ExpectedExitCode:    1,
 			StdoutFixturePath:   "./test_helpers/fixtures/create_blob_no_file",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
