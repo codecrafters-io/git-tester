@@ -7,14 +7,14 @@ import (
 	"path"
 
 	logger "github.com/codecrafters-io/tester-utils/logger"
-	tester_utils "github.com/codecrafters-io/tester-utils"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testInit(stageHarness *tester_utils.StageHarness) error {
+func testInit(harness *test_case_harness.TestCaseHarness) error {
 	initRandom()
 
-	logger := stageHarness.Logger
-	executable := stageHarness.Executable
+	logger := harness.Logger
+	executable := harness.Executable
 
 	logger.Debugf("Running git init")
 	tempDir, err := ioutil.TempDir("", "worktree")

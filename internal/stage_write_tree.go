@@ -15,16 +15,16 @@ import (
 	"strings"
 	"time"
 
-	tester_utils "github.com/codecrafters-io/tester-utils"
 	bytes_diff_visualizer "github.com/codecrafters-io/tester-utils/bytes_diff_visualizer"
 	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-func testWriteTree(stageHarness *tester_utils.StageHarness) error {
+func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
 	initRandom()
 
-	logger := stageHarness.Logger
-	executable := stageHarness.Executable
+	logger := harness.Logger
+	executable := harness.Executable
 
 	tempDir, err := ioutil.TempDir("", "worktree")
 	if err != nil {

@@ -7,18 +7,17 @@ import (
 	"strings"
 	"time"
 
-	tester_utils "github.com/codecrafters-io/tester-utils"
-
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
 )
 
-func testCreateCommit(stageHarness *tester_utils.StageHarness) error {
+func testCreateCommit(harness *test_case_harness.TestCaseHarness) error {
 	initRandom()
 
-	logger := stageHarness.Logger
-	executable := stageHarness.Executable
+	logger := harness.Logger
+	executable := harness.Executable
 
 	tempDir, err := ioutil.TempDir("", "worktree")
 	if err != nil {
