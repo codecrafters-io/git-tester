@@ -16,11 +16,12 @@ func testInit(harness *test_case_harness.TestCaseHarness) error {
 	logger := harness.Logger
 	executable := harness.Executable
 
-	logger.Debugf("Running git init")
 	tempDir, err := ioutil.TempDir("", "worktree")
 	if err != nil {
 		return err
 	}
+
+	logger.Infof("$ ./your_git.sh init")
 
 	executable.WorkingDir = tempDir
 	_, err = executable.Run("init")
@@ -59,7 +60,7 @@ func assertFileContents(friendlyName string, path string) error {
 	expectedContents1 := "ref: refs/heads/main\n"
 	expectedContents2 := "ref: refs/heads/master\n"
 	if actualContents != expectedContents1 && actualContents != expectedContents2 {
-		return fmt.Errorf("Expected %s to contain '%s' or '%s', got '%s'", friendlyName, expectedContents1, expectedContents2, actualContents)
+		return fmt.Errorf("Expected %s to contain %q or %q, got %q", friendlyName, expectedContents1, expectedContents2, actualContents)
 	}
 
 	return nil
@@ -68,11 +69,11 @@ func assertFileContents(friendlyName string, path string) error {
 func assertDirExistsInDir(parent string, child string) error {
 	info, err := os.Stat(path.Join(parent, child))
 	if os.IsNotExist(err) {
-		return fmt.Errorf("Expected the '%s' directory to be created", child)
+		return fmt.Errorf("Expected the %q directory to be created", child)
 	}
 
 	if !info.IsDir() {
-		return fmt.Errorf("Expected '%s' to be a directory", child)
+		return fmt.Errorf("Expected %q to be a directory", child)
 	}
 
 	return nil
@@ -81,11 +82,11 @@ func assertDirExistsInDir(parent string, child string) error {
 func assertFileExistsInDir(parent string, child string) error {
 	info, err := os.Stat(path.Join(parent, child))
 	if os.IsNotExist(err) {
-		return fmt.Errorf("Expected the '%s' file to be created", child)
+		return fmt.Errorf("Expected the %q file to be created", child)
 	}
 
 	if info.IsDir() {
-		return fmt.Errorf("Expected '%s' to be a file", child)
+		return fmt.Errorf("Expected %q to be a file", child)
 	}
 
 	return nil

@@ -18,6 +18,20 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/init",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"init_main": {
+			UntilStageSlug:      "init",
+			CodePath:            "./test_helpers/stages/init_main",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/init_main",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"init_failure": {
+			UntilStageSlug:      "init",
+			CodePath:            "./test_helpers/stages/init_failure",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/init_failure",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 		"read_blob_success": {
 			UntilStageSlug:      "read_blob",
 			CodePath:            "./test_helpers/stages/read_blob",

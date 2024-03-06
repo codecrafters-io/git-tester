@@ -120,7 +120,7 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 
 	expected, actual := "Paul Kuruvilla", commit.Author.Name
 	if expected != actual {
-		return fmt.Errorf("Expected '%s' as author name, got: '%s'", expected, actual)
+		return fmt.Errorf("Expected %q as author name, got: %q", expected, actual)
 	}
 	logger.Successf("Commit contents verified")
 
@@ -135,7 +135,7 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 
 	expected, actual = testFile.contents, string(bytes)
 	if expected != actual {
-		return fmt.Errorf("Expected '%s' as file contents, got: '%s'", expected, actual)
+		return fmt.Errorf("Expected %q as file contents, got: %q", expected, actual)
 	}
 	logger.Successf("File contents verified")
 
