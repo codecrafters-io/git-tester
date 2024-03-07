@@ -30,7 +30,7 @@ func testReadTree(harness *test_case_harness.TestCaseHarness) error {
 
 	executable.WorkingDir = tempDir
 
-	logger.Debugf("Running ./your_git.sh init")
+	logger.Infof("$ ./your_git.sh init")
 	_, err = executable.Run("init")
 	if err != nil {
 		return err
@@ -81,7 +81,7 @@ func testReadTree(harness *test_case_harness.TestCaseHarness) error {
 	}
 
 	sha := commit.TreeHash.String()
-	logger.Debugf("Running ./your_git.sh ls-tree --name-only %s", sha)
+	logger.Infof("$ ./your_git.sh ls-tree --name-only %s", sha)
 	result, err := executable.Run("ls-tree", "--name-only", sha)
 	if err != nil {
 		return err

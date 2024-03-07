@@ -33,7 +33,7 @@ func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
 
 	executable.WorkingDir = tempDir
 
-	logger.Debugf("Running ./your_git.sh init")
+	logger.Infof("$ ./your_git.sh init")
 	_, err = executable.Run("init")
 	if err != nil {
 		return err
