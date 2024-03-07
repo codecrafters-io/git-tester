@@ -92,7 +92,7 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 
 	testRepo := randomRepo()
 
-	logger.Debugf("Running ./your_git.sh clone %s <testDir>", testRepo.url)
+	logger.Infof("$ ./your_git.sh clone %s <testDir>", testRepo.url)
 	result, err := executable.Run("clone", testRepo.url, "test_dir")
 	if err != nil {
 		return err
@@ -111,7 +111,7 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 	// Test a commit
 	commit_sha := testRepo.randomCommit()
 
-	logger.Debugf("Running git cat-file commit %s", commit_sha)
+	logger.Infof("$ git cat-file commit %s", commit_sha)
 
 	commit, err := r.CommitObject(plumbing.NewHash(commit_sha))
 	if err != nil {

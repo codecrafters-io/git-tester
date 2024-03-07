@@ -99,7 +99,7 @@ func testCreateCommit(harness *test_case_harness.TestCaseHarness) error {
 	treeSha := nextCommit.TreeHash.String()
 
 	commitMessage := randomString()
-	logger.Debugf("Running ./your_git.sh commit-tree <tree_sha> -p <commit_sha> -m <message>")
+	logger.Infof("$ ./your_git.sh commit-tree <tree_sha> -p <commit_sha> -m <message>")
 	result, err := executable.Run("commit-tree", treeSha, "-p", parentCommitSha, "-m", commitMessage)
 	if err != nil {
 		return err
