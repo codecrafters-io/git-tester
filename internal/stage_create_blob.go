@@ -1,20 +1,14 @@
 package internal
 
 import (
-	"bytes"
-	"compress/zlib"
 	"fmt"
-	"io"
-	"io/ioutil"
 	"os"
 	"path"
 	"strings"
 
-	"github.com/codecrafters-io/tester-utils/bytes_diff_visualizer"
-	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/git-tester/internal/blob_object_verifier"
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
-	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/plumbing"
 )
 
 func testCreateBlob(harness *test_case_harness.TestCaseHarness) error {
@@ -23,7 +17,7 @@ func testCreateBlob(harness *test_case_harness.TestCaseHarness) error {
 	logger := harness.Logger
 	executable := harness.Executable
 
-	tempDir, err := ioutil.TempDir("", "worktree")
+	tempDir, err := os.MkdirTemp("", "worktree")
 	if err != nil {
 		return err
 	}
@@ -36,10 +30,10 @@ func testCreateBlob(harness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	sampleFileName := fmt.Sprintf("%s.txt", randomStringShort())
-	sampleFileContents := randomString()
+	sampleFileName := fmt.Sprintf("%s.txt", random.RandomWord())
+	sampleFileContents := random.RandomString()
 	logger.Infof("$ echo %q > %s", sampleFileContents, sampleFileName)
-	err = ioutil.WriteFile(
+	err = os.WriteFile(
 		path.Join(tempDir, sampleFileName),
 		[]byte(sampleFileContents),
 		os.ModePerm,
@@ -47,8 +41,6 @@ func testCreateBlob(harness *test_case_harness.TestCaseHarness) error {
 	if err != nil {
 		return err
 	}
-
-	expectedSha := plumbing.ComputeHash(plumbing.BlobObject, []byte(sampleFileContents))
 
 	logger.Infof("$ ./your_git.sh hash-object -w %s", sampleFileName)
 	result, err := executable.Run("hash-object", "-w", sampleFileName)
@@ -60,89 +52,36 @@ func testCreateBlob(harness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
+	blobObjectVerifier := blob_object_verifier.BlobObjectVerifier{
+		RawContents: []byte(sampleFileContents),
+	}
+
+	expectedSha := blobObjectVerifier.ExpectedSha()
+
 	if len(strings.TrimSpace(string(result.Stdout))) != 40 {
-		return fmt.Errorf("Expected a 40-char SHA (%q) as output. Got: %q", expectedSha.String(), strings.TrimSpace(string(result.Stdout)))
+		return fmt.Errorf("Expected a 40-char SHA (%q) as output. Got: %q", blobObjectVerifier.ExpectedSha(), strings.TrimSpace(string(result.Stdout)))
 	}
 
-	actualShaString := strings.TrimSpace(string(result.Stdout))
+	actualSha := strings.TrimSpace(string(result.Stdout))
 
-	if err = assertStdoutContains(result, expectedSha.String()); err != nil {
-		printFriendlyBlobFileDiff(logger, tempDir, actualShaString, expectedSha.String(), sampleFileContents)
+	logger.Successf("Output is a 40-char SHA.")
+
+	if err = blobObjectVerifier.VerifyFileContents(logger, tempDir, actualSha); err != nil {
 		return err
-	}
-
-	logger.Successf("Output is valid.")
-
-	logger.Infof("$ git cat-file -p %s", expectedSha.String())
-	r, err := git.PlainOpen(tempDir)
-	if err != nil {
-		return err
-	}
-
-	blob, err := r.BlobObject(expectedSha)
-	if err != nil {
-		return err
-	}
-
-	blobReader, err := blob.Reader()
-	if err != nil {
-		return err
-	}
-
-	bytes, err := ioutil.ReadAll(blobReader)
-	if err != nil {
-		return err
-	}
-
-	expected, actual := sampleFileContents, string(bytes)
-
-	if expected != actual {
-		return fmt.Errorf("Expected %q as file contents, got: %q", expected, actual)
 	}
 
 	logger.Successf("Blob file contents are valid.")
 
+	if actualSha != expectedSha {
+		logger.Infof("Hint: Your blob file was valid, but the SHA is incorrect.")
+		logger.Infof("      This most likely means that you're passing wrong data to your SHA hash function.")
+		logger.Infof("      Make sure you're computing the SHA before zlib-compressing the file contents, not after.")
+		logger.Infof("      Make sure you're including the file type and size in the SHA computation.")
+		logger.Infof("      In this case, the contents passed to the SHA computation should be: %q", blobObjectVerifier.ExpectedDecompressedFileContents())
+		return fmt.Errorf("Expected SHA: %q, got: %q", expectedSha, actualSha)
+	}
+
+	logger.Successf("Returned SHA matches expected SHA.")
+
 	return nil
-}
-
-func printFriendlyBlobFileDiff(logger *logger.Logger, repoDir, actualSha, expectedSha, contents string) {
-	actualFileRelativePath := path.Join(".git", "objects", actualSha[:2], actualSha[2:])
-	actualFilePath := path.Join(repoDir, actualFileRelativePath)
-	expectedDecompressedFileContents := []byte("blob " + fmt.Sprint(len(contents)) + "\x00" + contents)
-	logger.Infof("Expected SHA: %s", expectedSha)
-	logger.Infof("Returned SHA: %s", actualSha)
-
-	actualFileContents, err := os.ReadFile(actualFilePath)
-	if err != nil {
-		logger.Infof("Note: Did not find file at %q to render diff. Assuming contents are empty.", actualFileRelativePath)
-
-		var in bytes.Buffer
-		b := []byte("")
-		w := zlib.NewWriter(&in)
-		w.Write(b)
-		w.Close()
-
-		actualFileContents = in.Bytes()
-	}
-
-	compressedActualFileReader, err := zlib.NewReader(bytes.NewReader(actualFileContents))
-	if err != nil {
-		logger.Infof("Error decompressing file at %q to render diff. Assuming contents are empty.", actualFileRelativePath)
-		compressedActualFileReader, _ = zlib.NewReader(bytes.NewReader([]byte{}))
-	}
-
-	decompressedActualGitObjectFileContents, err := io.ReadAll(compressedActualFileReader)
-	if err != nil {
-		logger.Infof("Note: Error decompressing file at %q. Assuming contents are empty.", actualFileRelativePath)
-	}
-
-	lines := bytes_diff_visualizer.VisualizeByteDiff(decompressedActualGitObjectFileContents, expectedDecompressedFileContents)
-	logger.Errorf("Git object file doesn't match official Git implementation. Diff after zlib decompression:")
-	logger.Errorf("")
-
-	for _, line := range lines {
-		logger.Plainln(line)
-	}
-
-	logger.Errorf("")
 }

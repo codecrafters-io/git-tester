@@ -53,6 +53,13 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/create_blob_no_file",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
+		"create_blob_no_zlib": {
+			UntilStageSlug:      "create_blob",
+			CodePath:            "./test_helpers/stages/create_blob_no_zlib",
+			ExpectedExitCode:    1,
+			StdoutFixturePath:   "./test_helpers/fixtures/create_blob_no_zlib",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
 		"create_blob_success": {
 			UntilStageSlug:      "create_blob",
 			CodePath:            "./test_helpers/stages/create_blob",
