@@ -25,26 +25,5 @@ Debug = true
 [33m[stage-3] [0m[94m$ ./your_git.sh hash-object -w pear.txt[0m
 [33m[your_program] [0m7a50e289f5bde85780a843d5750ec3ae372af50a
 [33m[stage-3] [0m[92mOutput is a 40-char SHA.[0m
-[33m[stage-3] [0m[92mBlob file contents are valid.[0m
-[33m[stage-3] [0m[92mReturned SHA matches expected SHA.[0m
-[33m[stage-3] [0m[92mTest passed.[0m
-
-[33m[stage-4] [0m[94mRunning tests for Stage #4: read_tree[0m
-[33m[stage-4] [0m[36mRunning ./your_git.sh init[0m
-[33m[your_program] [0mInitialized git directory
-[33m[stage-4] [0m[36mWriting a tree to git storage..[0m
-[33m[stage-4] [0m[36mRunning ./your_git.sh ls-tree --name-only 978c60262a761655b8429dbeb12f7dce351c6cd6[0m
-[33m[your_program] [0mhumpty
-[33m[your_program] [0mscooby
-[33m[your_program] [0mvanilla
-[33m[stage-4] [0m[92mTest passed.[0m
-
-[33m[stage-5] [0m[94mRunning tests for Stage #5: write_tree[0m
-[33m[stage-5] [0m[36mRunning ./your_git.sh init[0m
-[33m[your_program] [0mInitialized git directory
-[33m[stage-5] [0m[94mCreating some files & directories[0m
-[33m[stage-5] [0m[94m$ ./your_git.sh write-tree[0m
-[33m[your_program] [0m7bba7df6498a0391b69e6343b517c3360b658293
-[33m[stage-5] [0m[36mReading file at .git/objects/7b/ba7df6498a0391b69e6343b517c3360b658293[0m
-[33m[stage-5] [0m[91mDid you write the tree object? Did not find a file in .git/objects/<first 2 chars of sha>/<remaining chars of sha>[0m
-[33m[stage-5] [0m[91mTest failed[0m
+[33m[stage-3] [0m[91mThe file at ".git/objects/7a/50e289f5bde85780a843d5750ec3ae372af50a" is not Zlib-compressed[0m
+[33m[stage-3] [0m[91mTest failed[0m

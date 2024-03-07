@@ -21,22 +21,21 @@ Debug = true
 [33m[stage-3] [0m[94mRunning tests for Stage #3: create_blob[0m
 [33m[stage-3] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-3] [0m[94m$ echo "dumpty dooby doo donkey horsey vanilla" > donkey.txt[0m
-[33m[stage-3] [0m[94m$ ./your_git.sh hash-object -w donkey.txt[0m
-[33m[your_program] [0m0afc04542ef7a942a6552c9d36616fb61e5fba94
-[33m[stage-3] [0m[94mExpected SHA: 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m
-[33m[stage-3] [0m[94mReturned SHA: 0afc04542ef7a942a6552c9d36616fb61e5fba94[0m
+[33m[stage-3] [0m[94m$ echo "orange pear grape pineapple blueberry banana" > pear.txt[0m
+[33m[stage-3] [0m[94m$ ./your_git.sh hash-object -w pear.txt[0m
+[33m[your_program] [0m1b6cfb9d1e21ccdec2d4f2b27dfd413561199394
+[33m[stage-3] [0m[92mOutput is a 40-char SHA.[0m
 [33m[stage-3] [0m[91mGit object file doesn't match official Git implementation. Diff after zlib decompression:[0m
 [33m[stage-3] [0m[91m[0m
-[33m[stage-3] [0mExpected (bytes 0-46), hexadecimal:                         | ASCII:
-[33m[stage-3] [0m62 6c 6f 62 20 33 38 00 64 75 6d 70 74 79 20 64 6f 6f 62 79 | blob 38.dumpty dooby
-[33m[stage-3] [0m20 64 6f 6f 20 64 6f 6e 6b 65 79 20 68 6f 72 73 65 79 20 76 |  doo donkey horsey v
-[33m[stage-3] [0m61 6e 69 6c 6c 61                                           | anilla
+[33m[stage-3] [0mExpected (bytes 0-52), hexadecimal:                         | ASCII:
+[33m[stage-3] [0m62 6c 6f 62 20 34 34 00 6f 72 61 6e 67 65 20 70 65 61 72 20 | blob 44.orange pear 
+[33m[stage-3] [0m67 72 61 70 65 20 70 69 6e 65 61 70 70 6c 65 20 62 6c 75 65 | grape pineapple blue
+[33m[stage-3] [0m62 65 72 72 79 20 62 61 6e 61 6e 61                         | berry banana
 [33m[stage-3] [0m
-[33m[stage-3] [0mActual (bytes 0-46), hexadecimal:                           | ASCII:
-[33m[stage-3] [0m62 6c 6f 62 33 38 00 64 75 6d 70 74 79 20 64 6f 6f 62 79 20 | blob38.dumpty dooby 
-[33m[stage-3] [0m64 6f 6f 20 64 6f 6e 6b 65 79 20 68 6f 72 73 65 79 20 76 61 | doo donkey horsey va
-[33m[stage-3] [0m6e 69 6c 6c 61                                              | nilla
+[33m[stage-3] [0mActual (bytes 0-52), hexadecimal:                           | ASCII:
+[33m[stage-3] [0m62 6c 6f 62 34 34 00 6f 72 61 6e 67 65 20 70 65 61 72 20 67 | blob44.orange pear g
+[33m[stage-3] [0m72 61 70 65 20 70 69 6e 65 61 70 70 6c 65 20 62 6c 75 65 62 | rape pineapple blueb
+[33m[stage-3] [0m65 72 72 79 20 62 61 6e 61 6e 61                            | erry banana
 [33m[stage-3] [0m[91m[0m
-[33m[stage-3] [0m[91mExpected stdout to contain "32eb24247f1cc0f2aa44da05b849392063a9b9e7", got: "0afc04542ef7a942a6552c9d36616fb61e5fba94\n"[0m
+[33m[stage-3] [0m[91mFile at ".git/objects/1b/6cfb9d1e21ccdec2d4f2b27dfd413561199394" does not match official Git implementation[0m
 [33m[stage-3] [0m[91mTest failed[0m

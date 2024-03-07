@@ -21,20 +21,9 @@ Debug = true
 [33m[stage-3] [0m[94mRunning tests for Stage #3: create_blob[0m
 [33m[stage-3] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-3] [0m[94m$ echo "dumpty dooby doo donkey horsey vanilla" > donkey.txt[0m
-[33m[stage-3] [0m[94m$ ./your_git.sh hash-object -w donkey.txt[0m
+[33m[stage-3] [0m[94m$ echo "orange pear grape pineapple blueberry banana" > pear.txt[0m
+[33m[stage-3] [0m[94m$ ./your_git.sh hash-object -w pear.txt[0m
 [33m[your_program] [0mafa8b20484a29b438370b623ced459c9409fcc05
-[33m[stage-3] [0m[94mExpected SHA: 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m
-[33m[stage-3] [0m[94mReturned SHA: afa8b20484a29b438370b623ced459c9409fcc05[0m
-[33m[stage-3] [0m[94mNote: Did not find file at ".git/objects/af/a8b20484a29b438370b623ced459c9409fcc05" to render diff. Assuming contents are empty.[0m
-[33m[stage-3] [0m[91mGit object file doesn't match official Git implementation. Diff after zlib decompression:[0m
-[33m[stage-3] [0m[91m[0m
-[33m[stage-3] [0mExpected (bytes 0-46), hexadecimal:                         | ASCII:
-[33m[stage-3] [0m62 6c 6f 62 20 33 38 00 64 75 6d 70 74 79 20 64 6f 6f 62 79 | blob 38.dumpty dooby
-[33m[stage-3] [0m20 64 6f 6f 20 64 6f 6e 6b 65 79 20 68 6f 72 73 65 79 20 76 |  doo donkey horsey v
-[33m[stage-3] [0m61 6e 69 6c 6c 61                                           | anilla
-[33m[stage-3] [0m
-[33m[stage-3] [0mActual (bytes 0-46), hexadecimal:          | ASCII:
-[33m[stage-3] [0m[91m[0m
-[33m[stage-3] [0m[91mExpected stdout to contain "32eb24247f1cc0f2aa44da05b849392063a9b9e7", got: "afa8b20484a29b438370b623ced459c9409fcc05\n"[0m
+[33m[stage-3] [0m[92mOutput is a 40-char SHA.[0m
+[33m[stage-3] [0m[91mDid not find file at ".git/objects/af/a8b20484a29b438370b623ced459c9409fcc05"[0m
 [33m[stage-3] [0m[91mTest failed[0m
