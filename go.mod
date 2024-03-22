@@ -3,7 +3,7 @@ module github.com/codecrafters-io/git-tester
 go 1.20
 
 require (
-	github.com/codecrafters-io/tester-utils v0.2.15
+	github.com/codecrafters-io/tester-utils v0.2.16
 	github.com/go-git/go-billy/v5 v5.0.0
 	github.com/go-git/go-git/v5 v5.0.0
 )
