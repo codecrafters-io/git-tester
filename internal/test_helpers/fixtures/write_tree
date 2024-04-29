@@ -1,22 +1,25 @@
 Debug = true
 
-[33m[stage-1] [0m[94mRunning tests for Stage #1: init[0m
-[33m[stage-1] [0m[94m$ ./your_git.sh init[0m
+[33m[stage-5] [0m[94mRunning tests for Stage #5: write_tree[0m
+[33m[stage-5] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-1] [0m[92m.git directory found.[0m
-[33m[stage-1] [0m[92m.git/objects directory found.[0m
-[33m[stage-1] [0m[92m.git/refs directory found.[0m
-[33m[stage-1] [0m[92m.git/HEAD file is valid.[0m
-[33m[stage-1] [0m[92mTest passed.[0m
+[33m[stage-5] [0m[94mCreating some files & directories[0m
+[33m[stage-5] [0m[94m$ ./your_git.sh write-tree[0m
+[33m[your_program] [0m7bba7df6498a0391b69e6343b517c3360b658293
+[33m[stage-5] [0m[36mReading file at .git/objects/7b/ba7df6498a0391b69e6343b517c3360b658293[0m
+[33m[stage-5] [0m[92mFound git object file written at .git/objects/7b/ba7df6498a0391b69e6343b517c3360b658293.[0m
+[33m[stage-5] [0m[94m$ git ls-tree --name-only 7bba7df6498a0391b69e6343b517c3360b658293[0m
+[33m[stage-5] [0m[92mTest passed.[0m
 
-[33m[stage-2] [0m[94mRunning tests for Stage #2: read_blob[0m
-[33m[stage-2] [0m[94m$ ./your_git.sh init[0m
+[33m[stage-4] [0m[94mRunning tests for Stage #4: read_tree[0m
+[33m[stage-4] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-2] [0m[94mAdded blob object to .git/objects: 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m
-[33m[stage-2] [0m[94m$ ./your_git.sh cat-file -p 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m
-[33m[your_program] [0mdumpty dooby doo donkey horsey vanilla
-[33m[stage-2] [0m[92mOutput is valid.[0m
-[33m[stage-2] [0m[92mTest passed.[0m
+[33m[stage-4] [0m[36mWriting a tree to git storage..[0m
+[33m[stage-4] [0m[94m$ ./your_git.sh ls-tree --name-only 978c60262a761655b8429dbeb12f7dce351c6cd6[0m
+[33m[your_program] [0mhumpty
+[33m[your_program] [0mscooby
+[33m[your_program] [0mvanilla
+[33m[stage-4] [0m[92mTest passed.[0m
 
 [33m[stage-3] [0m[94mRunning tests for Stage #3: create_blob[0m
 [33m[stage-3] [0m[94m$ ./your_git.sh init[0m
@@ -29,23 +32,20 @@ Debug = true
 [33m[stage-3] [0m[92mReturned SHA matches expected SHA.[0m
 [33m[stage-3] [0m[92mTest passed.[0m
 
-[33m[stage-4] [0m[94mRunning tests for Stage #4: read_tree[0m
-[33m[stage-4] [0m[94m$ ./your_git.sh init[0m
+[33m[stage-2] [0m[94mRunning tests for Stage #2: read_blob[0m
+[33m[stage-2] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-4] [0m[36mWriting a tree to git storage..[0m
-[33m[stage-4] [0m[94m$ ./your_git.sh ls-tree --name-only 978c60262a761655b8429dbeb12f7dce351c6cd6[0m
-[33m[your_program] [0mhumpty
-[33m[your_program] [0mscooby
-[33m[your_program] [0mvanilla
-[33m[stage-4] [0m[92mTest passed.[0m
+[33m[stage-2] [0m[94mAdded blob object to .git/objects: 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m
+[33m[stage-2] [0m[94m$ ./your_git.sh cat-file -p 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m
+[33m[your_program] [0mdumpty dooby doo donkey horsey vanilla
+[33m[stage-2] [0m[92mOutput is valid.[0m
+[33m[stage-2] [0m[92mTest passed.[0m
 
-[33m[stage-5] [0m[94mRunning tests for Stage #5: write_tree[0m
-[33m[stage-5] [0m[94m$ ./your_git.sh init[0m
+[33m[stage-1] [0m[94mRunning tests for Stage #1: init[0m
+[33m[stage-1] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-5] [0m[94mCreating some files & directories[0m
-[33m[stage-5] [0m[94m$ ./your_git.sh write-tree[0m
-[33m[your_program] [0m7bba7df6498a0391b69e6343b517c3360b658293
-[33m[stage-5] [0m[36mReading file at .git/objects/7b/ba7df6498a0391b69e6343b517c3360b658293[0m
-[33m[stage-5] [0m[92mFound git object file written at .git/objects/7b/ba7df6498a0391b69e6343b517c3360b658293.[0m
-[33m[stage-5] [0m[94m$ git ls-tree --name-only 7bba7df6498a0391b69e6343b517c3360b658293[0m
-[33m[stage-5] [0m[92mTest passed.[0m
+[33m[stage-1] [0m[92m.git directory found.[0m
+[33m[stage-1] [0m[92m.git/objects directory found.[0m
+[33m[stage-1] [0m[92m.git/refs directory found.[0m
+[33m[stage-1] [0m[92m.git/HEAD file is valid.[0m
+[33m[stage-1] [0m[92mTest passed.[0m
