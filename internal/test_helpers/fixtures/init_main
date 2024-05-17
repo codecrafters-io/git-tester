@@ -1,6 +1,6 @@
 Debug = true
 
-[33m[stage-1] [0m[94mRunning tests for Stage #1: init[0m
+[33m[stage-1] [0m[94mRunning tests for Stage #1: gg4[0m
 [33m[stage-1] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
 [33m[stage-1] [0m[92m.git directory found.[0m

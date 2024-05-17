@@ -1,6 +1,6 @@
 Debug = true
 
-[33m[stage-4] [0m[94mRunning tests for Stage #4: read_tree[0m
+[33m[stage-4] [0m[94mRunning tests for Stage #4: kp1[0m
 [33m[stage-4] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
 [33m[stage-4] [0m[36mWriting a tree to git storage..[0m
