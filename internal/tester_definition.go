@@ -9,31 +9,31 @@ var testerDefinition = tester_definition.TesterDefinition{
 	ExecutableFileName: "your_git.sh",
 	TestCases: []tester_definition.TestCase{
 		{
-			Slug:                    "init",
+			Slug:                    "gg4",
 			TestFunc:                testInit,
 		},
 		{
-			Slug:                    "read_blob",
+			Slug:                    "ic4",
 			TestFunc:                testReadBlob,
 		},
 		{
-			Slug:                    "create_blob",
+      Slug:                    "jt4",
 			TestFunc:                testCreateBlob,
 		},
 		{
-			Slug:                    "read_tree",
+			Slug:                    "kp1",
 			TestFunc:                testReadTree,
 		},
 		{
-			Slug:                    "write_tree",
+			Slug:                    "fe4",
 			TestFunc:                testWriteTree,
 		},
 		{
-			Slug:                    "create_commit",
+			Slug:                    "jm9",
 			TestFunc:                testCreateCommit,
 		},
 		{
-			Slug:                    "clone_repository",
+			Slug:                    "mg6",
 			TestFunc:                testCloneRepository,
 		},
 	},
