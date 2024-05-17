@@ -1,6 +1,6 @@
 Debug = true
 
-[33m[stage-3] [0m[94mRunning tests for Stage #3: create_blob[0m
+[33m[stage-3] [0m[94mRunning tests for Stage #3: jt4[0m
 [33m[stage-3] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
 [33m[stage-3] [0m[94m$ echo "orange pear grape pineapple blueberry banana" > pear.txt[0m

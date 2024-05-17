@@ -63,92 +63,261 @@ marketing:
 
 
 stages:
-  - slug: "init"
+  - legacy_slug: "init"
+    slug: "gg4"
     name: "Initialize the .git directory"
     difficulty: very_easy
     description_md: |-
-      In this stage, you'll implement the `git init` command. This command
-      initializes a repository by creating a `.git` directory and some files
-      inside it.
+      In this stage, you'll implement the `git init` command.
 
-      You can read more about what's inside the `.git` folder
-      [here](http://gitready.com/advanced/2009/03/23/whats-inside-your-git-directory.html).
+      ### The `git init` command
 
-      For the purposes of this challenge, you'll only need to create the bare
-      minimum required for Git to function properly:
+      <details>
+        <summary>Click to expand/collapse</summary>
 
+        `git init` initializes a Git repository by creating a `.git` directory with some files
+        & directories inside it.
+
+        You can learn more about what's inside the `.git` folder [here](https://blog.meain.io/2023/what-is-in-dot-git/). We've
+        included a description of the files & directores we'll be dealing with in this stage below.
+
+      </details>
+
+      ### The `.git` directory
+
+      <details>
+        <summary>Click to expand/collapse</summary>
+
+        At a bare minimum, a `.git` directory should contain the following files & directories:
+
+        ```
+        - .git/
+          - objects/
+          - refs/
+          - HEAD (should contain "ref: refs/heads/main\n" for a new repository)
+        ```
+
+        - `objects/`
+          - This directory contains [Git objects](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects).
+          - We'll learn more about what Git objects are in later stages.
+        - `refs/`
+          - This directory contains [Git references](https://git-scm.com/book/en/v2/Git-Internals-Git-References).
+          - We'll deal with this in later stages too.
+        - `HEAD`
+          - This file contains a reference to the currently checked out branch.
+          - For a new repository, it's contents will be `ref: refs/heads/main\n`.
+
+        You can learn more about these in detail [here](https://blog.meain.io/2023/what-is-in-dot-git/).
+      </details>
+
+      ### Tests
+
+      The tester will run your program in a new empty directory like this:
+
+      ```bash
+      # Create a new directory and cd into it
+      $ mkdir test_dir && cd test_dir
+
+      # Run your program
+      $ /path/to/your_git.sh init
       ```
-      - .git/
-        - objects/
-        - refs/
-        - HEAD (should contain "ref: refs/heads/master\n")
+
+      It'll then check if the `.git` directory and its contents are created correctly.
+
+      ```bash
+      # Check if .git directory exists
+      $ test -d .git
+
+      # Check if .git/objects directory exists
+      $ test -d .git/objects
+
+      # Check if .git/refs directory exists
+      $ test -d .git/refs
+
+      # Check if .git/HEAD file exists
+      $ test -f .git/HEAD
+
+      # Check if .git/HEAD contains either "ref: refs/heads/main\n" or "ref: refs/heads/master\n"
+      $ cat .git/HEAD
       ```
+
+      ### Notes
+
+      - Git actually creates more files & directories than the ones mentioned above when you run `git init`. We've only included the ones
+        that are absolutely necessary for Git to function properly.
+      - The `.git/HEAD` file has a newline at the end.
+      - The `.git/HEAD` file can contain either `ref: refs/heads/main\n` or `ref: refs/heads/master\n`, the tester will
+        work with either of these.
     marketing_md: |-
       In this stage, you'll implement the `git init` command. You'll initialize
       a git repository by creating a `.git` directory and some files inside it.
     tester_source_code_url: "https://github.com/codecrafters-io/git-tester/blob/03984478122959f23a866a0df102413a5ac08e67/internal/stage_init.go#L12"
 
-  - slug: "read_blob"
+  - legacy_slug: "read_blob"
+    slug: "ic4"
     name: "Read a blob object"
     difficulty: medium
     description_md: |-
-      In this challenge, we'll deal with three [Git
-      objects](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects):
+      In this stage, you'll add support for reading a blob using the `git cat-file` command.
 
-        - blobs
-        - trees
-        - commits
+      ### Git objects
 
-      Let's start with blobs, which represent files (binary data, to be
-      precise).
+      <details>
+        <summary>Click to expand/collapse</summary>
 
-      In this stage, you'll read a blob from your git repository by fetching its
-      contents from the `.git/objects` directory.
+        In this challenge, we'll deal with three [Git
+        objects](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects):
 
-      You'll do this using the first of multiple ["plumbing"
-      commands](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain)
-      we'll encounter in this challenge: [`git
-      cat-file`](https://git-scm.com/docs/git-cat-file).
+        - Blobs (**This stage**)
+          - These are used to store file data.
+          - Blobs only store the contents of a file, not its name or permissions.
+        - Trees (Future stages)
+          - These are used to store directory structures.
+          - The information stored can include things like what files/directories are in a tree, their names and permissions.
+        - Commits (Future stages)
+          - These are used to store commit data.
+          - The information stored can include things like the commit message, author, committer, parent commit(s) and more.
 
-      Your program will be called like so:
 
+        All Git objects are identifiable by a 40-character SHA-1 hash, also known as the "object hash".
+
+        Here's an example of an object hash: `e88f7a929cd70b0274c4ea33b209c97fa845fdbc`.
+      </details>
+
+      ### Git Object Storage
+
+      <details>
+        <summary>Click to expand/collapse</summary>
+
+        Git objects are stored in the `.git/objects` directory. The path to an object is derived from its hash.
+
+        The path for the object with the hash `e88f7a929cd70b0274c4ea33b209c97fa845fdbc` would be:
+
+        ```bash
+        ./git/objects/e8/8f7a929cd70b0274c4ea33b209c97fa845fdbc
+        ```
+
+        You'll see that the file isn't placed directly in the `./git/objects` directory. Instead, it's placed in a directory named with the
+        first two characters of the object's hash. The remaining 38 characters are used as the file name.
+
+        Each Git object has its own format for storage. We'll look at how Blobs are stored in this stage, and we'll cover
+        other objects in future stages.
+      </details>
+
+      ### Blob Object Storage
+
+      <details>
+        <summary>Click to expand/collapse</summary>
+
+        Each Git Blob is stored as a separate file in the `.git/objects` directory. The file contains a header and the contents of
+        the blob object, compressed using Zlib.
+
+        The format of a blob object file looks like this (after Zlib decompression):
+
+        ```
+        blob <size>\0<content>
+        ```
+
+        - `<size>` is the size of the content (in bytes)
+        - `\0` is a null byte
+        - `<content>` is the actual content of the file
+
+        For example, if the contents of a file are `hello world`, the blob object file would look like this (after Zlib decompression):
+
+        ```
+        blob 11\0hello world
+        ```
+      </details>
+
+      ### The cat-file command
+
+      <details>
+        <summary>Click to expand/collapse</summary>
+
+        In this stage, you'll read a blob from a git repository by reading its contents from the `.git/objects` directory.
+
+        You'll do this using the first of multiple ["plumbing" commands](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain)
+        we'll encounter in this challenge: [`git cat-file`](https://git-scm.com/docs/git-cat-file).
+
+        `git cat-file` is used to view the type of an object, its size, and its content. Example usage:
+
+        ```bash
+        $ git cat-file -p <blob_sha>
+        hello world # This is the contents of the blob
+        ```
+
+        To implement this, you'll need to:
+
+        - Read the contents of the blob object file from the `.git/objects` directory
+        - Decompress the contents using Zlib
+        - Extract the actual "content" from the decompressed data
+        - Print the content to stdout
+
+      </details>
+
+      ### Tests
+
+      The tester will first initialize a new git repository using your program:
+
+      ```bash
+      $ mkdir test_dir && cd test_dir
+      $ /path/to/your_git.sh init
       ```
-      ./your_git.sh cat-file -p <blob_sha>
+
+      It'll then insert a blob into the `.git/objects` directory and run your program like this:
+
+      ```bash
+      $ ./your_git.sh cat-file -p <blob_sha>
+      hello world
       ```
 
-      It is expected to print out the binary data that the blob contains. 
-      
-      In many programming languages the default print function (like [`fmt.Println`](https://pkg.go.dev/fmt#example-Println)) 
-      will append a newline to the output. The output of `cat-file` must not contain a 
-      newline at the end, so you might need to use a different function to print the output.
+      The tester will verify that the output of your program matches the binary data that the blob contains.
+
+      ### Notes
+
+      - In many programming languages the default print function (like [`fmt.Println`](https://pkg.go.dev/fmt#example-Println))
+        will append a newline to the output. The output of `cat-file` must not contain a
+        newline at the end, so you might need to use a different function to print the output.
 
       {{#lang_is_python}}
-      Keep in mind that Git uses [Zlib](https://en.wikipedia.org/wiki/Zlib) to
-      compress objects. You can use Python's built-in
-      [zlib](https://docs.python.org/3/library/zlib.html) library to read these
-      compressed files.
+      - Keep in mind that Git uses [Zlib](https://en.wikipedia.org/wiki/Zlib) to
+        compress objects. You can use Python's built-in
+        [zlib](https://docs.python.org/3/library/zlib.html) library to read these
+        compressed files.
       {{/lang_is_python}}
 
       {{#lang_is_ruby}}
-      Keep in mind that Git uses [Zlib](https://en.wikipedia.org/wiki/Zlib) to
-      compress objects. You can use Ruby's built-in
-      [Zlib](https://ruby-doc.org/stdlib-2.7.0/libdoc/zlib/rdoc/Zlib.html)
-      library to read these compressed files.
+      - Keep in mind that Git uses [Zlib](https://en.wikipedia.org/wiki/Zlib) to
+        compress objects. You can use Ruby's built-in
+        [Zlib](https://ruby-doc.org/stdlib-2.7.0/libdoc/zlib/rdoc/Zlib.html)
+        library to read these compressed files.
       {{/lang_is_ruby}}
 
       {{#lang_is_go}}
-      Keep in mind that Git uses [Zlib](https://en.wikipedia.org/wiki/Zlib) to
-      compress objects. You can use Go's built-in
-      [compress/zlib](https://golang.org/pkg/compress/zlib/) package to read
-      these compressed files.
+      - Keep in mind that Git uses [Zlib](https://en.wikipedia.org/wiki/Zlib) to
+        compress objects. You can use Go's built-in
+        [compress/zlib](https://golang.org/pkg/compress/zlib/) package to read
+       these compressed files.
       {{/lang_is_go}}
 
       {{#lang_is_rust}}
-      Keep in mind that Git uses [Zlib](https://en.wikipedia.org/wiki/Zlib) to
-      compress objects. You can use the
-      [flate2](https://crates.io/crates/flate2) crate to read these compressed
-      files, we've included it in the `Cargo.toml` file.
+      - Keep in mind that Git uses [Zlib](https://en.wikipedia.org/wiki/Zlib) to
+        compress objects. You can use the
+        [flate2](https://crates.io/crates/flate2) crate to read these compressed
+        files, we've included it in the `Cargo.toml` file.
       {{/lang_is_rust}}
+
+      {{^lang_is_python}}
+      {{^lang_is_ruby}}
+      {{^lang_is_go}}
+      {{^lang_is_rust}}
+      - Keep in mind that Git uses [Zlib](https://en.wikipedia.org/wiki/Zlib) to
+        compress objects. Many languages have utils for dealing with zlib data in their standard library. If not,
+        you might need to use a third-party library to read these compressed files.
+      {{/lang_is_rust}}
+      {{/lang_is_go}}
+      {{/lang_is_ruby}}
+      {{/lang_is_python}}
 
     marketing_md: |-
       In this stage, you'll read a blob from your git repository by fetching its
@@ -160,54 +329,256 @@ stages:
       cat-file`](https://git-scm.com/docs/git-cat-file).
     tester_source_code_url: "https://github.com/codecrafters-io/git-tester/blob/03984478122959f23a866a0df102413a5ac08e67/internal/stage_read_blob.go#L18"
 
-
-  - slug: "create_blob"
+  - legacy_slug: "create_blob"
+    slug: "jt4"
     name: "Create a blob object"
     difficulty: medium
     description_md: |-
-      In the previous stage, we learnt how to read a blob. In this stage, you'll
-      add a blob to your git repository by implementing the [`git
+      In this stage, you'll implement support for creating a blob using the [`git
       hash-object`](https://git-scm.com/docs/git-hash-object) command.
 
-      Your program will be called like so:
+      ### The `git hash-object` command
 
+      <details>
+        <summary>Click to expand/collapse</summary>
+
+        `git hash-object` is used to compute the SHA hash of a Git object. When used with the `-w` flag, it
+        also writes the object to the `.git/objects` directory.
+
+        Here's an example of using `git hash-object`:
+
+        ```bash
+        # Create a file with some content
+        $ echo "hello world" > test.txt
+
+        # Compute the SHA hash of the file + write it to .git/objects
+        $ git hash-object -w test.txt
+        3b18e512dba79e4c8300dd08aeb37f8e728b8dad
+
+        # Verify that the file was written to .git/objects
+        $ file .git/objects/3b/18e512dba79e4c8300dd08aeb37f8e728b8dad
+        .git/objects/3b/18e512dba79e4c8300dd08aeb37f8e728b8dad: zlib compressed data
+        ```
+
+      </details>
+
+      ### Blob Object Storage (Recap)
+
+      <details>
+        <summary>Click to expand/collapse</summary>
+
+        As mentioned in the previous stage, each Git Blob is stored as a separate file in the `.git/objects` directory. The file
+        contains a header and the contents of the blob object, compressed using Zlib.
+
+        The format of a blob object file looks like this (after Zlib decompression):
+
+        ```
+        blob <size>\0<content>
+        ```
+
+        - `<size>` is the size of the content (in bytes)
+        - `\0` is a null byte
+        - `<content>` is the actual content of the file
+
+        For example, if the contents of a file are `hello world`, the blob object file would look like this (after Zlib decompression):
+
+        ```
+        blob 11\0hello world
+        ```
+
+      </details>
+
+      ### Tests
+
+      The tester will first initialize a new git repository using your program:
+
+      ```bash
+      $ mkdir test_dir && cd test_dir
+      $ /path/to/your_git.sh init
       ```
-      ./your_git.sh hash-object -w <file>
+
+      It'll write some random data to a file:
+
+      ```bash
+      $ echo "hello world" > test.txt
       ```
 
-      It is expected to store the data from `<file>` as a blob in `.git/objects`
-      and print a 40-char SHA to stdout.
+      It'll then run your program like this:
 
-      To verify your implementation, the tester will try to read the blob your
-      program wrote. It'll do this using [`git
-      cat-file`](https://git-scm.com/docs/git-cat-file), the command you
-      implemented in the previous stage.
-
-      ```
-      git cat-file -p <blob_sha>
+      ```bash
+      $ ./your_git.sh hash-object -w test.txt
+      3b18e512dba79e4c8300dd08aeb37f8e728b8dad
       ```
 
+      The tester will verify that:
+
+      - Your program prints a 40-character SHA hash to stdout
+      - The file written to `.git/objects` matches what the official `git` implementation would write
+
+      ### Notes
+
+      - Although the object file is stored with zlib compression, the SHA hash needs to be computed over
+        the "uncompressed" contents of the file, not the compressed version.
+      - The input for the SHA hash is the header (`blob <size>\0`) + the actual contents of the file,
+        not just the contents of the file.
     marketing_md: |-
       In the previous stage, we learnt how to read a blob. In this stage, we'll
       persist a blob by implementing the `git hash-object` command.
     tester_source_code_url: "https://github.com/codecrafters-io/git-tester/blob/master/internal/stage_create_blob.go"
 
-  - slug: "read_tree"
+  - legacy_slug: "read_tree"
+    slug: "kp1"
     name: "Read a tree object"
     difficulty: medium
     description_md: |-
-      Now that we've learnt how to read/write blobs, let's move onto our next
-      Git object: [the tree](https://developer.github.com/v3/git/trees/).
+      In this stage, you'll implement the `git ls-tree` command, which is used to inspect a tree object.
 
-      In this stage, you'll implement the [`git
-      ls-tree`](https://git-scm.com/docs/git-ls-tree) command, which is used to
-      inspect a tree object.
+      ### Tree objects
 
-      The tester will execute your program like this:
+      <details>
+        <summary>Click to expand/collapse</summary>
 
+        In this stage, we'll deal with our next Git object type: [trees](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects#_tree_objects).
+
+        Trees are used to store directory structures.
+
+        A tree object has multiple "entries". Each entry includes:
+
+        - A SHA hash that points to a blob or tree object
+          - If the entry is a file, this points to a blob object
+          - If the entry is a directory, this points to a tree object
+        - The name of the file/directory
+        - The mode of the file/directory
+          - This is a simplified version of the permissions you'd see in a Unix file system.
+          - For files, the valid values are:
+              - `100644` (regular file)
+              - `100755` (executable file)
+              - `120000` (symbolic link)
+          - For directories, the value is `040000`
+          - There are other values for submodules, but we won't be dealing with those in this challenge.
+
+        For example, if you had a directory structure like this:
+
+        ```
+        your_repo/
+          - file1
+          - dir1/
+            - file_in_dir_1
+            - file_in_dir_2
+          - dir2/
+            - file_in_dir_3
+        ```
+
+        The entries in the tree object would look like this:
+
+        ```
+        040000 dir1 <tree_sha_1>
+        040000 dir2 <tree_sha_2>
+        100644 file1 <blob_sha_1>
+        ```
+
+        - Line 1 (`040000 dir1 <tree_sha_1>`) indicates that `dir1` is a directory with the SHA hash `<tree_sha_1>`
+        - Line 2 (`040000 dir2 <tree_sha_2>`) indicates that `dir2` is a directory with the SHA hash `<tree_sha_2>`
+        - Line 3 (`100644 file1 <blob_sha_1>`) indicates that `file1` is a regular file with the SHA hash `<blob_sha_1>`
+
+        `dir1` and `dir2` would be tree objects themselves, and their entries would contain the files/directories inside them.
+
+      </details>
+
+      ### The `ls-tree` command
+
+      <details>
+        <summary>Click to expand/collapse</summary>
+
+        The `git ls-tree` command is used to inspect a tree object.
+
+        For a directory structure like this:
+
+        ```
+        your_repo/
+          - file1
+          - dir1/
+            - file_in_dir_1
+            - file_in_dir_2
+          - dir2/
+            - file_in_dir_3
+        ```
+
+        The output of `git ls-tree` would look like this:
+
+        ```bash
+        $ git ls-tree <tree_sha>
+        040000 tree <tree_sha_1>	dir1
+        040000 tree <tree_sha_2>	dir2
+        100644 blob <blob_sha_1>	file1
+        ```
+
+        Note that the output is alphabetically sorted, this is how Git stores entries in the tree object internally.
+
+        In this stage you'll implement the `git ls-tree` command with the `--name-only` flag. Here's how the output looks with
+        the `--name-only` flag:
+
+        ```bash
+        $ git ls-tree --name-only <tree_sha>
+        dir1
+        dir2
+        file1
+        ```
+
+        The tester uses `--name-only` since this output format is easier to test against.
+
+        We recommend implementing the full `ls-tree` output too since that'll require that you parse all data
+        in the tree object, not just filenames.
+
+      </details>
+
+      ### Tree Object Storage
+
+      <details>
+        <summary>Click to expand/collapse</summary>
+
+        Just like blobs, tree objects are stored in the `.git/objects` directory. If the hash of a tree object is `e88f7a929cd70b0274c4ea33b209c97fa845fdbc`,
+        the path to the object would be `./git/objects/e8/8f7a929cd70b0274c4ea33b209c97fa845fdbc`.
+
+        The format of a tree object file looks like this (after Zlib decompression):
+
+        ```
+        tree <size>\0
+        <mode> <name>\0<20_byte_sha>
+        <mode> <name>\0<20_byte_sha>
+        ```
+
+        (The above code block is formatted with newlines for readability, but the actual file doesn't contain newlines)
+
+        - The file starts with `tree <size>\0`. This is the "object header", similar to what we saw with blob objects.
+        - After the header, there are multiple entries. Each entry is of the form `<mode> <name>\0<sha>`.
+          - `<mode>` is the mode of the file/directory (check the previous section for valid values)
+          - `<name>` is the name of the file/directory
+          - `\0` is a null byte
+          - `<20_byte_sha>` is the 20-byte SHA-1 hash of the blob/tree (this is **not** in hexadecimal format)
+
+        You can read more about the internal format of a tree object [here](https://stackoverflow.com/questions/14790681/what-is-the-internal-format-of-a-git-tree-object).
+
+      </details>
+
+      ### Tests
+
+      The tester will use your program to initialize a new repository:
+
+      ```bash
+      $ mkdir test_dir && cd test_dir
+      $ /path/to/your_git.sh init
       ```
-      ./your_git.sh ls-tree --name-only <tree_sha>
+
+      It'll then write a tree object to the `.git/objects` directory.
+
+      It'll then run your program like this:
+
+      ```bash
+      $ /path/to/your_git.sh ls-tree --name-only <tree_sha>
       ```
+
+      It'll verify that the output of your program matches the contents of the tree object.
 
       For a directory structure like this:
 
@@ -229,13 +600,10 @@ stages:
       file1
       ```
 
-      (Note that the output is alphabetically sorted, this is how Git stores
-      entries in the tree object internally)
+      ### Notes
 
-      To know more about the internal format of a tree object, checkout [this
-      StackOverflow
-      question](https://stackoverflow.com/questions/14790681/what-is-the-internal-format-of-a-git-tree-object).
-
+      - In a tree object file, the SHA hashes are not in hexadecimal format. They're just raw bytes (20 bytes long).
+      - In a tree object file, entries are sorted by their name. The output of `ls-tree` matches this order.
     marketing_md: |-
       Now that we've learnt how to read/write blobs, let's move onto our next
       Git object: [the tree](https://developer.github.com/v3/git/trees/). In
@@ -243,31 +611,119 @@ stages:
       `git ls-tree` command.
     tester_source_code_url: "https://github.com/codecrafters-io/git-tester/blob/03984478122959f23a866a0df102413a5ac08e67/internal/stage_read_tree.go#L20"
 
-  - slug: "write_tree"
+  - legacy_slug: "write_tree"
+    slug: "fe4"
     name: "Write a tree object"
     difficulty: medium
     description_md: |-
-      Now that you know how to read a tree object, let's put your new found
-      skills to test - can you _write_ a tree?
+      In this stage, you'll implement writing a tree to the `.git/objects` directory.
 
-      Here's how the tester will invoke your program:
+      ### The `git write-tree` command
 
+      <details>
+        <summary>Click to expand/collapse</summary>
+
+        The `git write-tree` command creates a tree object from the current state of the "staging area". The
+        staging area is a place where changes go when you run `git add`.
+
+        In this challenge we won't implement a staging area, we'll just assume that all files in the working directory are staged.
+
+        Here's an example of using `git write-tree`:
+
+        ```bash
+        # Create a file with some content
+        $ echo "hello world" > test.txt
+
+        # Add the file to the staging area (we won't implement a staging area in this challenge)
+        $ git add test.txt
+
+        # Write the tree to .git/objects
+        $ git write-tree
+        4b825dc642cb6eb9a060e54bf8d69288fbee4904
+        ```
+
+        The output of `git write-tree` is the 40-char SHA hash of the tree object that was written to `.git/objects`.
+
+        To implement this, you'll need to:
+
+        - Iterate over the files/directories in the working directory
+        - If the entry is a file, create a blob object and record its SHA hash
+        - If the entry is a directory, recursively create a tree object and record its SHA hash
+        - Once you have all the entries and their SHA hashes, write the tree object to the `.git/objects` directory
+
+        If you're testing this against `git` locally, make sure to run `git add .` before `git write-tree`, so that
+        all files in the working directory are staged.
+
+      </details>
+
+      ### Tree File Storage (recap)
+
+      <details>
+        <summary>Click to expand/collapse</summary>
+
+        We covered the format of a tree object file in the previous stage. Here's a quick recap of what
+        a tree object file looks like (before Zlib compression):
+
+        ```
+        tree <size>\0
+        <mode> <name>\0<20_byte_sha>
+        <mode> <name>\0<20_byte_sha>
+        ```
+
+        (The above code block is formatted with newlines for readability, but the actual file doesn't contain newlines)
+
+        - The file starts with `tree <size>\0`. This is the "object header", similar to what we saw with blob objects.
+        - After the header, there are multiple entries. Each entry is of the form `<mode> <name>\0<sha>`.
+          - `<mode>` is the mode of the file/directory
+          - `<name>` is the name of the file/directory
+          - `\0` is a null byte
+          - `<20_byte_sha>` is the 20-byte SHA-1 hash of the blob/tree (this is **not** in hexadecimal format)
+
+        You can read more about the internal format of a tree object [here](https://stackoverflow.com/questions/14790681/what-is-the-internal-format-of-a-git-tree-object).
+
+      </details>
+
+      ### Tests
+
+      The tester will initialize a new Git repository using your program:
+
+      ```bash
+      $ mkdir test_dir && cd test_dir
+      $ /path/to/your_git.sh init
       ```
-      ./your_git.sh write-tree
+
+      It'll create some random files and directories:
+
+      ```bash
+      $ echo "hello world" > test_file_1.txt
+      $ mkdir test_dir_1
+      $ echo "hello world" > test_dir_1/test_file_2.txt
+      $ mkdir test_dir_2
+      $ echo "hello world" > test_dir_2/test_file_3.txt
       ```
 
-      You're expected to write the entire working directory as a tree object,
-      and print the 40-char SHA.
+      And then run your program like this:
 
-      Caveat: Unlike the official Git implementation, we aren't going to
-      implement a staging area (the place where things go when you run `git
-      add`). We'll just assume that all files in the working directory are
-      staged. If you're testing this against `git` locally, make sure to run
-      `git add .` before `git write-tree`.
+      ```bash
+      $ /path/to/your_git.sh write-tree
+      4b825dc642cb6eb9a060e54bf8d69288fbee4904
+      ```
 
-      To verify your implementation, the tester will read the tree object from
-      the `.git` directory.
+      You're expected to write the entire working directory as a tree object
+      and print the 40-char SHA to stdout.
 
+      The tester will verify that the output of your program matches the SHA hash
+      of the tree object that the official `git` implementation would write.
+
+      ### Notes
+
+      - Remember to ignore the `.git` directory when creating entries in the tree object.
+      - Your implementation of `git write-tree` will need to handle nested directories. A recursive implementation
+        will help here, since you'll need to create tree objects for each subdirectory to be able to create the
+        parent directory's tree object.
+      - The implementation of `git write-tree` here differs slightly from the official `git` implementation. The
+        official `git` implementation uses the staging area to determine what to write to the tree object. We'll
+        just assume that all files in the working directory are staged.
     marketing_md: |-
       In this stage, you'll write a tree to git storage by implementing the [`git
       write-tree`](https://git-scm.com/docs/git-write-tree) command.
@@ -276,40 +732,82 @@ stages:
       that all changes in the worktree are staged.
     tester_source_code_url: "https://github.com/codecrafters-io/git-tester/blob/03984478122959f23a866a0df102413a5ac08e67/internal/stage_write_tree.go#L21"
 
-  - slug: "create_commit"
+  - legacy_slug: "create_commit"
+    slug: "jm9"
     name: "Create a commit"
     difficulty: medium
     description_md: |-
-      Let's move on to the last git object we'll be dealing with in this
-      challenge: the commit.
+      In this stage, you'll implement the `git commit-tree` command, which is used to create a commit object.
 
-      To create a commit, you'll need the following information:
+      ### Commits
+
+      Let's move on to the last git object we'll be dealing with in this
+      challenge: [the commit](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects#_git_commit_objects).
+
+      A commit object contains information like:
 
       - Committer/Author name + email
       - Timestamp
       - Tree SHA
       - Parent commit SHA(s), if any
 
-      In this stage, you'll implement [`git
-      commit-tree`](https://git-scm.com/docs/git-commit-tree), a plumbing
-      command that creates a commit.
+      We don't have a detailed description of the commit object format here, but you can read more about it
+      [here](https://stackoverflow.com/questions/22968856/what-is-the-file-format-of-a-git-commit-object-data-structure).
+
+      ### The `git commit-tree` command
+
+      The `git commit-tree` command creates a commit object. Example usage:
+
+      ```bash
+      # Create a new directory and cd into it
+      $ mkdir test_dir && cd test_dir
+
+      # Initialize a new git repository
+      $ git init
+      Initialized empty Git repository in /path/to/test_dir/.git/
+
+      # Create a tree, get its SHA
+      $ echo "hello world" > test.txt
+      $ git add test.txt
+      $ git write-tree
+      4b825dc642cb6eb9a060e54bf8d69288fbee4904
+
+      # Create the initial commit
+      $ git commit-tree 4b825dc642cb6eb9a060e54bf8d69288fbee4904 -m "Initial commit"
+      3b18e512dba79e4c8300dd08aeb37f8e728b8dad
+
+      # Write some changes, get another tree SHA
+      $ echo "hello world 2" > test.txt
+      $ git add test.txt
+      $ git write-tree
+      5b825dc642cb6eb9a060e54bf8d69288fbee4904
+
+      # Create a new commit with the new tree SHA
+      $ git commit-tree 5b825dc642cb6eb9a060e54bf8d69288fbee4904 -p 3b18e512dba79e4c8300dd08aeb37f8e728b8dad -m "Second commit"
+      ```
+
+      The output of `git commit-tree` is the 40-char SHA hash of the commit object that was written to `.git/objects`.
+
+      ### Tests
 
       Your program will be invoked like this:
 
       ```
-      ./your_git.sh commit-tree <tree_sha> -p <commit_sha> -m <message>
+      $ ./your_git.sh commit-tree <tree_sha> -p <commit_sha> -m <message>
       ```
-
-      You'll receive exactly one parent commit, and exactly one line in the
-      message. You're free to hardcode any valid name/email for the
-      author/committer fields.
 
       Your program must create a commit object and print its 40-char SHA to
       stdout.
 
+      To keep things simple:
+
+      - You'll receive exactly one parent commit
+      - You'll receive exactly one line in the message
+      - You're free to hardcode any valid name/email for the author/committer fields
+
+
       To verify your changes, the tester will read the commit object from the
       `.git` directory. It'll use the `git show` command to do this.
-
     marketing_md: |-
       Let's move on to the last git object we'll be dealing with in this
       challenge: the commit. In this stage, you'll create a commit by
@@ -317,42 +815,45 @@ stages:
       command.
     tester_source_code_url: "https://github.com/codecrafters-io/git-tester/blob/master/internal/stage_create_commit.go"
 
-  - slug: "clone_repository"
+  - legacy_slug: "clone_repository"
+    slug: "mg6"
     name: "Clone a repository"
     difficulty: hard
     description_md: |-
-      This is the last stage of the challenge, and probably the hardest.
+      In this stage, you'll implement cloning a public repository from GitHub.
 
-      In this stage, you'll clone a public repository from GitHub. To do this,
-      you'll use Git's [Smart HTTP transfer
-      protocol](https://www.git-scm.com/docs/http-protocol).
+      This is the last stage of the challenge, and probably the hardest across all of CodeCrafters!
+
+      We might split this into an extension with multiple stages in the future, but for now it's just one big stage.
+
+      We don't have detailed instructions for this stage, so you're all on your own here. A few pointers to get you started:
+
+      - You'll need to use Git's [Smart HTTP transfer protocol](https://www.git-scm.com/docs/http-protocol) for this.
+      - To know more about the protocol format, we recommend reading:
+        - [gitprotocol-pack.txt](https://github.com/git/git/blob/795ea8776befc95ea2becd8020c7a284677b4161/Documentation/gitprotocol-pack.txt)
+        - [gitformat-pack.txt](https://github.com/git/git/blob/795ea8776befc95ea2becd8020c7a284677b4161/Documentation/gitformat-pack.txt)
+        - [Unpacking Git packfiles](https://codewords.recurse.com/issues/three/unpacking-git-packfiles)
+        - [Sneaky git number encoding](https://medium.com/@concertdaw/sneaky-git-number-encoding-ddcc5db5329f).
 
       {{#lang_is_rust}}
       You can use the [reqwest](https://crates.io/crates/reqwest) crate to make
       HTTP requests, we've included it in the `Cargo.toml` file.
       {{/lang_is_rust}}
 
-      Your program will be invoked like this:
+      ### Tests
 
+      The tester will run your program like this:
+
+      ```bash
+      $ /path/to/your_git.sh clone https://github.com/blah/blah <some_dir>
       ```
-      ./your_git.sh clone https://github.com/blah/blah <some_dir>
-      ```
 
-      Your program must create `<some_dir>` and clone the given repository into
-      it.
+      Your program must create `<some_dir>` and clone the given repository into it.
 
-      To verify your changes, the tester will do the following:
+      To verify your changes, the tester will:
 
-      - Check the contents of a file
+      - Check the contents of a random file
       - Read commit object attributes from the `.git` directory
-
-      To know more about the protocol format, checkout
-      [gitprotocol-pack.txt](https://github.com/git/git/blob/795ea8776befc95ea2becd8020c7a284677b4161/Documentation/gitprotocol-pack.txt),
-      [gitformat-pack.txt](https://github.com/git/git/blob/795ea8776befc95ea2becd8020c7a284677b4161/Documentation/gitformat-pack.txt),
-      and
-      [these](https://codewords.recurse.com/issues/three/unpacking-git-packfiles)
-      [articles](https://medium.com/@concertdaw/sneaky-git-number-encoding-ddcc5db5329f).
-
     marketing_md: |-
       This is the last stage of the challenge, and probably the hardest! In this
       stage, you'll clone a public repository from GitHub. To do this, you'll

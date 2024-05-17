@@ -1,6 +1,6 @@
 Debug = true
 
-[33m[stage-3] [0m[94mRunning tests for Stage #3: create_blob[0m
+[33m[stage-3] [0m[94mRunning tests for Stage #3: jt4[0m
 [33m[stage-3] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
 [33m[stage-3] [0m[94m$ echo "orange pear grape pineapple blueberry banana" > pear.txt[0m
@@ -11,7 +11,7 @@ Debug = true
 [33m[stage-3] [0m[92mReturned SHA matches expected SHA.[0m
 [33m[stage-3] [0m[92mTest passed.[0m
 
-[33m[stage-2] [0m[94mRunning tests for Stage #2: read_blob[0m
+[33m[stage-2] [0m[94mRunning tests for Stage #2: ic4[0m
 [33m[stage-2] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
 [33m[stage-2] [0m[94mAdded blob object to .git/objects: 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m
@@ -20,7 +20,7 @@ Debug = true
 [33m[stage-2] [0m[92mOutput is valid.[0m
 [33m[stage-2] [0m[92mTest passed.[0m
 
-[33m[stage-1] [0m[94mRunning tests for Stage #1: init[0m
+[33m[stage-1] [0m[94mRunning tests for Stage #1: gg4[0m
 [33m[stage-1] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
 [33m[stage-1] [0m[92m.git directory found.[0m
