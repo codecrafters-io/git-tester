@@ -5,36 +5,36 @@ import (
 )
 
 var testerDefinition = tester_definition.TesterDefinition{
-	AntiCheatTestCases:    []tester_definition.TestCase{},
+	AntiCheatTestCases: []tester_definition.TestCase{},
 	ExecutableFileName: "your_git.sh",
 	TestCases: []tester_definition.TestCase{
 		{
-			Slug:                    "gg4",
-			TestFunc:                testInit,
+			Slug:     "gg4",
+			TestFunc: testInit,
 		},
 		{
-			Slug:                    "ic4",
-			TestFunc:                testReadBlob,
+			Slug:     "ic4",
+			TestFunc: testReadBlob,
 		},
 		{
-      Slug:                    "jt4",
-			TestFunc:                testCreateBlob,
+			Slug:     "jt4",
+			TestFunc: testCreateBlob,
 		},
 		{
-			Slug:                    "kp1",
-			TestFunc:                testReadTree,
+			Slug:     "kp1",
+			TestFunc: testReadTree,
 		},
 		{
-			Slug:                    "fe4",
-			TestFunc:                testWriteTree,
+			Slug:     "fe4",
+			TestFunc: testWriteTree,
 		},
 		{
-			Slug:                    "jm9",
-			TestFunc:                testCreateCommit,
+			Slug:     "jm9",
+			TestFunc: testCreateCommit,
 		},
 		{
-			Slug:                    "mg6",
-			TestFunc:                testCloneRepository,
+			Slug:     "mg6",
+			TestFunc: testCloneRepository,
 		},
 	},
 }
