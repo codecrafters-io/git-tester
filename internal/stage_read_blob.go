@@ -27,7 +27,7 @@ func testReadBlob(harness *test_case_harness.TestCaseHarness) error {
 
 	executable.WorkingDir = tempDir
 
-	logger.Infof("$ ./your_git.sh init")
+	logger.Infof("$ ./%s init", path.Base(executable.Path))
 	_, err = executable.Run("init")
 	if err != nil {
 		return err
@@ -71,7 +71,7 @@ func testReadBlob(harness *test_case_harness.TestCaseHarness) error {
 
 	logger.Infof("Added blob object to .git/objects: %s", expectedSha.String())
 
-	logger.Infof("$ ./your_git.sh cat-file -p %s", expectedSha.String())
+	logger.Infof("$ ./%s cat-file -p %s", path.Base(executable.Path), expectedSha.String())
 	result, err := executable.Run("cat-file", "-p", expectedSha.String())
 	if err != nil {
 		return err

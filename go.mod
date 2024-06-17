@@ -5,7 +5,7 @@ go 1.21
 toolchain go1.22.1
 
 require (
-	github.com/codecrafters-io/tester-utils v0.2.25
+	github.com/codecrafters-io/tester-utils v0.2.26
 	github.com/go-git/go-billy/v5 v5.0.0
 	github.com/go-git/go-git/v5 v5.0.0
 )

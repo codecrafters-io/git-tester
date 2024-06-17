@@ -92,7 +92,7 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 
 	testRepo := randomRepo()
 
-	logger.Infof("$ ./your_git.sh clone %s <testDir>", testRepo.url)
+	logger.Infof("$ ./%s clone %s <testDir>", path.Base(executable.Path), testRepo.url)
 	result, err := executable.Run("clone", testRepo.url, "test_dir")
 	if err != nil {
 		return err

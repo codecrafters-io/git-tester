@@ -24,7 +24,7 @@ func testCreateBlob(harness *test_case_harness.TestCaseHarness) error {
 
 	executable.WorkingDir = tempDir
 
-	logger.Infof("$ ./your_git.sh init")
+	logger.Infof("$ ./%s init", path.Base(executable.Path))
 	_, err = executable.Run("init")
 	if err != nil {
 		return err
@@ -42,7 +42,7 @@ func testCreateBlob(harness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	logger.Infof("$ ./your_git.sh hash-object -w %s", sampleFileName)
+	logger.Infof("$ ./%s hash-object -w %s", path.Base(executable.Path), sampleFileName)
 	result, err := executable.Run("hash-object", "-w", sampleFileName)
 	if err != nil {
 		return err

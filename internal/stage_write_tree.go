@@ -33,7 +33,7 @@ func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
 
 	executable.WorkingDir = tempDir
 
-	logger.Infof("$ ./your_git.sh init")
+	logger.Infof("$ ./%s init", path.Base(executable.Path))
 	_, err = executable.Run("init")
 	if err != nil {
 		return err
@@ -60,7 +60,7 @@ func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
 		panic(err)
 	}
 
-	logger.Infof("$ ./your_git.sh write-tree")
+	logger.Infof("$ ./%s write-tree", path.Base(executable.Path))
 	result, err := executable.Run("write-tree")
 	if err != nil {
 		return err
