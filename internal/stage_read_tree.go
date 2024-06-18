@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path"
 	"path/filepath"
 	"time"
 
@@ -30,7 +31,7 @@ func testReadTree(harness *test_case_harness.TestCaseHarness) error {
 
 	executable.WorkingDir = tempDir
 
-	logger.Infof("$ ./your_git.sh init")
+	logger.Infof("$ ./%s init", path.Base(executable.Path))
 	_, err = executable.Run("init")
 	if err != nil {
 		return err
@@ -81,7 +82,7 @@ func testReadTree(harness *test_case_harness.TestCaseHarness) error {
 	}
 
 	sha := commit.TreeHash.String()
-	logger.Infof("$ ./your_git.sh ls-tree --name-only %s", sha)
+	logger.Infof("$ ./%s ls-tree --name-only %s", path.Base(executable.Path), sha)
 	result, err := executable.Run("ls-tree", "--name-only", sha)
 	if err != nil {
 		return err

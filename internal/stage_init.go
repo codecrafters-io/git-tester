@@ -21,7 +21,7 @@ func testInit(harness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	logger.Infof("$ ./your_git.sh init")
+	logger.Infof("$ ./%s init", path.Base(executable.Path))
 
 	executable.WorkingDir = tempDir
 	_, err = executable.Run("init")
