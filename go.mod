@@ -6,7 +6,7 @@ toolchain go1.22.1
 
 require (
 	github.com/codecrafters-io/tester-utils v0.2.38
-	github.com/go-git/go-billy/v5 v5.0.0
+	github.com/go-git/go-billy/v5 v5.6.0
 	github.com/go-git/go-git/v5 v5.0.0
 )
 
@@ -14,6 +14,7 @@ require (
 // replace github.com/codecrafters-io/tester-utils v0.2.0 => /Users/rohitpaulk/experiments/codecrafters/tester-utils
 
 require (
+	github.com/cyphar/filepath-securejoin v0.2.5 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/fatih/color v1.17.0 // indirect
@@ -26,10 +27,10 @@ require (
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/sergi/go-diff v1.1.0 // indirect
-	github.com/stretchr/testify v1.8.4 // indirect
+	github.com/stretchr/testify v1.9.0 // indirect
 	github.com/xanzy/ssh-agent v0.2.1 // indirect
-	golang.org/x/crypto v0.0.0-20200302210943-78000ba7a073 // indirect
-	golang.org/x/net v0.0.0-20200301022130-244492dfa37a // indirect
+	golang.org/x/crypto v0.25.0 // indirect
+	golang.org/x/net v0.27.0 // indirect
 	golang.org/x/sys v0.25.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
