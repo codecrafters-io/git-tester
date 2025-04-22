@@ -2,8 +2,9 @@ package internal
 
 import (
 	"fmt"
-	"io/ioutil"
 	"math/rand"
+	"os"
+	"os/exec"
 	"path"
 	"time"
 
@@ -33,38 +34,38 @@ func (r TestRepo) randomFile() TestFile {
 }
 
 var testRepos []TestRepo = []TestRepo{
-	TestRepo{
+	{
 		url: "https://github.com/codecrafters-io/git-sample-1",
 		exampleCommits: []string{
 			"3b0466d22854e57bf9ad3ccf82008a2d3f199550",
 		},
 		exampleFiles: []TestFile{
-			TestFile{
+			{
 				path:     "scooby/dooby/doo",
 				contents: "dooby yikes dumpty scooby monkey donkey horsey humpty vanilla doo",
 			},
 		},
 	},
-	TestRepo{
+	{
 		url: "https://github.com/codecrafters-io/git-sample-2",
 		exampleCommits: []string{
 			"b521b9179412d90a893bc36f33f5dcfd987105ef",
 		},
 		exampleFiles: []TestFile{
-			TestFile{
+			{
 				path:     "humpty/vanilla/yikes",
 				contents: "scooby yikes dooby",
 			},
 		},
 	},
-	TestRepo{
+	{
 		url: "https://github.com/codecrafters-io/git-sample-3",
 		exampleCommits: []string{
 			"23f0bc3b5c7c3108e41c448f01a3db31e7064bbb",
 			"b521b9179412d90a893bc36f33f5dcfd987105ef",
 		},
 		exampleFiles: []TestFile{
-			TestFile{
+			{
 				path:     "donkey/donkey/monkey",
 				contents: "monkey humpty doo scooby dumpty donkey vanilla horsey dooby",
 			},
@@ -83,7 +84,7 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 	logger := harness.Logger
 	executable := harness.Executable
 
-	tempDir, err := ioutil.TempDir("", "worktree")
+	tempDir, err := os.MkdirTemp("", "worktree")
 	if err != nil {
 		return err
 	}
@@ -128,7 +129,7 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 	testFile := testRepo.randomFile()
 
 	logger.Debugf("Reading contents of a sample file")
-	bytes, err := ioutil.ReadFile(path.Join(repoDir, testFile.path))
+	bytes, err := os.ReadFile(path.Join(repoDir, testFile.path))
 	if err != nil {
 		return err
 	}
