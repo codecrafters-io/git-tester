@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path"
 
 	"github.com/codecrafters-io/tester-utils/random"
