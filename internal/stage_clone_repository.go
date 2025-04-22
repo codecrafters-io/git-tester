@@ -6,8 +6,8 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"time"
 
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 
 	"github.com/go-git/go-git/v5"
@@ -74,13 +74,11 @@ var testRepos []TestRepo = []TestRepo{
 }
 
 func randomRepo() TestRepo {
-	rand.Seed(time.Now().UnixNano())
-	return testRepos[rand.Intn(3)]
+	index := random.RandomInt(0, len(testRepos))
+	return testRepos[index]
 }
 
 func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
-	initRandom()
-
 	logger := harness.Logger
 	executable := harness.Executable
 

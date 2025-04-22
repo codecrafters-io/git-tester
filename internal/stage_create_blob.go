@@ -12,8 +12,6 @@ import (
 )
 
 func testCreateBlob(harness *test_case_harness.TestCaseHarness) error {
-	initRandom()
-
 	logger := harness.Logger
 	executable := harness.Executable
 

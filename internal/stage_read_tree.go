@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 	"github.com/go-git/go-billy/v5/osfs"
 	"github.com/go-git/go-git/v5"
@@ -39,11 +40,11 @@ func testReadTree(harness *test_case_harness.TestCaseHarness) error {
 	logger.Debugf("Writing a tree to git storage..")
 
 	rootFile := "root.txt"
-	firstLevel := randomStringsShort(3)
+	firstLevel := random.RandomWords(3)
 	rootFile, rootDir1, rootDir2 := firstLevel[0], firstLevel[1], firstLevel[2]
-	secondLevel := randomStringsShort(2)
+	secondLevel := random.RandomWords(2)
 	rootDir1File1, rootDir1File2 := secondLevel[0], secondLevel[1]
-	rootDir2File1 := randomStringShort()
+	rootDir2File1 := random.RandomWord()
 
 	writeFile(tempDir, rootFile)
 	writeFile(tempDir, filepath.Join(rootDir1, rootDir1File1))

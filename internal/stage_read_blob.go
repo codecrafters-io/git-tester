@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 	"github.com/go-git/go-billy/v5/osfs"
 	"github.com/go-git/go-git/v5/plumbing"
@@ -14,8 +15,6 @@ import (
 )
 
 func testReadBlob(harness *test_case_harness.TestCaseHarness) error {
-	initRandom()
-
 	logger := harness.Logger
 	executable := harness.Executable
 
