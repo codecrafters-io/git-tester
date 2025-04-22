@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"math/rand"
 	"os"
 	"os/exec"
 	"path"
@@ -17,12 +16,11 @@ import (
 
 	bytes_diff_visualizer "github.com/codecrafters-io/tester-utils/bytes_diff_visualizer"
 	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
-	initRandom()
-
 	logger := harness.Logger
 	executable := harness.Executable
 
@@ -187,14 +185,12 @@ func decodeZlib(data []byte) ([]byte, error) {
 }
 
 func generateFiles(root string, seed int64) error {
-	r := rand.New(rand.NewSource(seed))
+	content := random.RandomWords(4)
 
-	content := randomLongStringsRand(4, r)
+	first := random.RandomWords(3) // file1, dir1, dir2
 
-	first := randomStringsRand(3, r) // file1, dir1, dir2
-
-	dir1 := randomStringsRand(2, r) // file2, file3
-	dir2 := randomStringsRand(1, r) // file4
+	dir1 := random.RandomWords(2) // file2, file3
+	dir2 := random.RandomWords(1) // file4
 
 	writeFileContent(content[0], root, first[0])
 	writeFileContent(content[1], root, first[1], dir1[0])

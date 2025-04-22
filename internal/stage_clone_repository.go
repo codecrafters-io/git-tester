@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"math/rand"
 	"os"
 	"os/exec"
 	"path"
@@ -26,11 +25,11 @@ type TestRepo struct {
 }
 
 func (r TestRepo) randomCommit() string {
-	return r.exampleCommits[rand.Intn(len(r.exampleCommits))]
+	return r.exampleCommits[random.RandomInt(0, len(r.exampleCommits))]
 }
 
 func (r TestRepo) randomFile() TestFile {
-	return r.exampleFiles[rand.Intn(len(r.exampleFiles))]
+	return r.exampleFiles[random.RandomInt(0, len(r.exampleFiles))]
 }
 
 var testRepos []TestRepo = []TestRepo{

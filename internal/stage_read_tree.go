@@ -19,8 +19,6 @@ import (
 )
 
 func testReadTree(harness *test_case_harness.TestCaseHarness) error {
-	initRandom()
-
 	logger := harness.Logger
 	executable := harness.Executable
 
@@ -118,7 +116,7 @@ func testReadTree(harness *test_case_harness.TestCaseHarness) error {
 }
 
 func writeFile(rootDir string, filepath string) {
-	writeFileContent(randomString(), rootDir, filepath)
+	writeFileContent(random.RandomString(), rootDir, filepath)
 }
 
 func writeFileContent(content string, path ...string) {

@@ -97,7 +97,7 @@ func testCreateCommit(harness *test_case_harness.TestCaseHarness) error {
 
 	treeSha := nextCommit.TreeHash.String()
 
-	commitMessage := randomString()
+	commitMessage := random.RandomString()
 	logger.Infof("$ ./%s commit-tree <tree_sha> -p <commit_sha> -m <message>", path.Base(executable.Path))
 	result, err := executable.Run("commit-tree", treeSha, "-p", parentCommitSha, "-m", commitMessage)
 	if err != nil {

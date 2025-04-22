@@ -31,8 +31,8 @@ func testReadBlob(harness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	sampleFile := path.Join(tempDir, fmt.Sprintf("%s.txt", randomStringShort()))
-	sampleFileContents := randomString()
+	sampleFile := path.Join(tempDir, fmt.Sprintf("%s.txt", random.RandomWord()))
+	sampleFileContents := random.RandomString()
 	err = os.WriteFile(
 		sampleFile,
 		[]byte(sampleFileContents),
