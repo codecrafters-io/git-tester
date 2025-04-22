@@ -10,12 +10,10 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
-	"strconv"
 	"strings"
-	"time"
 
-	bytes_diff_visualizer "github.com/codecrafters-io/tester-utils/bytes_diff_visualizer"
-	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/bytes_diff_visualizer"
+	"github.com/codecrafters-io/tester-utils/logger"
 	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
@@ -39,21 +37,7 @@ func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
 
 	logger.Infof("Creating some files & directories")
 
-	var seed int64
-
-	if seedStr := os.Getenv("CODECRAFTERS_RANDOM_SEED"); seedStr != "" {
-		seedInt, err := strconv.Atoi(seedStr)
-
-		if err != nil {
-			panic(err)
-		}
-
-		seed = int64(seedInt)
-	} else {
-		seed = time.Now().UnixNano()
-	}
-
-	err = generateFiles(tempDir, seed)
+	err = generateFiles(tempDir)
 	if err != nil {
 		panic(err)
 	}
@@ -86,7 +70,7 @@ func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
 
 	logger.Successf("Found git object file written at .git/objects/%v/%v.", sha[:2], sha[2:])
 
-	err = checkWithGit(logger, sha, gitObjectFileContents, seed)
+	err = checkWithGit(logger, sha, gitObjectFileContents)
 	if err != nil {
 		return err
 	}
@@ -100,7 +84,7 @@ func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
 	return nil
 }
 
-func checkWithGit(logger *logger.Logger, actualHash string, actualGitObjectFileContents []byte, seed int64) error {
+func checkWithGit(logger *logger.Logger, actualHash string, actualGitObjectFileContents []byte) error {
 	tempDir, err := os.MkdirTemp("", "worktree")
 	if err != nil {
 		return err
@@ -110,7 +94,7 @@ func checkWithGit(logger *logger.Logger, actualHash string, actualGitObjectFileC
 		_ = os.RemoveAll(tempDir)
 	}()
 
-	err = generateFiles(tempDir, seed)
+	err = generateFiles(tempDir)
 	if err != nil {
 		return err
 	}
@@ -184,7 +168,7 @@ func decodeZlib(data []byte) ([]byte, error) {
 	return decompressedData, nil
 }
 
-func generateFiles(root string, seed int64) error {
+func generateFiles(root string) error {
 	content := random.RandomWords(4)
 
 	first := random.RandomWords(3) // file1, dir1, dir2
@@ -217,8 +201,6 @@ func runCmd(wd, path string, args ...string) ([]byte, error) {
 	cmd.Stderr = &errb
 
 	err := cmd.Run()
-
-	//	fmt.Printf("run: %v %v\nerr: %v\nout: %s\nstderr: %s\n", path, args, err, outb.Bytes(), errb.Bytes())
 
 	var exitError *exec.ExitError
 	if errors.As(err, &exitError) {
