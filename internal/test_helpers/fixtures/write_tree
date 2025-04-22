@@ -5,28 +5,28 @@ Debug = true
 [33m[your_program] [0mInitialized git directory
 [33m[stage-5] [0m[94mCreating some files & directories[0m
 [33m[stage-5] [0m[94m$ ./your_git.sh write-tree[0m
-[33m[your_program] [0m7bba7df6498a0391b69e6343b517c3360b658293
-[33m[stage-5] [0m[36mReading file at .git/objects/7b/ba7df6498a0391b69e6343b517c3360b658293[0m
-[33m[stage-5] [0m[92mFound git object file written at .git/objects/7b/ba7df6498a0391b69e6343b517c3360b658293.[0m
-[33m[stage-5] [0m[94m$ git ls-tree --name-only 7bba7df6498a0391b69e6343b517c3360b658293[0m
+[33m[your_program] [0m1bb64bad31995c6fa75a424cd0a4561583c4a344
+[33m[stage-5] [0m[36mReading file at .git/objects/1b/b64bad31995c6fa75a424cd0a4561583c4a344[0m
+[33m[stage-5] [0m[92mFound git object file written at .git/objects/1b/b64bad31995c6fa75a424cd0a4561583c4a344.[0m
+[33m[stage-5] [0m[94m$ git ls-tree --name-only 1bb64bad31995c6fa75a424cd0a4561583c4a344[0m
 [33m[stage-5] [0m[92mTest passed.[0m
 
 [33m[stage-4] [0m[94mRunning tests for Stage #4: kp1[0m
 [33m[stage-4] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
 [33m[stage-4] [0m[36mWriting a tree to git storage..[0m
-[33m[stage-4] [0m[94m$ ./your_git.sh ls-tree --name-only 978c60262a761655b8429dbeb12f7dce351c6cd6[0m
-[33m[your_program] [0mhumpty
-[33m[your_program] [0mscooby
-[33m[your_program] [0mvanilla
+[33m[stage-4] [0m[94m$ ./your_git.sh ls-tree --name-only 84d4a30900758cb253df0cb7bc3efcb1ae9810b8[0m
+[33m[your_program] [0mbanana
+[33m[your_program] [0morange
+[33m[your_program] [0mraspberry
 [33m[stage-4] [0m[92mTest passed.[0m
 
 [33m[stage-3] [0m[94mRunning tests for Stage #3: jt4[0m
 [33m[stage-3] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-3] [0m[94m$ echo "orange pear grape pineapple blueberry banana" > pear.txt[0m
-[33m[stage-3] [0m[94m$ ./your_git.sh hash-object -w pear.txt[0m
-[33m[your_program] [0m7a50e289f5bde85780a843d5750ec3ae372af50a
+[33m[stage-3] [0m[94m$ echo "mango apple strawberry blueberry raspberry pear" > raspberry.txt[0m
+[33m[stage-3] [0m[94m$ ./your_git.sh hash-object -w raspberry.txt[0m
+[33m[your_program] [0mb1881facde301016ca87d6619d7c016f0d7bd7d5
 [33m[stage-3] [0m[92mOutput is a 40-char SHA.[0m
 [33m[stage-3] [0m[92mBlob file contents are valid.[0m
 [33m[stage-3] [0m[92mReturned SHA matches expected SHA.[0m
@@ -35,9 +35,9 @@ Debug = true
 [33m[stage-2] [0m[94mRunning tests for Stage #2: ic4[0m
 [33m[stage-2] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-2] [0m[94mAdded blob object to .git/objects: 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m
-[33m[stage-2] [0m[94m$ ./your_git.sh cat-file -p 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m
-[33m[your_program] [0mdumpty dooby doo donkey horsey vanilla
+[33m[stage-2] [0m[94mAdded blob object to .git/objects: b996ed62b9b9eadf706d04ddbda9e113971f0abf[0m
+[33m[stage-2] [0m[94m$ ./your_git.sh cat-file -p b996ed62b9b9eadf706d04ddbda9e113971f0abf[0m
+[33m[your_program] [0mmango banana pineapple strawberry grape blueberry
 [33m[stage-2] [0m[92mOutput is valid.[0m
 [33m[stage-2] [0m[92mTest passed.[0m
 

@@ -5,24 +5,24 @@ Debug = true
 [33m[your_program] [0mInitialized git directory
 [33m[stage-5] [0m[94mCreating some files & directories[0m
 [33m[stage-5] [0m[94m$ ./your_git.sh write-tree[0m
-[33m[your_program] [0mca6496ab067423eec80b85b1b5aeb8882d29963e
-[33m[stage-5] [0m[36mReading file at .git/objects/ca/6496ab067423eec80b85b1b5aeb8882d29963e[0m
-[33m[stage-5] [0m[92mFound git object file written at .git/objects/ca/6496ab067423eec80b85b1b5aeb8882d29963e.[0m
+[33m[your_program] [0me0b19106f0c876dda120801e82ef88b9bddfd8d7
+[33m[stage-5] [0m[36mReading file at .git/objects/e0/b19106f0c876dda120801e82ef88b9bddfd8d7[0m
+[33m[stage-5] [0m[92mFound git object file written at .git/objects/e0/b19106f0c876dda120801e82ef88b9bddfd8d7.[0m
 [33m[stage-5] [0m[91mGit object file doesn't match official Git implementation. Diff after zlib decompression:[0m
 [33m[stage-5] [0m[91m[0m
 [33m[stage-5] [0mExpected (bytes 0-100), hexadecimal:                        | ASCII:
-[33m[stage-5] [0m74 72 65 65 20 31 30 [92m30[0m 00 31 30 30 36 34 34 20 68 6f 72 73 | tree 10[92m0[0m.100644 hors
-[33m[stage-5] [0m65 79 00 b3 bb b4 97 51 ee 2c 31 b7 c5 e1 24 06 5d 0f 38 1b | ey.....Q.,1...$.].8.
-[33m[stage-5] [0mfe 7a ff 34 30 30 30 30 20 68 75 6d 70 74 79 00 39 b2 e8 c1 | .z.40000 humpty.9...
-[33m[stage-5] [0m14 4b ba dd 5e a5 a0 d0 85 9c 16 7b 6b fc 73 08 34 30 30 30 | .K..^......{k.s.4000
-[33m[stage-5] [0m30 20 6d 6f 6e 6b 65 79 00 a1 e1 d3 c8 39 8b 89 b3 09 92 17 | 0 monkey.....9......
+[33m[stage-5] [0m74 72 65 65 20 31 30 [92m30[0m 00 31 30 30 36 34 34 20 67 72 61 70 | tree 10[92m0[0m.100644 grap
+[33m[stage-5] [0m65 00 38 e8 42 5f 03 f9 f1 da 9a 90 9f 94 be c5 1c e2 45 76 | e.8.B_............Ev
+[33m[stage-5] [0m20 e3 34 30 30 30 30 20 70 65 61 72 00 0b 3e 30 9e 6b ea 11 |  .40000 pear..>0.k..
+[33m[stage-5] [0m8a a9 92 b6 c9 72 ba 1f 6c f0 2b 77 4e 34 30 30 30 30 20 70 | .....r..l.+wN40000 p
+[33m[stage-5] [0m69 6e 65 61 70 70 6c 65 00 4b 63 c7 39 e5 7e 5c 2d 0e 61 ec | ineapple.Kc.9.~\-.a.
 [33m[stage-5] [0m
 [33m[stage-5] [0mActual (bytes 0-100), hexadecimal:                          | ASCII:
-[33m[stage-5] [0m74 72 65 65 20 31 30 [91m32[0m 00 31 30 30 36 34 34 20 68 6f 72 73 | tree 10[91m2[0m.100644 hors
-[33m[stage-5] [0m65 79 00 b3 bb b4 97 51 ee 2c 31 b7 c5 e1 24 06 5d 0f 38 1b | ey.....Q.,1...$.].8.
-[33m[stage-5] [0mfe 7a ff 30 34 30 30 30 30 20 68 75 6d 70 74 79 00 39 b2 e8 | .z.040000 humpty.9..
-[33m[stage-5] [0mc1 14 4b ba dd 5e a5 a0 d0 85 9c 16 7b 6b fc 73 08 30 34 30 | ..K..^......{k.s.040
-[33m[stage-5] [0m30 30 30 20 6d 6f 6e 6b 65 79 00 a1 e1 d3 c8 39 8b 89 b3 09 | 000 monkey.....9....
+[33m[stage-5] [0m74 72 65 65 20 31 30 [91m32[0m 00 31 30 30 36 34 34 20 67 72 61 70 | tree 10[91m2[0m.100644 grap
+[33m[stage-5] [0m65 00 38 e8 42 5f 03 f9 f1 da 9a 90 9f 94 be c5 1c e2 45 76 | e.8.B_............Ev
+[33m[stage-5] [0m20 e3 30 34 30 30 30 30 20 70 65 61 72 00 0b 3e 30 9e 6b ea |  .040000 pear..>0.k.
+[33m[stage-5] [0m11 8a a9 92 b6 c9 72 ba 1f 6c f0 2b 77 4e 30 34 30 30 30 30 | ......r..l.+wN040000
+[33m[stage-5] [0m20 70 69 6e 65 61 70 70 6c 65 00 4b 63 c7 39 e5 7e 5c 2d 0e |  pineapple.Kc.9.~\-.
 [33m[stage-5] [0m[91m[0m
 [33m[stage-5] [0m[91mGit object file doesn't match official Git implementation[0m
 [33m[stage-5] [0m[91mTest failed[0m
