@@ -70,7 +70,7 @@ func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
 
 	logger.Successf("Found git object file written at .git/objects/%v/%v.", sha[:2], sha[2:])
 
-	err = checkWithGit(logger, sha, gitObjectFileContents)
+	err = checkWithGit(tempDir, logger, sha, gitObjectFileContents)
 	if err != nil {
 		return err
 	}
@@ -84,22 +84,10 @@ func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
 	return nil
 }
 
-func checkWithGit(logger *logger.Logger, actualHash string, actualGitObjectFileContents []byte) error {
-	tempDir, err := os.MkdirTemp("", "worktree")
-	if err != nil {
-		return err
-	}
-
-	defer func() {
-		_ = os.RemoveAll(tempDir)
-	}()
-
-	err = generateFiles(tempDir)
-	if err != nil {
-		return err
-	}
-
-	_, err = runGit(tempDir, "init")
+// Git commands are run in the same tempDir, overwriting user operations
+// We need to create 2 set of dirs, with the exact same contents
+func checkWithGit(tempDir string, logger *logger.Logger, actualHash string, actualGitObjectFileContents []byte) error {
+	_, err := runGit(tempDir, "init")
 	if err != nil {
 		return err
 	}
@@ -169,7 +157,7 @@ func decodeZlib(data []byte) ([]byte, error) {
 }
 
 func generateFiles(root string) error {
-	content := random.RandomWords(4)
+	content := random.RandomStrings(4)
 
 	first := random.RandomWords(3) // file1, dir1, dir2
 
