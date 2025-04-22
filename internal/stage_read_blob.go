@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 
@@ -20,7 +19,7 @@ func testReadBlob(harness *test_case_harness.TestCaseHarness) error {
 	logger := harness.Logger
 	executable := harness.Executable
 
-	tempDir, err := ioutil.TempDir("", "worktree")
+	tempDir, err := os.MkdirTemp("", "worktree")
 	if err != nil {
 		return err
 	}
@@ -35,7 +34,7 @@ func testReadBlob(harness *test_case_harness.TestCaseHarness) error {
 
 	sampleFile := path.Join(tempDir, fmt.Sprintf("%s.txt", randomStringShort()))
 	sampleFileContents := randomString()
-	err = ioutil.WriteFile(
+	err = os.WriteFile(
 		sampleFile,
 		[]byte(sampleFileContents),
 		os.ModePerm,

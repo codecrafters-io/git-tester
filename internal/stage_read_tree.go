@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -24,7 +23,7 @@ func testReadTree(harness *test_case_harness.TestCaseHarness) error {
 	logger := harness.Logger
 	executable := harness.Executable
 
-	tempDir, err := ioutil.TempDir("", "worktree")
+	tempDir, err := os.MkdirTemp("", "worktree")
 	if err != nil {
 		return err
 	}

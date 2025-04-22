@@ -5,7 +5,7 @@ import (
 	"compress/zlib"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"math/rand"
 	"os"
 	"os/exec"
@@ -26,7 +26,7 @@ func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
 	logger := harness.Logger
 	executable := harness.Executable
 
-	tempDir, err := ioutil.TempDir("", "worktree")
+	tempDir, err := os.MkdirTemp("", "worktree")
 	if err != nil {
 		return err
 	}
@@ -103,7 +103,7 @@ func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
 }
 
 func checkWithGit(logger *logger.Logger, actualHash string, actualGitObjectFileContents []byte, seed int64) error {
-	tempDir, err := ioutil.TempDir("", "worktree")
+	tempDir, err := os.MkdirTemp("", "worktree")
 	if err != nil {
 		return err
 	}
@@ -178,7 +178,7 @@ func decodeZlib(data []byte) ([]byte, error) {
 	defer r.Close()
 
 	// Read all the decompressed data
-	decompressedData, err := ioutil.ReadAll(r)
+	decompressedData, err := io.ReadAll(r)
 	if err != nil {
 		return nil, err
 	}
