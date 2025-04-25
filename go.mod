@@ -1,8 +1,6 @@
 module github.com/codecrafters-io/git-tester
 
-go 1.21
-
-toolchain go1.22.1
+go 1.23
 
 require (
 	github.com/codecrafters-io/tester-utils v0.2.38

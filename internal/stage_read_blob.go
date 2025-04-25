@@ -2,10 +2,10 @@ package internal
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 	"github.com/go-git/go-billy/v5/osfs"
 	"github.com/go-git/go-git/v5/plumbing"
@@ -15,12 +15,10 @@ import (
 )
 
 func testReadBlob(harness *test_case_harness.TestCaseHarness) error {
-	initRandom()
-
 	logger := harness.Logger
 	executable := harness.Executable
 
-	tempDir, err := ioutil.TempDir("", "worktree")
+	tempDir, err := os.MkdirTemp("", "worktree")
 	if err != nil {
 		return err
 	}
@@ -33,9 +31,9 @@ func testReadBlob(harness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	sampleFile := path.Join(tempDir, fmt.Sprintf("%s.txt", randomStringShort()))
-	sampleFileContents := randomString()
-	err = ioutil.WriteFile(
+	sampleFile := path.Join(tempDir, fmt.Sprintf("%s.txt", random.RandomWord()))
+	sampleFileContents := random.RandomString()
+	err = os.WriteFile(
 		sampleFile,
 		[]byte(sampleFileContents),
 		os.ModePerm,

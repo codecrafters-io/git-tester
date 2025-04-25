@@ -4,18 +4,18 @@ Debug = true
 [33m[stage-4] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
 [33m[stage-4] [0m[36mWriting a tree to git storage..[0m
-[33m[stage-4] [0m[94m$ ./your_git.sh ls-tree --name-only 978c60262a761655b8429dbeb12f7dce351c6cd6[0m
-[33m[your_program] [0mhumpty
-[33m[your_program] [0mscooby
-[33m[your_program] [0mvanilla
+[33m[stage-4] [0m[94m$ ./your_git.sh ls-tree --name-only b2d2f8c10d725becf99fcfa62bec34584e5f8e83[0m
+[33m[your_program] [0mapple
+[33m[your_program] [0mblueberry
+[33m[your_program] [0mstrawberry
 [33m[stage-4] [0m[92mTest passed.[0m
 
 [33m[stage-3] [0m[94mRunning tests for Stage #3: jt4[0m
 [33m[stage-3] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-3] [0m[94m$ echo "orange pear grape pineapple blueberry banana" > pear.txt[0m
-[33m[stage-3] [0m[94m$ ./your_git.sh hash-object -w pear.txt[0m
-[33m[your_program] [0m7a50e289f5bde85780a843d5750ec3ae372af50a
+[33m[stage-3] [0m[94m$ echo "grape pear blueberry pineapple apple orange" > blueberry.txt[0m
+[33m[stage-3] [0m[94m$ ./your_git.sh hash-object -w blueberry.txt[0m
+[33m[your_program] [0mc15ad139c1acde0f92c11361b797f41197461f61
 [33m[stage-3] [0m[92mOutput is a 40-char SHA.[0m
 [33m[stage-3] [0m[92mBlob file contents are valid.[0m
 [33m[stage-3] [0m[92mReturned SHA matches expected SHA.[0m
@@ -24,9 +24,9 @@ Debug = true
 [33m[stage-2] [0m[94mRunning tests for Stage #2: ic4[0m
 [33m[stage-2] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-2] [0m[94mAdded blob object to .git/objects: 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m
-[33m[stage-2] [0m[94m$ ./your_git.sh cat-file -p 32eb24247f1cc0f2aa44da05b849392063a9b9e7[0m
-[33m[your_program] [0mdumpty dooby doo donkey horsey vanilla
+[33m[stage-2] [0m[94mAdded blob object to .git/objects: 0864cb0c02426f62a4e1d41c2dcdb23bcb9e8967[0m
+[33m[stage-2] [0m[94m$ ./your_git.sh cat-file -p 0864cb0c02426f62a4e1d41c2dcdb23bcb9e8967[0m
+[33m[your_program] [0mapple strawberry mango orange raspberry banana
 [33m[stage-2] [0m[92mOutput is valid.[0m
 [33m[stage-2] [0m[92mTest passed.[0m
 

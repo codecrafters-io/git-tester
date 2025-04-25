@@ -2,11 +2,12 @@ package internal
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path"
 	"strings"
 	"time"
 
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
@@ -14,12 +15,10 @@ import (
 )
 
 func testCreateCommit(harness *test_case_harness.TestCaseHarness) error {
-	initRandom()
-
 	logger := harness.Logger
 	executable := harness.Executable
 
-	tempDir, err := ioutil.TempDir("", "worktree")
+	tempDir, err := os.MkdirTemp("", "worktree")
 	if err != nil {
 		return err
 	}
@@ -34,11 +33,11 @@ func testCreateCommit(harness *test_case_harness.TestCaseHarness) error {
 	logger.Debugf("Creating some files & directories")
 
 	rootFile := "root.txt"
-	firstLevel := randomStringsShort(3)
+	firstLevel := random.RandomWords(3)
 	rootFile, rootDir1, rootDir2 := firstLevel[0], firstLevel[1], firstLevel[2]
-	secondLevel := randomStringsShort(2)
+	secondLevel := random.RandomWords(2)
 	rootDir1File1, rootDir1File2 := secondLevel[0], secondLevel[1]
-	thirdLevel := randomStringsShort(2)
+	thirdLevel := random.RandomWords(2)
 	rootDir2File1, rootDir2File2 := thirdLevel[0], thirdLevel[1]
 
 	writeFile(tempDir, rootFile)
@@ -98,7 +97,7 @@ func testCreateCommit(harness *test_case_harness.TestCaseHarness) error {
 
 	treeSha := nextCommit.TreeHash.String()
 
-	commitMessage := randomString()
+	commitMessage := random.RandomString()
 	logger.Infof("$ ./%s commit-tree <tree_sha> -p <commit_sha> -m <message>", path.Base(executable.Path))
 	result, err := executable.Run("commit-tree", treeSha, "-p", parentCommitSha, "-m", commitMessage)
 	if err != nil {

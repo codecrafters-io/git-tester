@@ -5,28 +5,24 @@ import (
 	"compress/zlib"
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"math/rand"
+	"io"
 	"os"
 	"os/exec"
 	"path"
 	"path/filepath"
-	"strconv"
 	"strings"
-	"time"
 
-	bytes_diff_visualizer "github.com/codecrafters-io/tester-utils/bytes_diff_visualizer"
-	logger "github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/bytes_diff_visualizer"
+	"github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/random"
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
-	initRandom()
-
 	logger := harness.Logger
 	executable := harness.Executable
 
-	tempDir, err := ioutil.TempDir("", "worktree")
+	tempDir, err := os.MkdirTemp("", "worktree")
 	if err != nil {
 		return err
 	}
@@ -41,21 +37,7 @@ func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
 
 	logger.Infof("Creating some files & directories")
 
-	var seed int64
-
-	if seedStr := os.Getenv("CODECRAFTERS_RANDOM_SEED"); seedStr != "" {
-		seedInt, err := strconv.Atoi(seedStr)
-
-		if err != nil {
-			panic(err)
-		}
-
-		seed = int64(seedInt)
-	} else {
-		seed = time.Now().UnixNano()
-	}
-
-	err = generateFiles(tempDir, seed)
+	err = generateFiles(tempDir)
 	if err != nil {
 		panic(err)
 	}
@@ -88,7 +70,7 @@ func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
 
 	logger.Successf("Found git object file written at .git/objects/%v/%v.", sha[:2], sha[2:])
 
-	err = checkWithGit(logger, sha, gitObjectFileContents, seed)
+	err = checkWithGit(tempDir, logger, sha, gitObjectFileContents)
 	if err != nil {
 		return err
 	}
@@ -102,22 +84,10 @@ func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
 	return nil
 }
 
-func checkWithGit(logger *logger.Logger, actualHash string, actualGitObjectFileContents []byte, seed int64) error {
-	tempDir, err := ioutil.TempDir("", "worktree")
-	if err != nil {
-		return err
-	}
-
-	defer func() {
-		_ = os.RemoveAll(tempDir)
-	}()
-
-	err = generateFiles(tempDir, seed)
-	if err != nil {
-		return err
-	}
-
-	_, err = runGit(tempDir, "init")
+// Git commands are run in the same tempDir, overwriting user operations
+// We need to create 2 set of dirs, with the exact same contents
+func checkWithGit(tempDir string, logger *logger.Logger, actualHash string, actualGitObjectFileContents []byte) error {
+	_, err := runGit(tempDir, "init")
 	if err != nil {
 		return err
 	}
@@ -178,7 +148,7 @@ func decodeZlib(data []byte) ([]byte, error) {
 	defer r.Close()
 
 	// Read all the decompressed data
-	decompressedData, err := ioutil.ReadAll(r)
+	decompressedData, err := io.ReadAll(r)
 	if err != nil {
 		return nil, err
 	}
@@ -186,15 +156,13 @@ func decodeZlib(data []byte) ([]byte, error) {
 	return decompressedData, nil
 }
 
-func generateFiles(root string, seed int64) error {
-	r := rand.New(rand.NewSource(seed))
+func generateFiles(root string) error {
+	content := random.RandomStrings(4)
 
-	content := randomLongStringsRand(4, r)
+	first := random.RandomWords(3) // file1, dir1, dir2
 
-	first := randomStringsRand(3, r) // file1, dir1, dir2
-
-	dir1 := randomStringsRand(2, r) // file2, file3
-	dir2 := randomStringsRand(1, r) // file4
+	dir1 := random.RandomWords(2) // file2, file3
+	dir2 := random.RandomWords(1) // file4
 
 	writeFileContent(content[0], root, first[0])
 	writeFileContent(content[1], root, first[1], dir1[0])
@@ -221,8 +189,6 @@ func runCmd(wd, path string, args ...string) ([]byte, error) {
 	cmd.Stderr = &errb
 
 	err := cmd.Run()
-
-	//	fmt.Printf("run: %v %v\nerr: %v\nout: %s\nstderr: %s\n", path, args, err, outb.Bytes(), errb.Bytes())
 
 	var exitError *exec.ExitError
 	if errors.As(err, &exitError) {
