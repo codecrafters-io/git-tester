@@ -93,22 +93,24 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 
 	logger.Infof("$ ./%s clone %s <testDir>", path.Base(executable.Path), testRepo.url)
 
-	gitPath, err := exec.LookPath("git")
+	oldGitPath, err := exec.LookPath("git")
 	if err != nil {
 		return fmt.Errorf("git executable not found: %v", err)
 	}
-	logger.Debugf("Found git executable at: %s", gitPath)
+	oldGitDir := path.Dir(oldGitPath)
+	logger.Debugf("Found git executable at: %s", oldGitPath)
 
-	gitDir, err := os.MkdirTemp("/tmp", "git-*")
+	tmpGitDir, err := os.MkdirTemp("/tmp", "git-*")
 	if err != nil {
 		return err
 	}
-	logger.Debugf("Created temporary directory for git clone: %s", gitDir)
-	defer os.RemoveAll(gitDir)
+	logger.Debugf("Created temporary directory for git clone: %s", tmpGitDir)
+	tmpGitPath := path.Join(tmpGitDir, "git")
+	defer os.RemoveAll(tmpGitDir)
 
 	// Copy the custom_executable to the output path
-	command := fmt.Sprintf("mv %s %s", gitPath, gitDir)
-	logger.Debugf("mv-ed git to temp directory: %s", gitDir)
+	command := fmt.Sprintf("mv %s %s", oldGitPath, tmpGitDir)
+	logger.Debugf("mv-ed git to temp directory: %s", tmpGitDir)
 	//fmt.Println(command)
 	copyCmd := exec.Command("sh", "-c", command)
 	copyCmd.Stdout = io.Discard
@@ -119,8 +121,8 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 
 	defer func() error {
 		// Copy the custom_executable to the output path
-		command := fmt.Sprintf("mv %s %s", gitDir, gitPath)
-		logger.Debugf("mv-ed git to og directory: %s", gitPath)
+		command := fmt.Sprintf("mv %s %s", tmpGitPath, oldGitDir)
+		logger.Debugf("mv-ed git to og directory: %s", oldGitDir)
 		//fmt.Println(command)
 		copyCmd := exec.Command("sh", "-c", command)
 		copyCmd.Stdout = io.Discard
@@ -134,8 +136,8 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 	}()
 
 	defer func() error {
-		if err := os.RemoveAll(gitDir); err != nil {
-			return fmt.Errorf("CodeCrafters Internal Error: delete directory failed: %s", gitDir)
+		if err := os.RemoveAll(tmpGitDir); err != nil {
+			return fmt.Errorf("CodeCrafters Internal Error: delete directory failed: %s", tmpGitDir)
 		}
 		return nil
 	}()
