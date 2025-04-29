@@ -2,7 +2,9 @@ package internal
 
 import (
 	"fmt"
+	"io"
 	"os"
+	"os/exec"
 	"path"
 
 	"github.com/codecrafters-io/tester-utils/random"
@@ -31,7 +33,7 @@ func (r TestRepo) randomFile() TestFile {
 	return r.exampleFiles[random.RandomInt(0, len(r.exampleFiles))]
 }
 
-var testRepos []TestRepo = []TestRepo{
+var testRepos = []TestRepo{
 	{
 		url: "https://github.com/codecrafters-io/git-sample-1",
 		exampleCommits: []string{
@@ -90,6 +92,54 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 	testRepo := randomRepo()
 
 	logger.Infof("$ ./%s clone %s <testDir>", path.Base(executable.Path), testRepo.url)
+
+	gitPath, err := exec.LookPath("git")
+	if err != nil {
+		return fmt.Errorf("git executable not found: %v", err)
+	}
+	logger.Debugf("Found git executable at: %s", gitPath)
+
+	gitDir, err := os.MkdirTemp("/tmp", "git-*")
+	if err != nil {
+		return err
+	}
+	logger.Debugf("Created temporary directory for git clone: %s", gitDir)
+	defer os.RemoveAll(gitDir)
+
+	// Copy the custom_executable to the output path
+	command := fmt.Sprintf("cp %s %s", gitPath, gitDir)
+	logger.Debugf("Cp-ed git to temp directory: %s", gitDir)
+	//fmt.Println(command)
+	copyCmd := exec.Command("sh", "-c", command)
+	copyCmd.Stdout = io.Discard
+	copyCmd.Stderr = io.Discard
+	if err := copyCmd.Run(); err != nil {
+		return fmt.Errorf("CodeCrafters Internal Error: cp failed: %w", err)
+	}
+
+	defer func() error {
+		// Copy the custom_executable to the output path
+		command := fmt.Sprintf("cp %s %s", gitDir, gitPath)
+		logger.Debugf("Cp-ed git to temp directory: %s", gitPath)
+		//fmt.Println(command)
+		copyCmd := exec.Command("sh", "-c", command)
+		copyCmd.Stdout = io.Discard
+		copyCmd.Stderr = io.Discard
+
+		if err := copyCmd.Run(); err != nil {
+			return fmt.Errorf("CodeCrafters Internal Error: cp failed: %w", err)
+		}
+
+		return nil
+	}()
+
+	defer func() error {
+		if err := os.RemoveAll(gitDir); err != nil {
+			return fmt.Errorf("CodeCrafters Internal Error: delete directory failed: %s", gitDir)
+		}
+		return nil
+	}()
+
 	result, err := executable.Run("clone", testRepo.url, "test_dir")
 	if err != nil {
 		return err
