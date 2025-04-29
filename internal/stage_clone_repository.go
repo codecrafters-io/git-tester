@@ -110,27 +110,24 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 
 	// Copy the custom_executable to the output path
 	command := fmt.Sprintf("mv %s %s", oldGitPath, tmpGitDir)
-	logger.Debugf("mv-ed git to temp directory: %s", tmpGitDir)
-	//fmt.Println(command)
 	copyCmd := exec.Command("sh", "-c", command)
 	copyCmd.Stdout = io.Discard
 	copyCmd.Stderr = io.Discard
 	if err := copyCmd.Run(); err != nil {
 		return fmt.Errorf("CodeCrafters Internal Error: mv failed: %w", err)
 	}
+	logger.Debugf("mv-ed git to temp directory: %s", tmpGitDir)
 
 	defer func() error {
 		// Copy the custom_executable to the output path
 		command := fmt.Sprintf("mv %s %s", tmpGitPath, oldGitDir)
-		logger.Debugf("mv-ed git to og directory: %s", oldGitDir)
-		//fmt.Println(command)
 		copyCmd := exec.Command("sh", "-c", command)
 		copyCmd.Stdout = io.Discard
 		copyCmd.Stderr = io.Discard
-
 		if err := copyCmd.Run(); err != nil {
 			return fmt.Errorf("CodeCrafters Internal Error: mv failed: %w", err)
 		}
+		logger.Debugf("mv-ed git to og directory: %s", oldGitDir)
 
 		return nil
 	}()
