@@ -2,7 +2,9 @@ package internal
 
 import (
 	"fmt"
+	"io"
 	"os"
+	"os/exec"
 	"path"
 
 	"github.com/codecrafters-io/tester-utils/random"
@@ -31,7 +33,7 @@ func (r TestRepo) randomFile() TestFile {
 	return r.exampleFiles[random.RandomInt(0, len(r.exampleFiles))]
 }
 
-var testRepos []TestRepo = []TestRepo{
+var testRepos = []TestRepo{
 	{
 		url: "https://github.com/codecrafters-io/git-sample-1",
 		exampleCommits: []string{
@@ -90,6 +92,53 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 	testRepo := randomRepo()
 
 	logger.Infof("$ ./%s clone %s <testDir>", path.Base(executable.Path), testRepo.url)
+
+	oldGitPath, err := exec.LookPath("git")
+	if err != nil {
+		return fmt.Errorf("git executable not found: %v", err)
+	}
+	oldGitDir := path.Dir(oldGitPath)
+	logger.Debugf("Found git executable at: %s", oldGitPath)
+
+	tmpGitDir, err := os.MkdirTemp("/tmp", "git-*")
+	if err != nil {
+		return err
+	}
+	logger.Debugf("Created temporary directory for git clone: %s", tmpGitDir)
+	tmpGitPath := path.Join(tmpGitDir, "git")
+	defer os.RemoveAll(tmpGitDir)
+
+	// Copy the custom_executable to the output path
+	command := fmt.Sprintf("mv %s %s", oldGitPath, tmpGitDir)
+	copyCmd := exec.Command("sh", "-c", command)
+	copyCmd.Stdout = io.Discard
+	copyCmd.Stderr = io.Discard
+	if err := copyCmd.Run(); err != nil {
+		return fmt.Errorf("CodeCrafters Internal Error: mv failed: %w", err)
+	}
+	logger.Debugf("mv-ed git to temp directory: %s", tmpGitDir)
+
+	defer func() error {
+		// Copy the custom_executable to the output path
+		command := fmt.Sprintf("mv %s %s", tmpGitPath, oldGitDir)
+		copyCmd := exec.Command("sh", "-c", command)
+		copyCmd.Stdout = io.Discard
+		copyCmd.Stderr = io.Discard
+		if err := copyCmd.Run(); err != nil {
+			return fmt.Errorf("CodeCrafters Internal Error: mv failed: %w", err)
+		}
+		logger.Debugf("mv-ed git to og directory: %s", oldGitDir)
+
+		return nil
+	}()
+
+	defer func() error {
+		if err := os.RemoveAll(tmpGitDir); err != nil {
+			return fmt.Errorf("CodeCrafters Internal Error: delete directory failed: %s", tmpGitDir)
+		}
+		return nil
+	}()
+
 	result, err := executable.Run("clone", testRepo.url, "test_dir")
 	if err != nil {
 		return err
