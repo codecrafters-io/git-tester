@@ -19,7 +19,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: cargo install cargo-binstall
-      - run: cargo binstall gitoxide
+      - run: cargo binstall gitoxide --force
       - run: echo "$HOME/.cargo/bin" >> $GITHUB_PATH
       - run: make test
       - run: make test_with_gix
