@@ -121,6 +121,17 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 
 	logger.Infof("$ git clone %s %s", testRepo.url, "test_dir")
 
+	//////// which git
+	command = fmt.Sprint("which git")
+	logger.Debugf(command)
+	cmd := exec.Command("sh", "-c", command)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("CodeCrafters Internal Error: mv1 failed: %w", err)
+	}
+	logger.Debugf("mv-ed git to temp directory: %s", tmpGitDir)
+
 	result, err := executable.Run("clone", testRepo.url, "test_dir")
 	if err != nil {
 		return err
