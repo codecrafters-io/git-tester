@@ -131,14 +131,9 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 		}
 		logger.Debugf("mv-ed git to og directory: %s", oldGitDir)
 
-		return nil
-	}()
-
-	defer func() error {
-		fmt.Println(tmpGitDir)
-		// if err := os.RemoveAll(tmpGitDir); err != nil {
-		// 	return fmt.Errorf("CodeCrafters Internal Error: delete directory failed: %s", tmpGitDir)
-		// }
+		if err := os.RemoveAll(tmpGitDir); err != nil {
+			return fmt.Errorf("CodeCrafters Internal Error: delete directory failed: %s", tmpGitDir)
+		}
 		return nil
 	}()
 
