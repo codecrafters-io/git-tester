@@ -2,7 +2,9 @@ package internal
 
 import (
 	"fmt"
+	"io"
 	"os"
+	"os/exec"
 	"path"
 
 	"github.com/codecrafters-io/tester-utils/random"
@@ -31,7 +33,7 @@ func (r TestRepo) randomFile() TestFile {
 	return r.exampleFiles[random.RandomInt(0, len(r.exampleFiles))]
 }
 
-var testRepos []TestRepo = []TestRepo{
+var testRepos = []TestRepo{
 	{
 		url: "https://github.com/codecrafters-io/git-sample-1",
 		exampleCommits: []string{
@@ -90,6 +92,46 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 	testRepo := randomRepo()
 
 	logger.Infof("$ ./%s clone %s <testDir>", path.Base(executable.Path), testRepo.url)
+
+	oldGitPath, err := exec.LookPath("git")
+	if err != nil {
+		return fmt.Errorf("git executable not found: %v", err)
+	}
+	oldGitDir := path.Dir(oldGitPath)
+	logger.Debugf("Found git executable at: %s", oldGitPath)
+
+	tmpGitDir, err := os.MkdirTemp("/tmp", "git-*")
+	if err != nil {
+		return err
+	}
+	logger.Debugf("Created temporary directory for git clone: %s", tmpGitDir)
+	tmpGitPath := path.Join(tmpGitDir, "git")
+	defer os.RemoveAll(tmpGitDir)
+
+	// Copy the custom_executable to the output path
+	command := fmt.Sprintf("sudo mv %s %s", oldGitPath, tmpGitDir)
+	logger.Debugf(command)
+	copyCmd := exec.Command("sh", "-c", command)
+	copyCmd.Stdout = os.Stdout
+	copyCmd.Stderr = os.Stderr
+	if err := copyCmd.Run(); err != nil {
+		return fmt.Errorf("CodeCrafters Internal Error: mv1 failed: %w", err)
+	}
+	logger.Debugf("mv-ed git to temp directory: %s", tmpGitDir)
+
+	logger.Infof("$ git clone %s %s", testRepo.url, "test_dir")
+
+	//////// which git
+	// command = fmt.Sprint("which git")
+	// logger.Debugf(command)
+	// cmd := exec.Command("sh", "-c", command)
+	// cmd.Stdout = os.Stdout
+	// cmd.Stderr = os.Stderr
+	// if err := cmd.Run(); err != nil {
+	// 	return fmt.Errorf("CodeCrafters Internal Error: mv1 failed: %w", err)
+	// }
+	// logger.Debugf("mv-ed git to temp directory: %s", tmpGitDir)
+
 	result, err := executable.Run("clone", testRepo.url, "test_dir")
 	if err != nil {
 		return err
@@ -135,6 +177,24 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 		return fmt.Errorf("Expected %q as file contents, got: %q", expected, actual)
 	}
 	logger.Successf("File contents verified")
+
+	defer func() error {
+		// Copy the custom_executable to the output path
+		command := fmt.Sprintf("sudo mv %s %s", tmpGitPath, oldGitDir)
+		logger.Debugf(command)
+		copyCmd := exec.Command("sh", "-c", command)
+		copyCmd.Stdout = io.Discard
+		copyCmd.Stderr = io.Discard
+		if err := copyCmd.Run(); err != nil {
+			return fmt.Errorf("CodeCrafters Internal Error: mv2 failed: %w", err)
+		}
+		logger.Debugf("mv-ed git to og directory: %s", oldGitDir)
+
+		if err := os.RemoveAll(tmpGitDir); err != nil {
+			return fmt.Errorf("CodeCrafters Internal Error: delete directory failed: %s", tmpGitDir)
+		}
+		return nil
+	}()
 
 	return nil
 }
