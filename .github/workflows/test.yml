@@ -21,4 +21,5 @@ jobs:
       - run: cargo install cargo-binstall
       - run: cargo binstall gitoxide
       - run: make test
+      - run: make test_with_gix
       - run: make test_with_git
