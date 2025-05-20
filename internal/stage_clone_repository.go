@@ -110,7 +110,7 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 
 	// Copy the custom_executable to the output path
 	command := fmt.Sprintf("sudo mv %s %s", oldGitPath, tmpGitDir)
-	fmt.Println(command)
+	logger.Debugf(command)
 	copyCmd := exec.Command("sh", "-c", command)
 	copyCmd.Stdout = os.Stdout
 	copyCmd.Stderr = os.Stderr
@@ -119,23 +119,7 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 	}
 	logger.Debugf("mv-ed git to temp directory: %s", tmpGitDir)
 
-	defer func() error {
-		// Copy the custom_executable to the output path
-		command := fmt.Sprintf("sudo mv %s %s", tmpGitPath, oldGitDir)
-		fmt.Println(command)
-		copyCmd := exec.Command("sh", "-c", command)
-		copyCmd.Stdout = io.Discard
-		copyCmd.Stderr = io.Discard
-		if err := copyCmd.Run(); err != nil {
-			return fmt.Errorf("CodeCrafters Internal Error: mv2 failed: %w", err)
-		}
-		logger.Debugf("mv-ed git to og directory: %s", oldGitDir)
-
-		if err := os.RemoveAll(tmpGitDir); err != nil {
-			return fmt.Errorf("CodeCrafters Internal Error: delete directory failed: %s", tmpGitDir)
-		}
-		return nil
-	}()
+	logger.Infof("$ git clone %s %s", testRepo.url, "test_dir")
 
 	result, err := executable.Run("clone", testRepo.url, "test_dir")
 	if err != nil {
@@ -182,6 +166,24 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 		return fmt.Errorf("Expected %q as file contents, got: %q", expected, actual)
 	}
 	logger.Successf("File contents verified")
+
+	defer func() error {
+		// Copy the custom_executable to the output path
+		command := fmt.Sprintf("sudo mv %s %s", tmpGitPath, oldGitDir)
+		logger.Debugf(command)
+		copyCmd := exec.Command("sh", "-c", command)
+		copyCmd.Stdout = io.Discard
+		copyCmd.Stderr = io.Discard
+		if err := copyCmd.Run(); err != nil {
+			return fmt.Errorf("CodeCrafters Internal Error: mv2 failed: %w", err)
+		}
+		logger.Debugf("mv-ed git to og directory: %s", oldGitDir)
+
+		if err := os.RemoveAll(tmpGitDir); err != nil {
+			return fmt.Errorf("CodeCrafters Internal Error: delete directory failed: %s", tmpGitDir)
+		}
+		return nil
+	}()
 
 	return nil
 }
