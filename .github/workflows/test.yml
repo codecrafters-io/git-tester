@@ -19,8 +19,8 @@ jobs:
         with:
           python-version: '3.12'
       - run: cargo install cargo-binstall
-      - run: cargo binstall gitoxide --force
-      - run: echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+      # This sets up the binaries required for gix.
+      - run: cargo binstall gitoxide --force 
       - run: make test
       - run: make test_with_gix
       - run: make test_with_git
