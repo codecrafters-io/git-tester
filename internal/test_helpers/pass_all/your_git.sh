@@ -1,12 +1,12 @@
 #!/bin/sh
 
-git config --global user.email "you@example.com"
-git config --global user.name "Your Name"
-git config --global init.defaultBranch "main"
+/tmp/test_helpers/git config --global user.email "you@example.com"
+/tmp/test_helpers/git config --global user.name "Your Name"
+/tmp/test_helpers/git config --global init.defaultBranch "main"
 
 if [ "$1" = "write-tree" ]
 then
-  git add .
+  /tmp/test_helpers/git add .
 fi
 
-exec git "$@"
+exec /tmp/test_helpers/git "$@"
