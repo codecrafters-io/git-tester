@@ -1,11 +1,11 @@
 Debug = true
 
-[33m[stage-5] [0m[94mRunning tests for Stage #5: fe4[0m
-[33m[stage-5] [0m[94m$ ./your_git.sh init[0m
+[33m[tester::#FE4] [0m[94mRunning tests for Stage #FE4 (fe4)[0m
+[33m[tester::#FE4] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-5] [0m[94mCreating some files & directories[0m
-[33m[stage-5] [0m[94m$ ./your_git.sh write-tree[0m
+[33m[tester::#FE4] [0m[94mCreating some files & directories[0m
+[33m[tester::#FE4] [0m[94m$ ./your_git.sh write-tree[0m
 [33m[your_program] [0m1bb64bad31995c6fa75a424cd0a4561583c4a344
-[33m[stage-5] [0m[36mReading file at .git/objects/1b/b64bad31995c6fa75a424cd0a4561583c4a344[0m
-[33m[stage-5] [0m[91mDid you write the tree object? Did not find a file in .git/objects/<first 2 chars of sha>/<remaining chars of sha>[0m
-[33m[stage-5] [0m[91mTest failed[0m
+[33m[tester::#FE4] [0m[36mReading file at .git/objects/1b/b64bad31995c6fa75a424cd0a4561583c4a344[0m
+[33m[tester::#FE4] [0m[91mDid you write the tree object? Did not find a file in .git/objects/<first 2 chars of sha>/<remaining chars of sha>[0m
+[33m[tester::#FE4] [0m[91mTest failed[0m

@@ -1,28 +1,28 @@
 Debug = true
 
-[33m[stage-5] [0m[94mRunning tests for Stage #5: fe4[0m
-[33m[stage-5] [0m[94m$ ./your_git.sh init[0m
+[33m[tester::#FE4] [0m[94mRunning tests for Stage #FE4 (fe4)[0m
+[33m[tester::#FE4] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-5] [0m[94mCreating some files & directories[0m
-[33m[stage-5] [0m[94m$ ./your_git.sh write-tree[0m
+[33m[tester::#FE4] [0m[94mCreating some files & directories[0m
+[33m[tester::#FE4] [0m[94m$ ./your_git.sh write-tree[0m
 [33m[your_program] [0me0b19106f0c876dda120801e82ef88b9bddfd8d7
-[33m[stage-5] [0m[36mReading file at .git/objects/e0/b19106f0c876dda120801e82ef88b9bddfd8d7[0m
-[33m[stage-5] [0m[92mFound git object file written at .git/objects/e0/b19106f0c876dda120801e82ef88b9bddfd8d7.[0m
-[33m[stage-5] [0m[91mGit object file doesn't match official Git implementation. Diff after zlib decompression:[0m
-[33m[stage-5] [0m[91m[0m
-[33m[stage-5] [0mExpected (bytes 0-100), hexadecimal:                        | ASCII:
-[33m[stage-5] [0m74 72 65 65 20 31 30 [92m30[0m 00 31 30 30 36 34 34 20 67 72 61 70 | tree 10[92m0[0m.100644 grap
-[33m[stage-5] [0m65 00 38 e8 42 5f 03 f9 f1 da 9a 90 9f 94 be c5 1c e2 45 76 | e.8.B_............Ev
-[33m[stage-5] [0m20 e3 34 30 30 30 30 20 70 65 61 72 00 0b 3e 30 9e 6b ea 11 |  .40000 pear..>0.k..
-[33m[stage-5] [0m8a a9 92 b6 c9 72 ba 1f 6c f0 2b 77 4e 34 30 30 30 30 20 70 | .....r..l.+wN40000 p
-[33m[stage-5] [0m69 6e 65 61 70 70 6c 65 00 4b 63 c7 39 e5 7e 5c 2d 0e 61 ec | ineapple.Kc.9.~\-.a.
-[33m[stage-5] [0m
-[33m[stage-5] [0mActual (bytes 0-100), hexadecimal:                          | ASCII:
-[33m[stage-5] [0m74 72 65 65 20 31 30 [91m32[0m 00 31 30 30 36 34 34 20 67 72 61 70 | tree 10[91m2[0m.100644 grap
-[33m[stage-5] [0m65 00 38 e8 42 5f 03 f9 f1 da 9a 90 9f 94 be c5 1c e2 45 76 | e.8.B_............Ev
-[33m[stage-5] [0m20 e3 30 34 30 30 30 30 20 70 65 61 72 00 0b 3e 30 9e 6b ea |  .040000 pear..>0.k.
-[33m[stage-5] [0m11 8a a9 92 b6 c9 72 ba 1f 6c f0 2b 77 4e 30 34 30 30 30 30 | ......r..l.+wN040000
-[33m[stage-5] [0m20 70 69 6e 65 61 70 70 6c 65 00 4b 63 c7 39 e5 7e 5c 2d 0e |  pineapple.Kc.9.~\-.
-[33m[stage-5] [0m[91m[0m
-[33m[stage-5] [0m[91mGit object file doesn't match official Git implementation[0m
-[33m[stage-5] [0m[91mTest failed[0m
+[33m[tester::#FE4] [0m[36mReading file at .git/objects/e0/b19106f0c876dda120801e82ef88b9bddfd8d7[0m
+[33m[tester::#FE4] [0m[92mFound git object file written at .git/objects/e0/b19106f0c876dda120801e82ef88b9bddfd8d7.[0m
+[33m[tester::#FE4] [0m[91mGit object file doesn't match official Git implementation. Diff after zlib decompression:[0m
+[33m[tester::#FE4] [0m[91m[0m
+[33m[tester::#FE4] [0mExpected (bytes 0-100), hexadecimal:                        | ASCII:
+[33m[tester::#FE4] [0m74 72 65 65 20 31 30 [92m30[0m 00 31 30 30 36 34 34 20 67 72 61 70 | tree 10[92m0[0m.100644 grap
+[33m[tester::#FE4] [0m65 00 38 e8 42 5f 03 f9 f1 da 9a 90 9f 94 be c5 1c e2 45 76 | e.8.B_............Ev
+[33m[tester::#FE4] [0m20 e3 34 30 30 30 30 20 70 65 61 72 00 0b 3e 30 9e 6b ea 11 |  .40000 pear..>0.k..
+[33m[tester::#FE4] [0m8a a9 92 b6 c9 72 ba 1f 6c f0 2b 77 4e 34 30 30 30 30 20 70 | .....r..l.+wN40000 p
+[33m[tester::#FE4] [0m69 6e 65 61 70 70 6c 65 00 4b 63 c7 39 e5 7e 5c 2d 0e 61 ec | ineapple.Kc.9.~\-.a.
+[33m[tester::#FE4] [0m
+[33m[tester::#FE4] [0mActual (bytes 0-100), hexadecimal:                          | ASCII:
+[33m[tester::#FE4] [0m74 72 65 65 20 31 30 [91m32[0m 00 31 30 30 36 34 34 20 67 72 61 70 | tree 10[91m2[0m.100644 grap
+[33m[tester::#FE4] [0m65 00 38 e8 42 5f 03 f9 f1 da 9a 90 9f 94 be c5 1c e2 45 76 | e.8.B_............Ev
+[33m[tester::#FE4] [0m20 e3 30 34 30 30 30 30 20 70 65 61 72 00 0b 3e 30 9e 6b ea |  .040000 pear..>0.k.
+[33m[tester::#FE4] [0m11 8a a9 92 b6 c9 72 ba 1f 6c f0 2b 77 4e 30 34 30 30 30 30 | ......r..l.+wN040000
+[33m[tester::#FE4] [0m20 70 69 6e 65 61 70 70 6c 65 00 4b 63 c7 39 e5 7e 5c 2d 0e |  pineapple.Kc.9.~\-.
+[33m[tester::#FE4] [0m[91m[0m
+[33m[tester::#FE4] [0m[91mGit object file doesn't match official Git implementation[0m
+[33m[tester::#FE4] [0m[91mTest failed[0m

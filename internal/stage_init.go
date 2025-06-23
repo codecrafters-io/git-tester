@@ -105,15 +105,15 @@ func doLogDebugTree(logger *logger.Logger, dir string, prefix string) {
 	}
 
 	if len(entries) == 0 {
-		logger.Infof(prefix + "  (directory is empty)")
+		logger.Infof("%s", prefix+"  (directory is empty)")
 	}
 
 	for _, info := range entries {
 		if info.IsDir() {
-			logger.Infof(prefix + "- " + info.Name() + "/")
+			logger.Infof("%s", prefix+"- "+info.Name()+"/")
 			doLogDebugTree(logger, path.Join(dir, info.Name()), prefix+" ")
 		} else {
-			logger.Infof(prefix + "- " + info.Name())
+			logger.Infof("%s", prefix+"- "+info.Name())
 		}
 	}
 }
