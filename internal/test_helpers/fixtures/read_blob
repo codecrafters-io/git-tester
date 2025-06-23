@@ -1,19 +1,19 @@
 Debug = true
 
-[33m[stage-2] [0m[94mRunning tests for Stage #2: ic4[0m
-[33m[stage-2] [0m[94m$ ./your_git.sh init[0m
+[33m[tester::#IC4] [0m[94mRunning tests for Stage #IC4 (ic4)[0m
+[33m[tester::#IC4] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-2] [0m[94mAdded blob object to .git/objects: 7a50e289f5bde85780a843d5750ec3ae372af50a[0m
-[33m[stage-2] [0m[94m$ ./your_git.sh cat-file -p 7a50e289f5bde85780a843d5750ec3ae372af50a[0m
+[33m[tester::#IC4] [0m[94mAdded blob object to .git/objects: 7a50e289f5bde85780a843d5750ec3ae372af50a[0m
+[33m[tester::#IC4] [0m[94m$ ./your_git.sh cat-file -p 7a50e289f5bde85780a843d5750ec3ae372af50a[0m
 [33m[your_program] [0morange pear grape pineapple blueberry banana
-[33m[stage-2] [0m[92mOutput is valid.[0m
-[33m[stage-2] [0m[92mTest passed.[0m
+[33m[tester::#IC4] [0m[92mOutput is valid.[0m
+[33m[tester::#IC4] [0m[92mTest passed.[0m
 
-[33m[stage-1] [0m[94mRunning tests for Stage #1: gg4[0m
-[33m[stage-1] [0m[94m$ ./your_git.sh init[0m
+[33m[tester::#GG4] [0m[94mRunning tests for Stage #GG4 (gg4)[0m
+[33m[tester::#GG4] [0m[94m$ ./your_git.sh init[0m
 [33m[your_program] [0mInitialized git directory
-[33m[stage-1] [0m[92m.git directory found.[0m
-[33m[stage-1] [0m[92m.git/objects directory found.[0m
-[33m[stage-1] [0m[92m.git/refs directory found.[0m
-[33m[stage-1] [0m[92m.git/HEAD file is valid.[0m
-[33m[stage-1] [0m[92mTest passed.[0m
+[33m[tester::#GG4] [0m[92m.git directory found.[0m
+[33m[tester::#GG4] [0m[92m.git/objects directory found.[0m
+[33m[tester::#GG4] [0m[92m.git/refs directory found.[0m
+[33m[tester::#GG4] [0m[92m.git/HEAD file is valid.[0m
+[33m[tester::#GG4] [0m[92mTest passed.[0m
