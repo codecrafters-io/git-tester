@@ -2,6 +2,7 @@ package internal
 
 import (
 	"os"
+	"regexp"
 	"testing"
 
 	tester_utils_testing "github.com/codecrafters-io/tester-utils/testing"
@@ -115,5 +116,16 @@ func TestStages(t *testing.T) {
 }
 
 func normalizeTesterOutput(testerOutput []byte) []byte {
+	replacements := map[string][]*regexp.Regexp{
+		"initalize_line":             {regexp.MustCompile(`Initialized empty Git repository in .*.git/`)},
+		"[your_program] commit-tree": {regexp.MustCompile(`\[your_program\] .{4}[a-z0-9]{40}`)},
+	}
+
+	for replacement, regexes := range replacements {
+		for _, regex := range regexes {
+			testerOutput = regex.ReplaceAll(testerOutput, []byte(replacement))
+		}
+	}
+
 	return testerOutput
 }

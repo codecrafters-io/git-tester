@@ -11,7 +11,7 @@ build:
 	go build -o dist/main.out ./cmd/tester
 
 test:
-	go test -v ./internal/
+	go test -v -count=1 ./internal/
 
 test_with_git: build
 	CODECRAFTERS_REPOSITORY_DIR=$(shell pwd)/internal/test_helpers/ryans_git \
