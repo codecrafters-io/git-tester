@@ -1,24 +1,15 @@
 package main
 
 import (
-	"compress/zlib"
-	"crypto/sha1"
-	"encoding/hex"
 	"fmt"
-	"io"
 	"os"
-	"path/filepath"
 	"sort"
 	"time"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/go-git/go-git/v5/plumbing/object"
 )
-
-type TreeEntry struct {
-	mode string
-	name string
-	sha  string
-}
 
 func main() {
 	if len(os.Args) < 2 {
@@ -64,79 +55,50 @@ func main() {
 }
 
 func initRepo() {
-	err := os.MkdirAll(".git", 0755)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error creating .git directory: %v\n", err)
-		os.Exit(1)
-	}
-
-	err = os.MkdirAll(".git/objects", 0755)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error creating .git/objects directory: %v\n", err)
-		os.Exit(1)
-	}
-
-	err = os.MkdirAll(".git/refs", 0755)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error creating .git/refs directory: %v\n", err)
-		os.Exit(1)
-	}
-
-	err = os.WriteFile(".git/HEAD", []byte("ref: refs/heads/main\n"), 0644)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error creating .git/HEAD file: %v\n", err)
-		os.Exit(1)
-	}
-
-	fmt.Printf("Initialized empty Git repository in %s/.git/\n", getCurrentDir())
-}
-
-func getCurrentDir() string {
 	wd, err := os.Getwd()
 	if err != nil {
-		return ""
+		fmt.Fprintf(os.Stderr, "Error getting working directory: %v\n", err)
+		os.Exit(1)
 	}
-	return wd
+
+	_, err = git.PlainInit(wd, false)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error initializing repository: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("Initialized empty Git repository in %s/.git/\n", wd)
 }
 
 func catFile(objectSHA string) {
-	objectPath := fmt.Sprintf(".git/objects/%s/%s", objectSHA[:2], objectSHA[2:])
-
-	file, err := os.Open(objectPath)
+	repo, err := git.PlainOpen(".")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error opening object file: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error opening repository: %v\n", err)
 		os.Exit(1)
 	}
-	defer file.Close()
 
-	reader, err := zlib.NewReader(file)
+	hash := plumbing.NewHash(objectSHA)
+	obj, err := repo.Storer.EncodedObject(plumbing.AnyObject, hash)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error creating zlib reader: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error reading object: %v\n", err)
+		os.Exit(1)
+	}
+
+	reader, err := obj.Reader()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error getting object reader: %v\n", err)
 		os.Exit(1)
 	}
 	defer reader.Close()
 
-	content, err := io.ReadAll(reader)
+	content := make([]byte, obj.Size())
+	_, err = reader.Read(content)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading compressed content: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error reading object content: %v\n", err)
 		os.Exit(1)
 	}
 
-	nullIndex := -1
-	for i, b := range content {
-		if b == 0 {
-			nullIndex = i
-			break
-		}
-	}
-
-	if nullIndex == -1 {
-		fmt.Fprintf(os.Stderr, "Invalid object format\n")
-		os.Exit(1)
-	}
-
-	objectContent := content[nullIndex+1:]
-	fmt.Print(string(objectContent))
+	fmt.Print(string(content))
 }
 
 func hashObject(filename string) {
@@ -146,106 +108,55 @@ func hashObject(filename string) {
 		os.Exit(1)
 	}
 
-	header := fmt.Sprintf("blob %d\x00", len(content))
-	store := append([]byte(header), content...)
-
-	hash := sha1.Sum(store)
-	sha := hex.EncodeToString(hash[:])
-
-	objectDir := fmt.Sprintf(".git/objects/%s", sha[:2])
-	err = os.MkdirAll(objectDir, 0755)
+	repo, err := git.PlainOpen(".")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error creating object directory: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error opening repository: %v\n", err)
 		os.Exit(1)
 	}
 
-	objectPath := fmt.Sprintf("%s/%s", objectDir, sha[2:])
-	objectFile, err := os.Create(objectPath)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error creating object file: %v\n", err)
-		os.Exit(1)
-	}
-	defer objectFile.Close()
+	obj := repo.Storer.NewEncodedObject()
+	obj.SetType(plumbing.BlobObject)
+	obj.SetSize(int64(len(content)))
 
-	writer := zlib.NewWriter(objectFile)
-	defer writer.Close()
-
-	_, err = writer.Write(store)
+	writer, err := obj.Writer()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error writing compressed content: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error getting object writer: %v\n", err)
 		os.Exit(1)
 	}
 
-	fmt.Println(sha)
+	_, err = writer.Write(content)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error writing object content: %v\n", err)
+		os.Exit(1)
+	}
+	writer.Close()
+
+	hash, err := repo.Storer.SetEncodedObject(obj)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error storing object: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println(hash.String())
 }
 
 func lsTree(treeSHA string) {
-	objectPath := fmt.Sprintf(".git/objects/%s/%s", treeSHA[:2], treeSHA[2:])
-
-	file, err := os.Open(objectPath)
+	repo, err := git.PlainOpen(".")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error opening tree object: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error opening repository: %v\n", err)
 		os.Exit(1)
 	}
-	defer file.Close()
 
-	reader, err := zlib.NewReader(file)
+	hash := plumbing.NewHash(treeSHA)
+	tree, err := repo.TreeObject(hash)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error creating zlib reader: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error reading tree object: %v\n", err)
 		os.Exit(1)
 	}
-	defer reader.Close()
-
-	content, err := io.ReadAll(reader)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading compressed content: %v\n", err)
-		os.Exit(1)
-	}
-
-	nullIndex := -1
-	for i, b := range content {
-		if b == 0 {
-			nullIndex = i
-			break
-		}
-	}
-
-	if nullIndex == -1 {
-		fmt.Fprintf(os.Stderr, "Invalid tree object format\n")
-		os.Exit(1)
-	}
-
-	treeContent := content[nullIndex+1:]
 
 	var names []string
-	i := 0
-	for i < len(treeContent) {
-		spaceIndex := -1
-		for j := i; j < len(treeContent); j++ {
-			if treeContent[j] == ' ' {
-				spaceIndex = j
-				break
-			}
-		}
-		if spaceIndex == -1 {
-			break
-		}
-
-		nullIndex := -1
-		for j := spaceIndex + 1; j < len(treeContent); j++ {
-			if treeContent[j] == 0 {
-				nullIndex = j
-				break
-			}
-		}
-		if nullIndex == -1 {
-			break
-		}
-
-		name := string(treeContent[spaceIndex+1 : nullIndex])
-		names = append(names, name)
-
-		i = nullIndex + 21
+	for _, entry := range tree.Entries {
+		names = append(names, entry.Name)
 	}
 
 	sort.Strings(names)
@@ -255,107 +166,121 @@ func lsTree(treeSHA string) {
 }
 
 func writeTree() {
-	treeSHA := writeTreeRecursive(".")
-	fmt.Println(treeSHA)
-}
-
-func writeTreeRecursive(dirPath string) string {
-	entries, err := os.ReadDir(dirPath)
+	repo, err := git.PlainOpen(".")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading directory: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error opening repository: %v\n", err)
 		os.Exit(1)
 	}
 
-	var treeEntries []TreeEntry
+	worktree, err := repo.Worktree()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error getting worktree: %v\n", err)
+		os.Exit(1)
+	}
+
+	// Add all files to the index
+	err = worktree.AddGlob(".")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error adding files: %v\n", err)
+		os.Exit(1)
+	}
+
+	// Create a tree from the worktree status
+	// status, err := worktree.Status()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error getting worktree status: %v\n", err)
+		os.Exit(1)
+	}
+
+	treeHash, err := writeTreeRecursive(repo, ".")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error writing tree: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println(treeHash.String())
+}
+
+func writeTreeRecursive(repo *git.Repository, dirPath string) (plumbing.Hash, error) {
+	entries, err := os.ReadDir(dirPath)
+	if err != nil {
+		return plumbing.Hash{}, err
+	}
+
+	var treeEntries []object.TreeEntry
 
 	for _, entry := range entries {
 		if entry.Name() == ".git" {
 			continue
 		}
 
-		fullPath := filepath.Join(dirPath, entry.Name())
+		fullPath := dirPath + "/" + entry.Name()
+		if dirPath == "." {
+			fullPath = entry.Name()
+		}
 
 		if entry.IsDir() {
-			subTreeSHA := writeTreeRecursive(fullPath)
-			treeEntries = append(treeEntries, TreeEntry{
-				mode: "40000",
-				name: entry.Name(),
-				sha:  subTreeSHA,
+			// Recursively create subtree
+			subTreeHash, err := writeTreeRecursive(repo, fullPath)
+			if err != nil {
+				continue
+			}
+
+			treeEntries = append(treeEntries, object.TreeEntry{
+				Name: entry.Name(),
+				Mode: 0040000, // Directory mode
+				Hash: subTreeHash,
 			})
 		} else {
+			// Create blob for file
 			content, err := os.ReadFile(fullPath)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error reading file: %v\n", err)
-				os.Exit(1)
+				continue
 			}
 
-			header := fmt.Sprintf("blob %d\x00", len(content))
-			store := append([]byte(header), content...)
-			hash := sha1.Sum(store)
-			sha := hex.EncodeToString(hash[:])
+			obj := repo.Storer.NewEncodedObject()
+			obj.SetType(plumbing.BlobObject)
+			obj.SetSize(int64(len(content)))
 
-			objectDir := fmt.Sprintf(".git/objects/%s", sha[:2])
-			os.MkdirAll(objectDir, 0755)
-			objectPath := fmt.Sprintf("%s/%s", objectDir, sha[2:])
+			writer, err := obj.Writer()
+			if err != nil {
+				continue
+			}
+			writer.Write(content)
+			writer.Close()
 
-			if _, err := os.Stat(objectPath); os.IsNotExist(err) {
-				objectFile, err := os.Create(objectPath)
-				if err != nil {
-					fmt.Fprintf(os.Stderr, "Error creating object file: %v\n", err)
-					os.Exit(1)
-				}
-				defer objectFile.Close()
-
-				writer := zlib.NewWriter(objectFile)
-				defer writer.Close()
-				writer.Write(store)
+			hash, err := repo.Storer.SetEncodedObject(obj)
+			if err != nil {
+				continue
 			}
 
-			treeEntries = append(treeEntries, TreeEntry{
-				mode: "100644",
-				name: entry.Name(),
-				sha:  sha,
+			treeEntries = append(treeEntries, object.TreeEntry{
+				Name: entry.Name(),
+				Mode: 0100644, // Regular file mode
+				Hash: hash,
 			})
 		}
 	}
 
-	// Sort by name only (Git behavior)
+	// Sort entries by name (Git requirement)
 	sort.Slice(treeEntries, func(i, j int) bool {
-		return treeEntries[i].name < treeEntries[j].name
+		return treeEntries[i].Name < treeEntries[j].Name
 	})
 
-	var treeContent []byte
-	for _, entry := range treeEntries {
-		entryData := fmt.Sprintf("%s %s\x00%s", entry.mode, entry.name, hexToBytes(entry.sha))
-		treeContent = append(treeContent, []byte(entryData)...)
-	}
-
-	header := fmt.Sprintf("tree %d\x00", len(treeContent))
-	store := append([]byte(header), treeContent...)
-	hash := sha1.Sum(store)
-	sha := hex.EncodeToString(hash[:])
-
-	objectDir := fmt.Sprintf(".git/objects/%s", sha[:2])
-	os.MkdirAll(objectDir, 0755)
-	objectPath := fmt.Sprintf("%s/%s", objectDir, sha[2:])
-
-	objectFile, err := os.Create(objectPath)
+	// Create tree object
+	tree := &object.Tree{Entries: treeEntries}
+	treeObj := repo.Storer.NewEncodedObject()
+	err = tree.Encode(treeObj)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error creating tree object file: %v\n", err)
-		os.Exit(1)
+		return plumbing.Hash{}, err
 	}
-	defer objectFile.Close()
 
-	writer := zlib.NewWriter(objectFile)
-	defer writer.Close()
-	writer.Write(store)
+	treeHash, err := repo.Storer.SetEncodedObject(treeObj)
+	if err != nil {
+		return plumbing.Hash{}, err
+	}
 
-	return sha
-}
-
-func hexToBytes(hexStr string) string {
-	bytes, _ := hex.DecodeString(hexStr)
-	return string(bytes)
+	return treeHash, nil
 }
 
 func commitTree(args []string) {
@@ -377,43 +302,53 @@ func commitTree(args []string) {
 		}
 	}
 
-	timestamp := time.Now().Unix()
-	author := "CodeCrafters <test@codecrafters.io>"
-
-	commitContent := fmt.Sprintf("tree %s\n", treeSHA)
-	if parentSHA != "" {
-		commitContent += fmt.Sprintf("parent %s\n", parentSHA)
-	}
-	commitContent += fmt.Sprintf("author %s %d +0000\n", author, timestamp)
-	commitContent += fmt.Sprintf("committer %s %d +0000\n\n%s\n", author, timestamp, message)
-
-	header := fmt.Sprintf("commit %d\x00", len(commitContent))
-	store := append([]byte(header), []byte(commitContent)...)
-	hash := sha1.Sum(store)
-	sha := hex.EncodeToString(hash[:])
-
-	objectDir := fmt.Sprintf(".git/objects/%s", sha[:2])
-	os.MkdirAll(objectDir, 0755)
-	objectPath := fmt.Sprintf("%s/%s", objectDir, sha[2:])
-
-	objectFile, err := os.Create(objectPath)
+	repo, err := git.PlainOpen(".")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error creating commit object file: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error opening repository: %v\n", err)
 		os.Exit(1)
 	}
-	defer objectFile.Close()
 
-	writer := zlib.NewWriter(objectFile)
-	defer writer.Close()
-	writer.Write(store)
+	treeHash := plumbing.NewHash(treeSHA)
 
-	fmt.Println(sha)
+	commit := &object.Commit{
+		TreeHash: treeHash,
+		Message:  message + "\n",
+		Author: object.Signature{
+			Name:  "CodeCrafters-Bot",
+			Email: "hello@codecrafters.io",
+			When:  time.Now(),
+		},
+		Committer: object.Signature{
+			Name:  "CodeCrafters-Bot",
+			Email: "hello@codecrafters.io",
+			When:  time.Now(),
+		},
+	}
+
+	if parentSHA != "" {
+		parentHash := plumbing.NewHash(parentSHA)
+		commit.ParentHashes = []plumbing.Hash{parentHash}
+	}
+
+	obj := repo.Storer.NewEncodedObject()
+	err = commit.Encode(obj)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error encoding commit: %v\n", err)
+		os.Exit(1)
+	}
+
+	hash, err := repo.Storer.SetEncodedObject(obj)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error storing commit: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println(hash.String())
 }
 
 func cloneRepo(repoURL, targetDir string) {
 	fmt.Printf("Cloning into '%s'...\n", targetDir)
 
-	// Use go-git to perform the clone
 	_, err := git.PlainClone(targetDir, false, &git.CloneOptions{
 		URL:      repoURL,
 		Progress: os.Stdout,
