@@ -1,0 +1,64 @@
+[33m[tester::#MG6] [0m[94mRunning tests for Stage #MG6 (mg6)[0m
+[33m[tester::#MG6] [0m[94m$ ./your_program.sh clone https://github.com/codecrafters-io/git-sample-1 <testDir>[0m
+[33m[your_program] [0mCloning into 'test_dir'...
+[33m[your_program] [0mEnumerating objects: 332, done.
+[33m[your_program] [0mCounting objects:   0% (1/332)Counting objects:   1% (4/332)Counting objects:   2% (7/332)Counting objects:   3% (10/332)Counting objects:   4% (14/332)Counting objects:   5% (17/332)Counting objects:   6% (20/332)Counting objects:   7% (24/332)Counting objects:   8% (27/332)Counting objects:   9% (30/332)Counting objects:  10% (34/332)Counting objects:  11% (37/332)Counting objects:  12% (40/332)Counting objects:  13% (44/332)Counting objects:  14% (47/332)Counting objects:  15% (50/332)Counting objects:  16% (54/332)Counting objects:  17% (57/332)Counting objects:  18% (60/332)Counting objects:  19% (64/332)Counting objects:  20% (67/332)Counting objects:  21% (70/332)Counting objects:  22% (74/332)Counting objects:  23% (77/332)Counting objects:  24% (80/332)Counting objects:  25% (83/332)Counting objects:  26% (87/332)Counting objects:  27% (90/332)Counting objects:  28% (93/332)Counting objects:  29% (97/332)Counting objects:  30% (100/332)Counting objects:  31% (103/332)Counting objects:  32% (107/332)Counting objects:  33% (110/332)Counting objects:  34% (113/332)Counting objects:  35% (117/332)Counting objects:  36% (120/332)Counting objects:  37% (123/332)Counting objects:  38% (127/332)Counting objects:  39% (130/332)Counting objects:  40% (133/332)Counting objects:  41% (137/332)Counting objects:  42% (140/332)Counting objects:  43% (143/332)Counting objects:  44% (147/332)Counting objects:  45% (150/332)Counting objects:  46% (153/332)Counting objects:  47% (157/332)Counting objects:  48% (160/332)Counting objects:  49% (163/332)Counting objects:  50% (166/332)Counting objects:  51% (170/332)Counting objects:  52% (173/332)Counting objects:  53% (176/332)Counting objects:  54% (180/332)Counting objects:  55% (183/332)Counting objects:  56% (186/332)Counting objects:  57% (190/332)Counting objects:  58% (193/332)Counting objects:  59% (196/332)Counting objects:  60% (200/332)Counting objects:  61% (203/332)Counting objects:  62% (206/332)Counting objects:  63% (210/332)Counting objects:  64% (213/332)Counting objects:  65% (216/332)Counting objects:  66% (220/332)Counting objects:  67% (223/332)Counting objects:  68% (226/332)Counting objects:  69% (230/332)Counting objects:  70% (233/332)Counting objects:  71% (236/332)Counting objects:  72% (240/332)Counting objects:  73% (243/332)Counting objects:  74% (246/332)Counting objects:  75% (249/332)Counting objects:  76% (253/332)Counting objects:  77% (256/332)Counting objects:  78% (259/332)Counting objects:  79% (263/332)Counting objects:  80% (266/332)Counting objects:  81% (269/332)Counting objects:  82% (273/332)Counting objects:  83% (276/332)Counting objects:  84% (279/332)Counting objects:  85% (283/332)Counting objects:  86% (286/332)Counting objects:  87% (289/332)Counting objects:  88% (293/332)Counting objects:  89% (296/332)Counting objects:  90% (299/332)Counting objects:  91% (303/332)Counting objects:  92% (306/332)Counting objects:  93% (309/332)Counting objects:  94% (313/332)Counting objects:  95% (316/332)Counting objects:  96% (319/332)Counting objects:  97% (323/332)Counting objects:  98% (326/332)Counting objects:  99% (329/332)Counting objects: 100% (332/332)Counting objects: 100% (332/332), done.
+[33m[your_program] [0mCompressing objects:   0% (1/152)Compressing objects:   1% (2/152)Compressing objects:   2% (4/152)Compressing objects:   3% (5/152)Compressing objects:   4% (7/152)Compressing objects:   5% (8/152)Compressing objects:   6% (10/152)Compressing objects:   7% (11/152)Compressing objects:   8% (13/152)Compressing objects:   9% (14/152)Compressing objects:  10% (16/152)Compressing objects:  11% (17/152)Compressing objects:  12% (19/152)Compressing objects:  13% (20/152)Compressing objects:  14% (22/152)Compressing objects:  15% (23/152)Compressing objects:  16% (25/152)Compressing objects:  17% (26/152)Compressing objects:  18% (28/152)Compressing objects:  19% (29/152)Compressing objects:  20% (31/152)Compressing objects:  21% (32/152)Compressing objects:  22% (34/152)Compressing objects:  23% (35/152)Compressing objects:  24% (37/152)Compressing objects:  25% (38/152)Compressing objects:  26% (40/152)Compressing objects:  27% (42/152)Compressing objects:  28% (43/152)Compressing objects:  29% (45/152)Compressing objects:  30% (46/152)Compressing objects:  31% (48/152)Compressing objects:  32% (49/152)Compressing objects:  33% (51/152)Compressing objects:  34% (52/152)Compressing objects:  35% (54/152)Compressing objects:  36% (55/152)Compressing objects:  37% (57/152)Compressing objects:  38% (58/152)Compressing objects:  39% (60/152)Compressing objects:  40% (61/152)Compressing objects:  41% (63/152)Compressing objects:  42% (64/152)Compressing objects:  43% (66/152)Compressing objects:  44% (67/152)Compressing objects:  45% (69/152)Compressing objects:  46% (70/152)Compressing objects:  47% (72/152)Compressing objects:  48% (73/152)Compressing objects:  49% (75/152)Compressing objects:  50% (76/152)Compressing objects:  51% (78/152)Compressing objects:  52% (80/152)Compressing objects:  53% (81/152)Compressing objects:  54% (83/152)Compressing objects:  55% (84/152)Compressing objects:  56% (86/152)Compressing objects:  57% (87/152)Compressing objects:  58% (89/152)Compressing objects:  59% (90/152)Compressing objects:  60% (92/152)Compressing objects:  61% (93/152)Compressing objects:  62% (95/152)Compressing objects:  63% (96/152)Compressing objects:  64% (98/152)Compressing objects:  65% (99/152)Compressing objects:  66% (101/152)Compressing objects:  67% (102/152)Compressing objects:  68% (104/152)Compressing objects:  69% (105/152)Compressing objects:  70% (107/152)Compressing objects:  71% (108/152)Compressing objects:  72% (110/152)Compressing objects:  73% (111/152)Compressing objects:  74% (113/152)Compressing objects:  75% (114/152)Compressing objects:  76% (116/152)Compressing objects:  77% (118/152)Compressing objects:  78% (119/152)Compressing objects:  79% (121/152)Compressing objects:  80% (122/152)Compressing objects:  81% (124/152)Compressing objects:  82% (125/152)Compressing objects:  83% (127/152)Compressing objects:  84% (128/152)Compressing objects:  85% (130/152)Compressing objects:  86% (131/152)Compressing objects:  87% (133/152)Compressing objects:  88% (134/152)Compressing objects:  89% (136/152)Compressing objects:  90% (137/152)Compressing objects:  91% (139/152)Compressing objects:  92% (140/152)Compressing objects:  93% (142/152)Compressing objects:  94% (143/152)Compressing objects:  95% (145/152)Compressing objects:  96% (146/152)Compressing objects:  97% (148/152)Compressing objects:  98% (149/152)Compressing objects:  99% (151/152)Compressing objects: 100% (152/152)Compressing objects: 100% (152/152), done.
+[33m[your_program] [0mTotal 332 (delta 3), reused 331 (delta 2), pack-reused 0 (from 0)
+[33m[tester::#MG6] [0m[94m$ git cat-file commit 3b0466d22854e57bf9ad3ccf82008a2d3f199550[0m
+[33m[tester::#MG6] [0m[92mCommit contents verified[0m
+[33m[tester::#MG6] [0m[92mFile contents verified[0m
+[33m[tester::#MG6] [0m[92mTest passed.[0m
+
+[33m[tester::#JM9] [0m[94mRunning tests for Stage #JM9 (jm9)[0m
+[33m[tester::#JM9] [0m[94m$ ./your_program.sh commit-tree <tree_sha> -p <commit_sha> -m <message>[0m
+[33m[your_program] [0m36cd86c21d517051b6d4c357dbd8530284304cfa
+[33m[tester::#JM9] [0m[92mTest passed.[0m
+
+[33m[tester::#FE4] [0m[94mRunning tests for Stage #FE4 (fe4)[0m
+[33m[tester::#FE4] [0m[94m$ ./your_program.sh init[0m
+[33m[your_program] [0mInitialized empty Git repository in /var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/worktree2188636716/.git/
+[33m[tester::#FE4] [0m[94mCreating some files & directories[0m
+[33m[tester::#FE4] [0m[94m$ ./your_program.sh write-tree[0m
+[33m[your_program] [0m5794e0cecb636294c4c6753742dcf616f21b7f8e
+[33m[tester::#FE4] [0m[92mFound git object file written at .git/objects/57/94e0cecb636294c4c6753742dcf616f21b7f8e.[0m
+[33m[tester::#FE4] [0m[94m$ git ls-tree --name-only 5794e0cecb636294c4c6753742dcf616f21b7f8e[0m
+[33m[tester::#FE4] [0m[92mTest passed.[0m
+
+[33m[tester::#KP1] [0m[94mRunning tests for Stage #KP1 (kp1)[0m
+[33m[tester::#KP1] [0m[94m$ ./your_program.sh init[0m
+[33m[your_program] [0mInitialized empty Git repository in /var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/worktree6938411/.git/
+[33m[tester::#KP1] [0m[94m$ ./your_program.sh ls-tree --name-only b8b2ce4032667654a481b94b38818b24fe84c460[0m
+[33m[your_program] [0mgrape
+[33m[your_program] [0morange
+[33m[your_program] [0mstrawberry
+[33m[tester::#KP1] [0m[92mTest passed.[0m
+
+[33m[tester::#JT4] [0m[94mRunning tests for Stage #JT4 (jt4)[0m
+[33m[tester::#JT4] [0m[94m$ ./your_program.sh init[0m
+[33m[your_program] [0mInitialized empty Git repository in /var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/worktree2355929280/.git/
+[33m[tester::#JT4] [0m[94m$ echo "raspberry blueberry banana pear pineapple apple" > banana.txt[0m
+[33m[tester::#JT4] [0m[94m$ ./your_program.sh hash-object -w banana.txt[0m
+[33m[your_program] [0m27ece14445d59efd51d58d64afe55b2d912b2503
+[33m[tester::#JT4] [0m[92mOutput is a 40-char SHA.[0m
+[33m[tester::#JT4] [0m[92mBlob file contents are valid.[0m
+[33m[tester::#JT4] [0m[92mReturned SHA matches expected SHA.[0m
+[33m[tester::#JT4] [0m[92mTest passed.[0m
+
+[33m[tester::#IC4] [0m[94mRunning tests for Stage #IC4 (ic4)[0m
+[33m[tester::#IC4] [0m[94m$ ./your_program.sh init[0m
+[33m[your_program] [0mInitialized empty Git repository in /var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/worktree1251219973/.git/
+[33m[tester::#IC4] [0m[94mAdded blob object to .git/objects: da6ad811e0463b5b347359cc21fb53a3e5010d10[0m
+[33m[tester::#IC4] [0m[94m$ ./your_program.sh cat-file -p da6ad811e0463b5b347359cc21fb53a3e5010d10[0m
+[33m[your_program] [0mpineapple grape orange blueberry apple mango
+[33m[tester::#IC4] [0m[92mOutput is valid.[0m
+[33m[tester::#IC4] [0m[92mTest passed.[0m
+
+[33m[tester::#GG4] [0m[94mRunning tests for Stage #GG4 (gg4)[0m
+[33m[tester::#GG4] [0m[94m$ ./your_program.sh init[0m
+[33m[your_program] [0mInitialized empty Git repository in /var/folders/5l/z5y3dkwn68sgb6htzc5w7vnm0000gn/T/worktree2744590251/.git/
+[33m[tester::#GG4] [0m[92m.git directory found.[0m
+[33m[tester::#GG4] [0m[92m.git/objects directory found.[0m
+[33m[tester::#GG4] [0m[92m.git/refs directory found.[0m
+[33m[tester::#GG4] [0m[92m.git/HEAD file is valid.[0m
+[33m[tester::#GG4] [0m[92mTest passed.[0m
