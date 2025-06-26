@@ -103,11 +103,18 @@ func TestStages(t *testing.T) {
 			StdoutFixturePath:   "./test_helpers/fixtures/write_tree",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
-		"pass_all": {
+		"pass_all_against_ryans_git": {
 			UntilStageSlug:      "mg6",
 			CodePath:            "./test_helpers/ryans_git",
 			ExpectedExitCode:    0,
-			StdoutFixturePath:   "./test_helpers/fixtures/pass_all",
+			StdoutFixturePath:   "./test_helpers/fixtures/pass_all_ryan",
+			NormalizeOutputFunc: normalizeTesterOutput,
+		},
+		"pass_all_against_git": {
+			UntilStageSlug:      "mg6",
+			CodePath:            "./test_helpers/pass_all",
+			ExpectedExitCode:    0,
+			StdoutFixturePath:   "./test_helpers/fixtures/pass_all_git",
 			NormalizeOutputFunc: normalizeTesterOutput,
 		},
 	}
