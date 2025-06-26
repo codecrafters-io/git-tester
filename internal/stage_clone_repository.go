@@ -113,7 +113,7 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 	defer os.RemoveAll(tmpGitDir)
 
 	// Copy the custom_executable to the output path
-	command := fmt.Sprintf("sudo mv %s %s", oldGitPath, tmpGitDir)
+	command := fmt.Sprintf("mv %s %s", oldGitPath, tmpGitDir)
 	logger.Debugf("command: %s", command)
 	copyCmd := exec.Command("sh", "-c", command)
 	copyCmd.Stdout = os.Stdout
@@ -168,7 +168,7 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 
 	defer func() error {
 		// Copy the custom_executable to the output path
-		command := fmt.Sprintf("sudo mv %s %s", tmpGitPath, oldGitDir)
+		command := fmt.Sprintf("mv %s %s", tmpGitPath, oldGitDir)
 		logger.Debugf("command: %s", command)
 		copyCmd := exec.Command("sh", "-c", command)
 		copyCmd.Stdout = io.Discard
