@@ -10,6 +10,8 @@ import (
 	"github.com/codecrafters-io/tester-utils/logger"
 )
 
+const tempGitDirectory = "/tmp/copied-git/"
+
 type GitTempDir struct {
 	TempDir     string
 	OriginalDir string
@@ -25,10 +27,8 @@ func MoveGitToTemp(logger *logger.Logger) (*GitTempDir, error) {
 	}
 	oldGitDir := path.Dir(oldGitPath)
 
-	tmpGitDir, err := os.MkdirTemp("/tmp", "git-*")
-	if err != nil {
-		return nil, err
-	}
+	tmpGitDir := tempGitDirectory
+	os.Mkdir(tmpGitDir, 0755)
 	tmpGitPath := path.Join(tmpGitDir, "git")
 
 	command := fmt.Sprintf("sudo mv %s %s", oldGitPath, tmpGitDir)
