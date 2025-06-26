@@ -1,6 +1,9 @@
 #!/bin/sh
 
 if command -v git >/dev/null 2>&1; then
+    # In stage5, we don't move the git binary, it's required for the actual test
+    # And, the test is logically wrong, before running write-tree, we need to run
+    # git add .
     if [ "$1" = "write-tree" ]
         then
            git add .
