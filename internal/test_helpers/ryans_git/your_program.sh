@@ -1,21 +1,12 @@
 #!/bin/sh
 
-# Detect the current platform and architecture
+# We need to build the binary and run it from the calling directory
+# Because it will be called like `git init` from the test directory
 SCRIPT_DIR=$(dirname $0)
-OS=$(uname -s)
-ARCH=$(uname -m)
+CALLING_DIR=$(pwd)
 
-# Normalize architecture and build binary name
-[ "$ARCH" = "x86_64" ] && ARCH="amd64"
-[ "$ARCH" = "aarch64" ] && ARCH="arm64"
+cd $SCRIPT_DIR
+go build -o ryan-git ./...
+cd $CALLING_DIR
 
-BINARY="mygit-$(echo $OS | tr '[:upper:]' '[:lower:]')-$ARCH"
-
-# Use the binary if it exists, otherwise fall back to go run
-BINARY_PATH="$SCRIPT_DIR/$BINARY"
-if [ -f "$BINARY_PATH" ]; then
-    exec "$BINARY_PATH" "$@"
-else
-    echo "Binary not found: $BINARY_PATH"
-    exit 1
-fi
+exec "$SCRIPT_DIR/ryan-git" "$@"
