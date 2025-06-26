@@ -22,11 +22,10 @@ func testReadTree(harness *test_case_harness.TestCaseHarness) error {
 	logger := harness.Logger
 	executable := harness.Executable
 
-	gitTempDir, err := MoveGitToTemp(logger)
+	_, err := MoveGitToTemp(harness, logger)
 	if err != nil {
 		return err
 	}
-	defer gitTempDir.RestoreGit()
 
 	tempDir, err := os.MkdirTemp("", "worktree")
 	if err != nil {
