@@ -15,6 +15,12 @@ func testCreateBlob(harness *test_case_harness.TestCaseHarness) error {
 	logger := harness.Logger
 	executable := harness.Executable
 
+	gitTempDir, err := MoveGitToTemp(logger)
+	if err != nil {
+		return err
+	}
+	defer gitTempDir.RestoreGit()
+
 	tempDir, err := os.MkdirTemp("", "worktree")
 	if err != nil {
 		return err
