@@ -95,11 +95,11 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	gitTemp, err := MoveGitToTemp(logger)
+	gitTempDir, err := MoveGitToTemp(logger)
 	if err != nil {
 		return err
 	}
-	defer gitTemp.RestoreGit()
+	defer gitTempDir.RestoreGit()
 
 	logger.Infof("$ git clone %s %s", testRepo.url, "test_dir")
 

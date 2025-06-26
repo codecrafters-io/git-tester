@@ -33,7 +33,7 @@ func MoveGitToTemp(logger *logger.Logger) (*GitTempDir, error) {
 	logger.Debugf("Created temporary directory for git clone: %s", tmpGitDir)
 	tmpGitPath := path.Join(tmpGitDir, "git")
 
-	command := fmt.Sprintf("mv %s %s", oldGitPath, tmpGitDir)
+	command := fmt.Sprintf("sudo mv %s %s", oldGitPath, tmpGitDir)
 	logger.Debugf("command: %s", command)
 	moveCmd := exec.Command("sh", "-c", command)
 	moveCmd.Stdout = os.Stdout
@@ -54,7 +54,7 @@ func MoveGitToTemp(logger *logger.Logger) (*GitTempDir, error) {
 
 // RestoreGit moves the git binary back to its original location and cleans up
 func (g *GitTempDir) RestoreGit() error {
-	command := fmt.Sprintf("mv %s %s", g.TempGitPath, g.OriginalDir)
+	command := fmt.Sprintf("sudo mv %s %s", g.TempGitPath, g.OriginalDir)
 	g.logger.Debugf("command: %s", command)
 	moveCmd := exec.Command("sh", "-c", command)
 	moveCmd.Stdout = io.Discard
