@@ -65,8 +65,8 @@ func (g *GitTempDir) restoreGitInternal() error {
 	return nil
 }
 
-// RestoreGit moves the git binary back to its original location and cleans up
-// This is a wrapper around the internal restoreGitInternal function that handles the logging
+// RestoreGit is a wrapper around the internal restoreGitInternal function
+// that handles the logging even if the internal call errors out
 func (g *GitTempDir) RestoreGit() {
 	if err := g.restoreGitInternal(); err != nil {
 		if g.logger != nil {
