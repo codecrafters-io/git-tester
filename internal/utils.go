@@ -11,24 +11,17 @@ import (
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-type GitTempDir struct {
-	TempDir     string
-	OriginalDir string
-	TempGitPath string
-	logger      *logger.Logger
-}
-
 // MoveGitToTemp moves the system git binary to a temporary directory
-func MoveGitToTemp(harness *test_case_harness.TestCaseHarness, logger *logger.Logger) (*GitTempDir, error) {
+func MoveGitToTemp(harness *test_case_harness.TestCaseHarness, logger *logger.Logger) {
 	oldGitPath, err := exec.LookPath("git")
 	if err != nil {
-		return nil, fmt.Errorf("CodeCrafters Internal Error: git executable not found: %v", err)
+		panic(fmt.Sprintf("CodeCrafters Internal Error: git executable not found: %v", err))
 	}
 	oldGitDir := path.Dir(oldGitPath)
 
 	tmpGitDir, err := os.MkdirTemp("/tmp", "git-*")
 	if err != nil {
-		return nil, err
+		panic(fmt.Sprintf("CodeCrafters Internal Error: create tmp git directory failed: %v", err))
 	}
 	tmpGitPath := path.Join(tmpGitDir, "git")
 
@@ -38,34 +31,25 @@ func MoveGitToTemp(harness *test_case_harness.TestCaseHarness, logger *logger.Lo
 	moveCmd.Stderr = os.Stderr
 	if err := moveCmd.Run(); err != nil {
 		os.RemoveAll(tmpGitDir)
-		return nil, fmt.Errorf("CodeCrafters Internal Error: mv git to tmp directory failed: %w", err)
-	}
-
-	gitTempDir := &GitTempDir{
-		TempDir:     tmpGitDir,
-		OriginalDir: oldGitDir,
-		TempGitPath: tmpGitPath,
-		logger:      logger,
+		panic(fmt.Sprintf("CodeCrafters Internal Error: mv git to tmp directory failed: %v", err))
 	}
 
 	// Register teardown function to automatically restore git
-	harness.RegisterTeardownFunc(func() { gitTempDir.restoreGitInternal() })
-
-	return gitTempDir, nil
+	harness.RegisterTeardownFunc(func() { restoreGit(tmpGitPath, oldGitDir) })
 }
 
 // RestoreGit moves the git binary back to its original location and cleans up
-func (g *GitTempDir) restoreGitInternal() error {
-	command := fmt.Sprintf("sudo mv %s %s", g.TempGitPath, g.OriginalDir)
+func restoreGit(newPath string, originalPath string) error {
+	command := fmt.Sprintf("sudo mv %s %s", newPath, originalPath)
 	moveCmd := exec.Command("sh", "-c", command)
 	moveCmd.Stdout = io.Discard
 	moveCmd.Stderr = io.Discard
 	if err := moveCmd.Run(); err != nil {
-		return fmt.Errorf("CodeCrafters Internal Error: mv restore for git failed: %w", err)
+		panic(fmt.Sprintf("CodeCrafters Internal Error: mv restore for git failed: %v", err))
 	}
 
-	if err := os.RemoveAll(g.TempDir); err != nil {
-		return fmt.Errorf("CodeCrafters Internal Error: delete tmp git directory failed: %s", g.TempDir)
+	if err := os.RemoveAll(newPath); err != nil {
+		panic(fmt.Sprintf("CodeCrafters Internal Error: delete tmp git directory failed: %s", newPath))
 	}
 
 	return nil
