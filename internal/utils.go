@@ -8,6 +8,7 @@ import (
 	"path"
 
 	"github.com/codecrafters-io/tester-utils/logger"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
 type GitTempDir struct {
@@ -18,7 +19,7 @@ type GitTempDir struct {
 }
 
 // MoveGitToTemp moves the system git binary to a temporary directory
-func MoveGitToTemp(logger *logger.Logger) (*GitTempDir, error) {
+func MoveGitToTemp(harness *test_case_harness.TestCaseHarness, logger *logger.Logger) (*GitTempDir, error) {
 	oldGitPath, err := exec.LookPath("git")
 	if err != nil {
 		return nil, fmt.Errorf("CodeCrafters Internal Error: git executable not found: %v", err)
@@ -40,12 +41,17 @@ func MoveGitToTemp(logger *logger.Logger) (*GitTempDir, error) {
 		return nil, fmt.Errorf("CodeCrafters Internal Error: mv git to tmp directory failed: %w", err)
 	}
 
-	return &GitTempDir{
+	gitTempDir := &GitTempDir{
 		TempDir:     tmpGitDir,
 		OriginalDir: oldGitDir,
 		TempGitPath: tmpGitPath,
 		logger:      logger,
-	}, nil
+	}
+
+	// Register teardown function to automatically restore git
+	harness.RegisterTeardownFunc(func() { gitTempDir.restoreGitInternal() })
+
+	return gitTempDir, nil
 }
 
 // RestoreGit moves the git binary back to its original location and cleans up
@@ -63,14 +69,4 @@ func (g *GitTempDir) restoreGitInternal() error {
 	}
 
 	return nil
-}
-
-// RestoreGit is a wrapper around the internal restoreGitInternal function
-// that handles the logging even if the internal call errors out
-func (g *GitTempDir) RestoreGit() {
-	if err := g.restoreGitInternal(); err != nil {
-		if g.logger != nil {
-			g.logger.Errorf("Failed to restore git: %v", err)
-		}
-	}
 }
