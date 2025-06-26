@@ -6,7 +6,7 @@ SCRIPT_DIR=$(dirname $0)
 CALLING_DIR=$(pwd)
 
 cd $SCRIPT_DIR
-go build -o ryan-git ./...
+go build -o ryan-git ./... > /dev/null 2>&1
 cd $CALLING_DIR
 
 exec "$SCRIPT_DIR/ryan-git" "$@"
