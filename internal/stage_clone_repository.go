@@ -79,11 +79,7 @@ func randomRepo() TestRepo {
 func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 	logger := harness.Logger
 	executable := harness.Executable
-
-	_, err := MoveGitToTemp(harness, logger)
-	if err != nil {
-		return err
-	}
+	MoveGitToTemp(harness, logger)
 
 	tempDir, err := os.MkdirTemp("", "worktree")
 	if err != nil {
