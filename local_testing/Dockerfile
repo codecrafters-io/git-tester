@@ -1,7 +1,7 @@
-FROM golang:1.24-alpine
+FROM golang:1.24
 
 # Install required packages
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y \
     # Required for make test
     make \
     # Required to run bash tests
@@ -9,7 +9,10 @@ RUN apk add --no-cache \
     # Required for fixtures
     python3 \
     # Required for testing
-    git
+    git \
+    # Required for mv operations
+    sudo \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
@@ -22,8 +25,5 @@ RUN GODEBUG="installgoroot=all" go install std
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Set the default shell to ash
-SHELL ["/bin/ash", "-c"]
-
 # Default command
-CMD ["/bin/ash"]
+CMD ["/bin/bash"]
