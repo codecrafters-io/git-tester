@@ -2,9 +2,7 @@ package internal
 
 import (
 	"fmt"
-	"io"
 	"os"
-	"os/exec"
 	"path"
 
 	"github.com/codecrafters-io/tester-utils/random"
@@ -97,31 +95,11 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 		return err
 	}
 
-	oldGitPath, err := exec.LookPath("git")
-	if err != nil {
-		return fmt.Errorf("git executable not found: %v", err)
-	}
-	oldGitDir := path.Dir(oldGitPath)
-	logger.Debugf("Found git executable at: %s", oldGitPath)
-
-	tmpGitDir, err := os.MkdirTemp("/tmp", "git-*")
+	gitTemp, err := MoveGitToTemp(logger)
 	if err != nil {
 		return err
 	}
-	logger.Debugf("Created temporary directory for git clone: %s", tmpGitDir)
-	tmpGitPath := path.Join(tmpGitDir, "git")
-	defer os.RemoveAll(tmpGitDir)
-
-	// Copy the custom_executable to the output path
-	command := fmt.Sprintf("mv %s %s", oldGitPath, tmpGitDir)
-	logger.Debugf("command: %s", command)
-	copyCmd := exec.Command("sh", "-c", command)
-	copyCmd.Stdout = os.Stdout
-	copyCmd.Stderr = os.Stderr
-	if err := copyCmd.Run(); err != nil {
-		return fmt.Errorf("CodeCrafters Internal Error: mv1 failed: %w", err)
-	}
-	logger.Debugf("mv-ed git to temp directory: %s", tmpGitDir)
+	defer gitTemp.RestoreGit()
 
 	logger.Infof("$ git clone %s %s", testRepo.url, "test_dir")
 
@@ -165,24 +143,6 @@ func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 		return fmt.Errorf("Expected %q as file contents, got: %q", expected, actual)
 	}
 	logger.Successf("File contents verified")
-
-	defer func() error {
-		// Copy the custom_executable to the output path
-		command := fmt.Sprintf("mv %s %s", tmpGitPath, oldGitDir)
-		logger.Debugf("command: %s", command)
-		copyCmd := exec.Command("sh", "-c", command)
-		copyCmd.Stdout = io.Discard
-		copyCmd.Stderr = io.Discard
-		if err := copyCmd.Run(); err != nil {
-			return fmt.Errorf("CodeCrafters Internal Error: mv2 failed: %w", err)
-		}
-		logger.Debugf("mv-ed git to og directory: %s", oldGitDir)
-
-		if err := os.RemoveAll(tmpGitDir); err != nil {
-			return fmt.Errorf("CodeCrafters Internal Error: delete directory failed: %s", tmpGitDir)
-		}
-		return nil
-	}()
 
 	return nil
 }
