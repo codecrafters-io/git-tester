@@ -9,7 +9,7 @@ if command -v git >/dev/null 2>&1; then
 fi
 
 # Find git binary in /tmp locations
-for tmpdir in /tmp/*/git; do
+for tmpdir in /tmp/git-*/git; do
     if [ -x "$tmpdir" ]; then
         "$tmpdir" config --global init.defaultBranch main
         "$tmpdir" config --global user.email "hello@codecrafters.io"
