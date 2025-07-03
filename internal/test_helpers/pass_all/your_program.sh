@@ -30,4 +30,5 @@ for tmpdir in /tmp/git-*/git; do
     fi
 done
 
+echo "git binary not found in PATH or /tmp directories"
 exit 1
