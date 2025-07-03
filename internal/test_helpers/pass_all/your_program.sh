@@ -11,15 +11,30 @@ fi
 # Find git binary in /tmp locations
 for tmpdir in /tmp/git-*/git; do
     if [ -x "$tmpdir" ]; then
-        "$tmpdir" config --global init.defaultBranch main
-        "$tmpdir" config --global user.email "hello@codecrafters.io"
-        "$tmpdir" config --global user.name "CodeCrafters-Bot"
+        # commit-tree stage doesn't use call this script for init
+        # So we need to run this setup again
+        if [ "$1" = "commit-tree" ]; then
+            "$tmpdir" config --local user.email "hello@codecrafters.io"
+            "$tmpdir" config --local user.name "CodeCrafters-Bot"
+        fi
 
         if [ "$1" = "write-tree" ]; then
             "$tmpdir" add .
         fi
 
-        exec "$tmpdir" "$@"
+        if [ "$1" = "init" ]; then
+            "$tmpdir" "$@"
+            # If init.defaultBranch is not set, set it to main
+            # If not set globally, git always shows a warning
+            if ! "$tmpdir" config --global --get init.defaultBranch >/dev/null 2>&1; then
+                "$tmpdir" config --global init.defaultBranch main
+            fi
+            # Setup is run locally so it's only set for the current temp repo
+            "$tmpdir" config --local user.email "hello@codecrafters.io"
+            "$tmpdir" config --local user.name "CodeCrafters-Bot"
+        else
+            exec "$tmpdir" "$@"
+        fi
     fi
 done
 
