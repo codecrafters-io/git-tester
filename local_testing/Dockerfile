@@ -10,8 +10,6 @@ RUN apt-get update && apt-get install -y \
     python3 \
     # Required for testing
     git \
-    # Required for mv operations
-    sudo \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory

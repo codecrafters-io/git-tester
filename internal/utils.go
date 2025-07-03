@@ -25,10 +25,10 @@ func MoveGitToTemp(harness *test_case_harness.TestCaseHarness, logger *logger.Lo
 	}
 	tmpGitPath := path.Join(tmpGitDir, "git")
 
-	command := fmt.Sprintf("sudo mv %s %s", oldGitPath, tmpGitDir)
+	command := fmt.Sprintf("mv %s %s", oldGitPath, tmpGitPath)
 	moveCmd := exec.Command("sh", "-c", command)
-	moveCmd.Stdout = os.Stdout
-	moveCmd.Stderr = os.Stderr
+	moveCmd.Stdout = io.Discard
+	moveCmd.Stderr = io.Discard
 	if err := moveCmd.Run(); err != nil {
 		os.RemoveAll(tmpGitDir)
 		panic(fmt.Sprintf("CodeCrafters Internal Error: mv git to tmp directory failed: %v", err))
@@ -40,7 +40,7 @@ func MoveGitToTemp(harness *test_case_harness.TestCaseHarness, logger *logger.Lo
 
 // RestoreGit moves the git binary back to its original location and cleans up
 func restoreGit(newPath string, originalPath string) error {
-	command := fmt.Sprintf("sudo mv %s %s", newPath, originalPath)
+	command := fmt.Sprintf("mv %s %s", newPath, originalPath)
 	moveCmd := exec.Command("sh", "-c", command)
 	moveCmd.Stdout = io.Discard
 	moveCmd.Stderr = io.Discard
@@ -48,8 +48,8 @@ func restoreGit(newPath string, originalPath string) error {
 		panic(fmt.Sprintf("CodeCrafters Internal Error: mv restore for git failed: %v", err))
 	}
 
-	if err := os.RemoveAll(newPath); err != nil {
-		panic(fmt.Sprintf("CodeCrafters Internal Error: delete tmp git directory failed: %s", newPath))
+	if err := os.RemoveAll(path.Dir(newPath)); err != nil {
+		panic(fmt.Sprintf("CodeCrafters Internal Error: delete tmp git directory failed: %s", path.Dir(newPath)))
 	}
 
 	return nil
