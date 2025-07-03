@@ -17,7 +17,6 @@ func MoveGitToTemp(harness *test_case_harness.TestCaseHarness, logger *logger.Lo
 	if err != nil {
 		panic(fmt.Sprintf("CodeCrafters Internal Error: git executable not found: %v", err))
 	}
-	oldGitDir := path.Dir(oldGitPath)
 
 	tmpGitDir, err := os.MkdirTemp("/tmp", "git-*")
 	if err != nil {
@@ -35,7 +34,7 @@ func MoveGitToTemp(harness *test_case_harness.TestCaseHarness, logger *logger.Lo
 	}
 
 	// Register teardown function to automatically restore git
-	harness.RegisterTeardownFunc(func() { restoreGit(tmpGitPath, oldGitDir) })
+	harness.RegisterTeardownFunc(func() { restoreGit(tmpGitPath, oldGitPath) })
 }
 
 // RestoreGit moves the git binary back to its original location and cleans up
