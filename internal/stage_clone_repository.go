@@ -31,7 +31,7 @@ func (r TestRepo) randomFile() TestFile {
 	return r.exampleFiles[random.RandomInt(0, len(r.exampleFiles))]
 }
 
-var testRepos []TestRepo = []TestRepo{
+var testRepos = []TestRepo{
 	{
 		url: "https://github.com/codecrafters-io/git-sample-1",
 		exampleCommits: []string{
@@ -79,6 +79,7 @@ func randomRepo() TestRepo {
 func testCloneRepository(harness *test_case_harness.TestCaseHarness) error {
 	logger := harness.Logger
 	executable := harness.Executable
+	RelocateSystemGit(harness, logger)
 
 	tempDir, err := os.MkdirTemp("", "worktree")
 	if err != nil {
