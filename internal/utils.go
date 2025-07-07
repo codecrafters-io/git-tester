@@ -11,8 +11,8 @@ import (
 	"github.com/codecrafters-io/tester-utils/test_case_harness"
 )
 
-// MoveGitToTemp moves the system git binary to a temporary directory
-func MoveGitToTemp(harness *test_case_harness.TestCaseHarness, logger *logger.Logger) {
+// RelocateSystemGit moves the system git binary to a temporary directory
+func RelocateSystemGit(harness *test_case_harness.TestCaseHarness, logger *logger.Logger) {
 	oldGitPath, err := exec.LookPath("git")
 	if err != nil {
 		panic(fmt.Sprintf("CodeCrafters Internal Error: git executable not found: %v", err))
@@ -34,11 +34,11 @@ func MoveGitToTemp(harness *test_case_harness.TestCaseHarness, logger *logger.Lo
 	}
 
 	// Register teardown function to automatically restore git
-	harness.RegisterTeardownFunc(func() { restoreGit(tmpGitPath, oldGitPath) })
+	harness.RegisterTeardownFunc(func() { restoreSystemGit(tmpGitPath, oldGitPath) })
 }
 
-// RestoreGit moves the git binary back to its original location and cleans up
-func restoreGit(newPath string, originalPath string) error {
+// RestoreSystemGit moves the git binary back to its original location and cleans up
+func restoreSystemGit(newPath string, originalPath string) error {
 	command := fmt.Sprintf("mv %s %s", newPath, originalPath)
 	moveCmd := exec.Command("sh", "-c", command)
 	moveCmd.Stdout = io.Discard
