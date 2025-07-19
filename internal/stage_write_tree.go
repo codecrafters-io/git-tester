@@ -21,6 +21,8 @@ import (
 func testWriteTree(harness *test_case_harness.TestCaseHarness) error {
 	logger := harness.Logger
 	executable := harness.Executable
+	// This stage Requires the git binary for verifying the git object
+	// So, no relocation is done for this stage
 
 	tempDir, err := os.MkdirTemp("", "worktree")
 	if err != nil {
