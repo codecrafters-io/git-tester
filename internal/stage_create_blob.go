@@ -57,7 +57,8 @@ func testCreateBlob(harness *test_case_harness.TestCaseHarness) error {
 	expectedSha := blobObjectVerifier.ExpectedSha()
 
 	if len(strings.TrimSpace(string(result.Stdout))) != 40 {
-		return fmt.Errorf("Expected a 40-char SHA (%q) as output. Got: %q", blobObjectVerifier.ExpectedSha(), strings.TrimSpace(string(result.Stdout)))
+		return fmt.Errorf(`Expected a 40-char SHA: %s
+Got:                    %s`, blobObjectVerifier.ExpectedSha(), strings.TrimSpace(string(result.Stdout)))
 	}
 
 	actualSha := strings.TrimSpace(string(result.Stdout))
