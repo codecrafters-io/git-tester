@@ -2,10 +2,10 @@ Debug = true
 
 [33m[tester::#JT4] [0m[94mRunning tests for Stage #JT4 (jt4)[0m
 [33m[tester::#JT4] [0m[94m$ ./your_git.sh init[0m
-[33m[your_program] [0mInitialized git directory
+[33m[your_program] [0m[0mInitialized git directory[0m
 [33m[tester::#JT4] [0m[94m$ echo "orange pear grape pineapple blueberry banana" > pear.txt[0m
 [33m[tester::#JT4] [0m[94m$ ./your_git.sh hash-object -w pear.txt[0m
-[33m[your_program] [0mafa8b20484a29b438370b623ced459c9409fcc05
+[33m[your_program] [0m[0mafa8b20484a29b438370b623ced459c9409fcc05[0m
 [33m[tester::#JT4] [0m[92mOutput is a 40-char SHA.[0m
 [33m[tester::#JT4] [0m[91mDid not find file at ".git/objects/af/a8b20484a29b438370b623ced459c9409fcc05"[0m
 [33m[tester::#JT4] [0m[91mTest failed[0m

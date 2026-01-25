@@ -2,10 +2,10 @@ Debug = true
 
 [33m[tester::#JT4] [0m[94mRunning tests for Stage #JT4 (jt4)[0m
 [33m[tester::#JT4] [0m[94m$ ./your_git.sh init[0m
-[33m[your_program] [0mInitialized git directory
+[33m[your_program] [0m[0mInitialized git directory[0m
 [33m[tester::#JT4] [0m[94m$ echo "orange pear grape pineapple blueberry banana" > pear.txt[0m
 [33m[tester::#JT4] [0m[94m$ ./your_git.sh hash-object -w pear.txt[0m
-[33m[your_program] [0m7a50e289f5bde85780a843d5750ec3ae372af50a
+[33m[your_program] [0m[0m7a50e289f5bde85780a843d5750ec3ae372af50a[0m
 [33m[tester::#JT4] [0m[92mOutput is a 40-char SHA.[0m
 [33m[tester::#JT4] [0m[92mBlob file contents are valid.[0m
 [33m[tester::#JT4] [0m[92mReturned SHA matches expected SHA.[0m
@@ -13,16 +13,16 @@ Debug = true
 
 [33m[tester::#IC4] [0m[94mRunning tests for Stage #IC4 (ic4)[0m
 [33m[tester::#IC4] [0m[94m$ ./your_git.sh init[0m
-[33m[your_program] [0mInitialized git directory
+[33m[your_program] [0m[0mInitialized git directory[0m
 [33m[tester::#IC4] [0m[94mAdded blob object to .git/objects: d3eaf53b1d60ac21803c5091eb4add1c6502664d[0m
 [33m[tester::#IC4] [0m[94m$ ./your_git.sh cat-file -p d3eaf53b1d60ac21803c5091eb4add1c6502664d[0m
-[33m[your_program] [0mstrawberry apple blueberry mango pineapple raspberry
+[33m[your_program] [0m[0mstrawberry apple blueberry mango pineapple raspberry[0m
 [33m[tester::#IC4] [0m[92mOutput is valid.[0m
 [33m[tester::#IC4] [0m[92mTest passed.[0m
 
 [33m[tester::#GG4] [0m[94mRunning tests for Stage #GG4 (gg4)[0m
 [33m[tester::#GG4] [0m[94m$ ./your_git.sh init[0m
-[33m[your_program] [0mInitialized git directory
+[33m[your_program] [0m[0mInitialized git directory[0m
 [33m[tester::#GG4] [0m[92m.git directory found.[0m
 [33m[tester::#GG4] [0m[92m.git/objects directory found.[0m
 [33m[tester::#GG4] [0m[92m.git/refs directory found.[0m

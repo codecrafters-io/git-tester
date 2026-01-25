@@ -2,7 +2,7 @@ Debug = true
 
 [33m[tester::#GG4] [0m[94mRunning tests for Stage #GG4 (gg4)[0m
 [33m[tester::#GG4] [0m[94m$ ./your_git.sh init[0m
-[33m[your_program] [0mdid nothing
+[33m[your_program] [0m[0mdid nothing[0m
 [33m[tester::#GG4] [0m[94mFiles found in directory: [0m
 [33m[tester::#GG4] [0m[94m   (directory is empty)[0m
 [33m[tester::#GG4] [0m[91mExpected the ".git" directory to be created[0m
