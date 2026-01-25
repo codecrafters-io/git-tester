@@ -5,7 +5,7 @@ go 1.24.0
 toolchain go1.24.2
 
 require (
-	github.com/codecrafters-io/tester-utils v0.4.9
+	github.com/codecrafters-io/tester-utils v0.4.13
 	github.com/go-git/go-billy/v5 v5.0.0
 	github.com/go-git/go-git/v5 v5.0.0
 )
@@ -14,6 +14,7 @@ require (
 // replace github.com/codecrafters-io/tester-utils v0.2.0 => /Users/rohitpaulk/experiments/codecrafters/tester-utils
 
 require (
+	github.com/creack/pty v1.1.24 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/fatih/color v1.18.0 // indirect
