@@ -2,12 +2,12 @@ Debug = true
 
 [33m[tester::#KP1] [0m[94mRunning tests for Stage #KP1 (kp1)[0m
 [33m[tester::#KP1] [0m[94m$ ./your_git.sh init[0m
-[33m[your_program] [0mInitialized git directory
+[33m[your_program] [0m[0mInitialized git directory[0m
 [33m[tester::#KP1] [0m[36mWriting a tree to git storage..[0m
 [33m[tester::#KP1] [0m[94m$ ./your_git.sh ls-tree --name-only b2d2f8c10d725becf99fcfa62bec34584e5f8e83[0m
-[33m[your_program] [0mapple
-[33m[your_program] [0mblueberry
-[33m[your_program] [0mstrawberry
-[33m[your_program] [0mSomething went wrong!
+[33m[your_program] [0m[0mapple[0m
+[33m[your_program] [0m[0mblueberry[0m
+[33m[your_program] [0m[0mstrawberry[0m
+[33m[your_program] [0m[0mSomething went wrong![0m
 [33m[tester::#KP1] [0m[91mExpected 0 as exit code, got: 1[0m
 [33m[tester::#KP1] [0m[91mTest failed[0m

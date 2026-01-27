@@ -2,22 +2,22 @@ Debug = true
 
 [33m[tester::#JT4] [0m[94mRunning tests for Stage #JT4 (jt4)[0m
 [33m[tester::#JT4] [0m[94m$ ./your_git.sh init[0m
-[33m[your_program] [0mInitialized git directory
+[33m[your_program] [0m[0mInitialized git directory[0m
 [33m[tester::#JT4] [0m[94m$ echo "orange pear grape pineapple blueberry banana" > pear.txt[0m
 [33m[tester::#JT4] [0m[94m$ ./your_git.sh hash-object -w pear.txt[0m
-[33m[your_program] [0m1b6cfb9d1e21ccdec2d4f2b27dfd413561199394
+[33m[your_program] [0m[0m1b6cfb9d1e21ccdec2d4f2b27dfd413561199394[0m
 [33m[tester::#JT4] [0m[92mOutput is a 40-char SHA.[0m
 [33m[tester::#JT4] [0m[91mGit object file doesn't match official Git implementation. Diff after zlib decompression:[0m
 [33m[tester::#JT4] [0m[91m[0m
-[33m[tester::#JT4] [0mExpected (bytes 0-52), hexadecimal:                         | ASCII:
-[33m[tester::#JT4] [0m62 6c 6f 62 [92m20[0m 34 34 00 6f 72 61 6e 67 65 20 70 65 61 72 20 | blob[92m [0m44.orange pear 
-[33m[tester::#JT4] [0m67 72 61 70 65 20 70 69 6e 65 61 70 70 6c 65 20 62 6c 75 65 | grape pineapple blue
-[33m[tester::#JT4] [0m62 65 72 72 79 20 62 61 6e 61 6e 61                         | berry banana
-[33m[tester::#JT4] [0m
-[33m[tester::#JT4] [0mActual (bytes 0-52), hexadecimal:                           | ASCII:
-[33m[tester::#JT4] [0m62 6c 6f 62 [91m34[0m 34 00 6f 72 61 6e 67 65 20 70 65 61 72 20 67 | blob[91m4[0m4.orange pear g
-[33m[tester::#JT4] [0m72 61 70 65 20 70 69 6e 65 61 70 70 6c 65 20 62 6c 75 65 62 | rape pineapple blueb
-[33m[tester::#JT4] [0m65 72 72 79 20 62 61 6e 61 6e 61                            | erry banana
+[33m[tester::#JT4] [0m[0mExpected (bytes 0-52), hexadecimal:                         | ASCII:[0m
+[33m[tester::#JT4] [0m[0m62 6c 6f 62 [92m20[0m 34 34 00 6f 72 61 6e 67 65 20 70 65 61 72 20 | blob[92m [0m44.orange pear [0m
+[33m[tester::#JT4] [0m[0m67 72 61 70 65 20 70 69 6e 65 61 70 70 6c 65 20 62 6c 75 65 | grape pineapple blue[0m
+[33m[tester::#JT4] [0m[0m62 65 72 72 79 20 62 61 6e 61 6e 61                         | berry banana[0m
+[33m[tester::#JT4] [0m[0m[0m
+[33m[tester::#JT4] [0m[0mActual (bytes 0-52), hexadecimal:                           | ASCII:[0m
+[33m[tester::#JT4] [0m[0m62 6c 6f 62 [91m34[0m 34 00 6f 72 61 6e 67 65 20 70 65 61 72 20 67 | blob[91m4[0m4.orange pear g[0m
+[33m[tester::#JT4] [0m[0m72 61 70 65 20 70 69 6e 65 61 70 70 6c 65 20 62 6c 75 65 62 | rape pineapple blueb[0m
+[33m[tester::#JT4] [0m[0m65 72 72 79 20 62 61 6e 61 6e 61                            | erry banana[0m
 [33m[tester::#JT4] [0m[91m[0m
 [33m[tester::#JT4] [0m[91mFile at ".git/objects/1b/6cfb9d1e21ccdec2d4f2b27dfd413561199394" does not match official Git implementation[0m
 [33m[tester::#JT4] [0m[91mTest failed[0m

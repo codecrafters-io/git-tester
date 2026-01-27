@@ -2,20 +2,20 @@ Debug = true
 
 [33m[tester::#KP1] [0m[94mRunning tests for Stage #KP1 (kp1)[0m
 [33m[tester::#KP1] [0m[94m$ ./your_git.sh init[0m
-[33m[your_program] [0mInitialized git directory
+[33m[your_program] [0m[0mInitialized git directory[0m
 [33m[tester::#KP1] [0m[36mWriting a tree to git storage..[0m
 [33m[tester::#KP1] [0m[94m$ ./your_git.sh ls-tree --name-only b2d2f8c10d725becf99fcfa62bec34584e5f8e83[0m
-[33m[your_program] [0mapple
-[33m[your_program] [0mblueberry
-[33m[your_program] [0mstrawberry
+[33m[your_program] [0m[0mapple[0m
+[33m[your_program] [0m[0mblueberry[0m
+[33m[your_program] [0m[0mstrawberry[0m
 [33m[tester::#KP1] [0m[92mTest passed.[0m
 
 [33m[tester::#JT4] [0m[94mRunning tests for Stage #JT4 (jt4)[0m
 [33m[tester::#JT4] [0m[94m$ ./your_git.sh init[0m
-[33m[your_program] [0mInitialized git directory
+[33m[your_program] [0m[0mInitialized git directory[0m
 [33m[tester::#JT4] [0m[94m$ echo "grape pear blueberry pineapple apple orange" > blueberry.txt[0m
 [33m[tester::#JT4] [0m[94m$ ./your_git.sh hash-object -w blueberry.txt[0m
-[33m[your_program] [0mc15ad139c1acde0f92c11361b797f41197461f61
+[33m[your_program] [0m[0mc15ad139c1acde0f92c11361b797f41197461f61[0m
 [33m[tester::#JT4] [0m[92mOutput is a 40-char SHA.[0m
 [33m[tester::#JT4] [0m[92mBlob file contents are valid.[0m
 [33m[tester::#JT4] [0m[92mReturned SHA matches expected SHA.[0m
@@ -23,16 +23,16 @@ Debug = true
 
 [33m[tester::#IC4] [0m[94mRunning tests for Stage #IC4 (ic4)[0m
 [33m[tester::#IC4] [0m[94m$ ./your_git.sh init[0m
-[33m[your_program] [0mInitialized git directory
+[33m[your_program] [0m[0mInitialized git directory[0m
 [33m[tester::#IC4] [0m[94mAdded blob object to .git/objects: 0864cb0c02426f62a4e1d41c2dcdb23bcb9e8967[0m
 [33m[tester::#IC4] [0m[94m$ ./your_git.sh cat-file -p 0864cb0c02426f62a4e1d41c2dcdb23bcb9e8967[0m
-[33m[your_program] [0mapple strawberry mango orange raspberry banana
+[33m[your_program] [0m[0mapple strawberry mango orange raspberry banana[0m
 [33m[tester::#IC4] [0m[92mOutput is valid.[0m
 [33m[tester::#IC4] [0m[92mTest passed.[0m
 
 [33m[tester::#GG4] [0m[94mRunning tests for Stage #GG4 (gg4)[0m
 [33m[tester::#GG4] [0m[94m$ ./your_git.sh init[0m
-[33m[your_program] [0mInitialized git directory
+[33m[your_program] [0m[0mInitialized git directory[0m
 [33m[tester::#GG4] [0m[92m.git directory found.[0m
 [33m[tester::#GG4] [0m[92m.git/objects directory found.[0m
 [33m[tester::#GG4] [0m[92m.git/refs directory found.[0m
