@@ -19,4 +19,4 @@ jobs:
         with:
           python-version: '3.13'
 
-      - run: make test
+      - run: sudo make test

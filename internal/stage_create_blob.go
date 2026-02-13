@@ -14,6 +14,7 @@ import (
 func testCreateBlob(harness *test_case_harness.TestCaseHarness) error {
 	logger := harness.Logger
 	executable := harness.Executable
+	RelocateSystemGit(harness, logger)
 
 	tempDir, err := os.MkdirTemp("", "worktree")
 	if err != nil {
